@@ -4,5 +4,7 @@
 
 # Python bytecode and caches
 __pycache__/
+**/__pycache__/
 *.py[cod]
+**/*.py[cod]
 *$py.class
