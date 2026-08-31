@@ -1,0 +1,8 @@
+# VS Code workspace settings
+.vscode/*
+!.vscode/settings.json
+
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
