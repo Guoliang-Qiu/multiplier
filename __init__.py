@@ -1,3 +1,9 @@
-from multiplier.booth_wallace import WIDTH, build_multiplier, multiply, simulate_all
+from importlib import import_module
 
-__all__ = ["WIDTH", "build_multiplier", "multiply", "simulate_all"]
+_mod = import_module("multiplier.9_bits_signed_exact_multiplier")
+
+WIDTH = _mod.WIDTH
+build_multiplier = _mod.build_multiplier
+multiply = _mod.multiply
+
+__all__ = ["WIDTH", "build_multiplier", "multiply"]
