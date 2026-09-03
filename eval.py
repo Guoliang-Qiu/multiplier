@@ -1,14 +1,22 @@
-"""Compare a candidate multiplier with exact integer multiplication."""
+"""Evaluate a circuit for signed Q2.7 multiplication rounded to Q4.7."""
 from __future__ import annotations
 
 import argparse
 import importlib.util
 import json
-import time
 from pathlib import Path
 import sys
+import time
 
-WIDTH = 9
+ROOT = Path(__file__).resolve().parent.parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from multiplier.circuit import INPUT_WIDTH, simulate_many, validate_circuit
+
+FRACTION_BITS = 7
+ROUNDING_OFFSET = 1 << (FRACTION_BITS - 1)
+SCALE = 1 << FRACTION_BITS
 
 
 def load_module(path: Path):
@@ -21,18 +29,32 @@ def load_module(path: Path):
     return module
 
 
+def round_q4_14_to_q4_7(raw: int) -> int:
+    """Round to nearest Q4.7 code, with ties away from zero."""
+    if raw >= 0:
+        return (raw + ROUNDING_OFFSET) >> FRACTION_BITS
+    return -((-raw + ROUNDING_OFFSET) >> FRACTION_BITS)
+
+
 def evaluate(module) -> dict[str, float | int]:
-    total = errors = absolute = squared = maximum = 0
-    for a in range(-(1 << (WIDTH - 1)), 1 << (WIDTH - 1)):
-        for b in range(-(1 << (WIDTH - 1)), 1 << (WIDTH - 1)):
-            actual = module.multiply(a, b)
-            expected = a * b
-            error = abs(actual - expected)
-            total += 1
-            errors += actual != expected
-            absolute += error
-            squared += error * error
-            maximum = max(maximum, error)
+    if not hasattr(module, "build_circuit"):
+        raise AttributeError("candidate must expose build_circuit()")
+    circuit = module.build_circuit()
+    validate_circuit(circuit)
+
+    total = errors = 0
+    absolute = squared = maximum = 0.0
+    bound = 1 << (INPUT_WIDTH - 1)
+    inputs = [(a, b) for a in range(-bound, bound) for b in range(-bound, bound)]
+    for (a, b), raw_actual in zip(inputs, simulate_many(circuit, inputs)):
+        actual_code = round_q4_14_to_q4_7(raw_actual)
+        expected_code = round_q4_14_to_q4_7(a * b)
+        error = abs(actual_code - expected_code) / SCALE
+        total += 1
+        errors += actual_code != expected_code
+        absolute += error
+        squared += error * error
+        maximum = max(maximum, error)
     return {
         "total_cases": total,
         "error_cases": errors,
@@ -46,15 +68,9 @@ def evaluate(module) -> dict[str, float | int]:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("implementation", type=Path)
-    parser.add_argument("--reference", type=Path, help="Optional exact reference to validate")
     args = parser.parse_args()
     start = time.perf_counter()
-    candidate = load_module(args.implementation.resolve())
-    if args.reference:
-        reference = load_module(args.reference.resolve())
-        if evaluate(reference)["error_rate"] != 0.0:
-            raise RuntimeError("Reference implementation is not exact")
-    result = evaluate(candidate)
+    result = evaluate(load_module(args.implementation.resolve()))
     result["runtime_seconds"] = time.perf_counter() - start
     print(json.dumps(result, sort_keys=True))
 

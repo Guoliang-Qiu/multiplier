@@ -1,9 +1,3 @@
-from importlib import import_module
+from multiplier.circuit import Circuit, Node, simulate, simulate_many, validate_circuit
 
-_mod = import_module("multiplier.9_bits_signed_exact_multiplier")
-
-WIDTH = _mod.WIDTH
-build_multiplier = _mod.build_multiplier
-multiply = _mod.multiply
-
-__all__ = ["WIDTH", "build_multiplier", "multiply"]
+__all__ = ["Circuit", "Node", "simulate", "simulate_many", "validate_circuit"]
