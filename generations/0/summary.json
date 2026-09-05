@@ -1,0 +1,71 @@
+{
+  "generation": 0,
+  "population": [
+    {
+      "path": "/home/guoli/multiplier/generations/0/candidate_g0000_0000.py",
+      "parent_paths": [],
+      "score": 1.0,
+      "passed": true,
+      "feedback": "candidate=/home/guoli/multiplier/generations/0/candidate_g0000_0000.py, gate_cost=724, performance={'error_cases': 0, 'error_rate': 0.0, 'mae': 0.0, 'max_abs_error': 0.0, 'rmse': 0.0, 'runtime_seconds': 3.8615141860209405, 'total_cases': 262144}",
+      "objectives": [
+        724,
+        0.0
+      ],
+      "details": {
+        "gate_cost": 724,
+        "performance": {
+          "error_cases": 0,
+          "error_rate": 0.0,
+          "mae": 0.0,
+          "max_abs_error": 0.0,
+          "rmse": 0.0,
+          "runtime_seconds": 3.8615141860209405,
+          "total_cases": 262144
+        },
+        "implementation": "/home/guoli/multiplier/generations/0/candidate_g0000_0000.py"
+      },
+      "cost": {
+        "gate_cost": 724
+      },
+      "performance": {
+        "mae": 0.0,
+        "error_cases": 0,
+        "error_rate": 0.0,
+        "max_abs_error": 0.0,
+        "rmse": 0.0,
+        "runtime_seconds": 3.8615141860209405,
+        "total_cases": 262144
+      }
+    }
+  ],
+  "offspring": [],
+  "prompts": [
+    {
+      "generated_offspring": 0,
+      "successful_offspring": 0,
+      "success_rate": 0.0,
+      "offspring_count": 0,
+      "average_score": 0.0,
+      "average_pass_rate": 0.0,
+      "average_objectives": []
+    },
+    {
+      "generated_offspring": 0,
+      "successful_offspring": 0,
+      "success_rate": 0.0,
+      "offspring_count": 0,
+      "average_score": 0.0,
+      "average_pass_rate": 0.0,
+      "average_objectives": []
+    },
+    {
+      "generated_offspring": 0,
+      "successful_offspring": 0,
+      "success_rate": 0.0,
+      "offspring_count": 0,
+      "average_score": 0.0,
+      "average_pass_rate": 0.0,
+      "average_objectives": []
+    }
+  ]
+}
