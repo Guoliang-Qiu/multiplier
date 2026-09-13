@@ -1,0 +1,18 @@
+Inspect the parent four-input `a*b + c*d` Circuit DAG and make one targeted
+approximation based on partial-product significance. The inputs are four
+independent 9-bit two's-complement Q2.7 buses in fixed `a`, `b`, `c`, `d`
+order, and the output is a 19-bit two's-complement Q4.14 bus. Try a deliberate
+scheme such as removing or simplifying selected low-significance partial
+products, sharing partial-product logic between the two product paths, or
+keeping only the partial products that materially affect the Q4.7 result.
+Account for signed partial products and sign extension; do not assume that a
+low physical bit is harmless without checking how carries and quantization
+propagate. Make a local change rather than rewriting the whole circuit.
+
+The approximation must be encoded as a static runnable Circuit DAG using only
+the allowed gate and leaf types. Preserve the zero-argument `build_circuit()`
+interface and do not add simulation, scoring, or custom gate-cost code. Run the
+existing `eval.py` on the candidate using the current four-input evaluation
+procedure, including its fixed sampling, Q4.7 quantization, and `evm_db`
+calculation. Judge the scheme by the actual `evm_db` versus weighted
+output-reachable gate cost, not by a local error estimate or gate count alone.

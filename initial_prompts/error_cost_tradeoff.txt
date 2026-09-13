@@ -1,12 +1,16 @@
 Use the parent four-input `a*b + c*d` multiplier's current output-reachable
-gate cost and Q4.7 real-value MAE to make one verifiable approximate
+gate cost and Q4.7 real-value `evm_db` to make one verifiable approximate
 optimization. The four inputs are 9-bit two's-complement Q2.7 values, the
 output is a 19-bit two's-complement Q4.14 value, and the full-precision
 reference is `(a*b + c*d) / 128`. Prefer an untried local simplification or a
 targeted subgraph substitution rather than a broad rewrite. Balance gate-cost
-reduction against MAE, and preserve low-error structure unless the expected
+reduction against `evm_db`, and preserve low-error structure unless the expected
 tradeoff is justified. Look for opportunities to share or recombine equivalent
 subgraphs across the `a*b` and `c*d` paths, while keeping all bit positions and
 sign-extension behavior correct. Fixed gate costs and Q4.14-to-Q4.7 result
 quantization are defined by the external evaluator; do not modify or duplicate
-that logic in the candidate.
+that logic in the candidate. The approximation must be implemented in the
+static circuit itself. Evaluate the candidate with the existing `eval.py`
+procedure, including its fixed four-input sampling, result quantization, and
+`evm_db` calculation; do not use a local error estimate in place of this
+evaluation.

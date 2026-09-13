@@ -10,4 +10,8 @@ their interfaces and bit-level semantics match. Use only AND, OR, XOR, and
 NOT gates, and preserve the zero-argument `build_circuit()` interface and
 shared DAG format. The external evaluator uses `(a*b + c*d) / 128` as the
 full-precision reference and quantizes only the circuit's Q4.14 result to
-Q4.7. Do not implement simulation or scoring in the candidate.
+Q4.7. The approximation must be implemented in the runnable circuit itself.
+Evaluate the candidate with the existing `eval.py` procedure and use its
+reported `evm_db` and weighted gate cost to verify the tradeoff. Do not
+implement simulation or scoring in the candidate, and do not replace the
+evaluator with a local error estimate.

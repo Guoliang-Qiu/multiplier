@@ -1,0 +1,16 @@
+Inspect the parent four-input `a*b + c*d` Circuit DAG and make one targeted
+approximation in arithmetic reduction. Explore a simplified full-adder or
+compressor, selective carry propagation, a shared carry structure, selective
+rounding, or a constant compensation term. Choose a specific region and keep
+the change local. Preserve correct 9-bit signed input interpretation,
+sign-extension, the fixed `a`, `b`, `c`, `d` bus order, and the 19-bit Q4.14
+output interface.
+
+Implement the approximation as a static, input-independent Circuit DAG using
+only AND, OR, XOR, and NOT gates plus the permitted leaves. Do not simulate
+inputs, compute scores, or override gate costs in the candidate. Validate the
+actual implementation with the existing `eval.py` procedure: its fixed
+four-input sample generation, Q4.14-to-Q4.7 quantization, and `evm_db` metric
+are authoritative. Retain the change only when the measured `evm_db` and
+weighted output-reachable gate cost provide a meaningful tradeoff; do not rely
+on an isolated compressor error calculation.

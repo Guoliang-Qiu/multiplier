@@ -14,18 +14,23 @@ Constraints:
 - Evaluation quantizes only the circuit result from Q4.14 to Q4.7 using
   `floor(raw / 128 + 0.5)`. MAE, RMSE, maximum absolute error, error rate,
   and related metrics are reported in real-value units.
-- Four-input evaluation enumerates every unordered `(b, d)` pair in the
-  signed 9-bit domain and samples a fixed number of `(a, c)` values per pair
-  using RNG seed 42. The per-pair sample count is controlled by
-  `TAP2_COPIES` and defaults to 8.
 - Candidates expose only a zero-argument `build_circuit()` that returns `multiplier.circuit.Circuit`.
 - A candidate generates a static, input-independent DAG. It must not simulate inputs, compute scores, or override gate costs.
+- Approximation must be implemented as a runnable circuit, not as a post-processing
+  rule or a predicted score. Every approximation scheme must be evaluated by the
+  existing `eval.py` procedure, including its fixed input generation, Q4.7
+  quantization, and `evm_db` calculation.
+- The search should explicitly consider targeted approximation schemes that are
+  effective for this objective, including partial-product truncation or removal,
+  simplified compressors/adders, selective rounding, and compensation constants.
+  These choices must be judged by the `eval.py` results and weighted gate cost,
+  rather than by gate count or an isolated local error estimate.
 - Gate nodes may use only AND, OR, XOR, and NOT. ZERO, ONE, IN_A, IN_B,
   IN_C, and IN_D are allowed leaves.
 - Four-input candidates must use the input buses in fixed `a`, `b`, `c`, `d`
   order, with leaves `IN_A`, `IN_B`, `IN_C`, and `IN_D`.
 - Fixed external gate costs are AND=1, OR=1, XOR=3, and NOT=0. Only output-reachable gates are counted.
 - Configured baseline implementations are read-only seeds. Mutations operate on copies under `generations/` only.
-- The search minimizes weighted gate cost and Q4.7 real-value MAE for the
+- The search minimizes weighted gate cost and Q4.7 real-value `evm_db` for the
   four-input `a*b + c*d` objective.
 - Each generation's non-dominated candidates are preserved under `generations/<generation>/`.
