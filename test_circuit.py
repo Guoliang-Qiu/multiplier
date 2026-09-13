@@ -18,8 +18,7 @@ def make_test_circuit(mask_output: bool = False):
     both = circuit.add("AND", a_ids[0], b_ids[0])
     either = circuit.add("OR", xor, both)
     output = circuit.add("AND", either, zero) if mask_output else either
-    circuit.a_ids = a_ids
-    circuit.b_ids = b_ids
+    circuit.input_ids = a_ids + b_ids
     circuit.output_ids = [output] + [zero] * 17
     return circuit, (xor, both, either), (a_ids[0], b_ids[0])
 

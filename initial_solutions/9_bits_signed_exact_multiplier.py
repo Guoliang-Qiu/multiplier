@@ -65,8 +65,7 @@ def build_circuit() -> Circuit:
     one_const = circuit.add("ONE")
     a_bits = [circuit.add("IN_A") for _ in range(WIDTH)]
     b_bits = [circuit.add("IN_B") for _ in range(WIDTH)]
-    circuit.a_ids = a_bits
-    circuit.b_ids = b_bits
+    circuit.input_ids = a_bits + b_bits
 
     columns: list[list[int]] = [[] for _ in range(OUT_WIDTH)]
     num_groups = (WIDTH + 1) // 2

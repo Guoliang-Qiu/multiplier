@@ -1,10 +1,10 @@
-"""Exact signed 9-bit radix-4 Booth multiplier circuit generator."""
+"""Exact signed 9-bit radix-4 Booth generator for ``a*b + c*d``."""
 from __future__ import annotations
 
 from multiplier.circuit import Circuit
 
 WIDTH = 9
-OUT_WIDTH = 18
+OUT_WIDTH = 19
 
 
 def _and(a: int, b: int, circuit: Circuit) -> int:
@@ -59,48 +59,33 @@ def _booth_control_sign(
     return _xor(middle, low, circuit), middle
 
 
-def build_circuit() -> Circuit:
-    circuit = Circuit()
-    zero = circuit.add("ZERO")
-    one_const = circuit.add("ONE")
-    a_bits = [circuit.add("IN_A") for _ in range(WIDTH)]
-    b_bits = [circuit.add("IN_B") for _ in range(WIDTH)]
-    circuit.a_ids = a_bits
-    circuit.b_ids = b_bits
-
-    columns: list[list[int]] = [[] for _ in range(OUT_WIDTH)]
+def _add_product(
+    columns: list[list[int]], multiplicand: list[int], multiplier: list[int],
+    zero: int, one_const: int, circuit: Circuit,
+) -> None:
+    """Add one sign-extended Booth product into the shared bit columns."""
     num_groups = (WIDTH + 1) // 2
     last_group = num_groups - 1
 
-    # Booth partial products with sign-bit inversion instead of sign extension.
     for group in range(num_groups):
         offset = 2 * group
-        sign_col = offset + WIDTH
-        is_top = sign_col == OUT_WIDTH - 1
+        is_top = offset + WIDTH == OUT_WIDTH - 1
         if group == last_group:
-            one, negative = _booth_control_sign(b_bits, group, zero, circuit)
-            for source in range(WIDTH + 1):
-                bit = _xor(
-                    _and(_bit_w(a_bits, source, zero), one, circuit),
-                    negative,
-                    circuit,
-                )
-                if source == WIDTH and not is_top:
-                    bit = _not(bit, circuit)
-                columns[offset + source].append(bit)
+            one, negative = _booth_control_sign(multiplier, group, zero, circuit)
+            two = None
         else:
-            one, two, negative = _booth_control(b_bits, group, zero, circuit)
-            for source in range(WIDTH + 1):
-                times_one = _and(_bit_w(a_bits, source, zero), one, circuit)
-                if source > 0:
-                    times_two = _and(_bit_w(a_bits, source - 1, zero), two, circuit)
-                    magnitude = _or(times_one, times_two, circuit)
-                else:
-                    magnitude = times_one
-                bit = _xor(magnitude, negative, circuit)
-                if source == WIDTH and not is_top:
-                    bit = _not(bit, circuit)
-                columns[offset + source].append(bit)
+            one, two, negative = _booth_control(multiplier, group, zero, circuit)
+        for source in range(WIDTH + 1):
+            times_one = _and(_bit_w(multiplicand, source, zero), one, circuit)
+            if two is None or source == 0:
+                magnitude = times_one
+            else:
+                times_two = _and(_bit_w(multiplicand, source - 1, zero), two, circuit)
+                magnitude = _or(times_one, times_two, circuit)
+            bit = _xor(magnitude, negative, circuit)
+            if source == WIDTH and not is_top:
+                bit = _not(bit, circuit)
+            columns[offset + source].append(bit)
         columns[offset].append(negative)
 
     compensation = -sum(
@@ -111,6 +96,21 @@ def build_circuit() -> Circuit:
     for col in range(OUT_WIDTH):
         if (compensation >> col) & 1:
             columns[col].append(one_const)
+
+
+def build_circuit() -> Circuit:
+    circuit = Circuit()
+    zero = circuit.add("ZERO")
+    one_const = circuit.add("ONE")
+    a_bits = [circuit.add("IN_A") for _ in range(WIDTH)]
+    b_bits = [circuit.add("IN_B") for _ in range(WIDTH)]
+    c_bits = [circuit.add("IN_C") for _ in range(WIDTH)]
+    d_bits = [circuit.add("IN_D") for _ in range(WIDTH)]
+    circuit.input_ids = a_bits + b_bits + c_bits + d_bits
+
+    columns: list[list[int]] = [[] for _ in range(OUT_WIDTH)]
+    _add_product(columns, a_bits, b_bits, zero, one_const, circuit)
+    _add_product(columns, c_bits, d_bits, zero, one_const, circuit)
 
     # Wallace carry-save compression.
     for col in range(OUT_WIDTH):
@@ -143,4 +143,5 @@ def build_circuit() -> Circuit:
             output_ids.append(total)
 
     circuit.output_ids = output_ids
+    circuit.output_width = OUT_WIDTH
     return circuit

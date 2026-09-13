@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 INPUT_WIDTH = 9
 OUTPUT_WIDTH = 18
 GATE_ARITY = {"AND": 2, "OR": 2, "XOR": 2, "NOT": 1}
-LEAF_KINDS = {"IN_A", "IN_B", "ZERO", "ONE"}
+LEAF_KINDS = {"IN_A", "IN_B", "IN_C", "IN_D", "ZERO", "ONE"}
 
 
 @dataclass(frozen=True)
@@ -19,9 +19,10 @@ class Node:
 @dataclass
 class Circuit:
     nodes: list[Node] = field(default_factory=list)
-    a_ids: list[int] = field(default_factory=list)
-    b_ids: list[int] = field(default_factory=list)
+    # Input buses are concatenated in fixed A, B, C, D order.
+    input_ids: list[int] = field(default_factory=list)
     output_ids: list[int] = field(default_factory=list)
+    output_width: int = OUTPUT_WIDTH
 
     def add(self, kind: str, *inputs: int) -> int:
         self.nodes.append(Node(kind, tuple(inputs)))
@@ -59,10 +60,19 @@ class SubcircuitTruthRow:
 def validate_circuit(circuit: Circuit) -> None:
     if not isinstance(circuit, Circuit):
         raise TypeError("build_circuit() must return multiplier.circuit.Circuit")
-    if len(circuit.a_ids) != INPUT_WIDTH or len(circuit.b_ids) != INPUT_WIDTH:
-        raise ValueError(f"circuit must have two {INPUT_WIDTH}-bit input buses")
-    if len(circuit.output_ids) != OUTPUT_WIDTH:
-        raise ValueError(f"circuit must have {OUTPUT_WIDTH} output bits")
+    if len(circuit.input_ids) not in {2 * INPUT_WIDTH, 4 * INPUT_WIDTH}:
+        raise ValueError(
+            f"circuit must have {2 * INPUT_WIDTH} or {4 * INPUT_WIDTH} input nodes"
+        )
+    bus_count = len(circuit.input_ids) // INPUT_WIDTH
+    buses = tuple(
+        circuit.input_ids[index * INPUT_WIDTH:(index + 1) * INPUT_WIDTH]
+        for index in range(bus_count)
+    )
+    if any(len(bus) != INPUT_WIDTH for bus in buses):
+        raise ValueError(f"circuit must have {len(buses)} {INPUT_WIDTH}-bit input buses")
+    if len(circuit.output_ids) != circuit.output_width:
+        raise ValueError(f"circuit must have {circuit.output_width} output bits")
 
     for index, node in enumerate(circuit.nodes):
         if node.kind in LEAF_KINDS:
@@ -78,35 +88,36 @@ def validate_circuit(circuit: Circuit) -> None:
         if any(source < 0 or source >= index for source in node.inputs):
             raise ValueError(f"node {index} must reference earlier valid nodes")
 
-    if len(set(circuit.a_ids + circuit.b_ids)) != 2 * INPUT_WIDTH:
+    if len(set(sum((list(bus) for bus in buses), []))) != len(buses) * INPUT_WIDTH:
         raise ValueError("input buses must contain distinct nodes")
-    for node_id in circuit.a_ids:
-        if not 0 <= node_id < len(circuit.nodes) or circuit.nodes[node_id].kind != "IN_A":
-            raise ValueError("a_ids must reference IN_A leaves")
-    for node_id in circuit.b_ids:
-        if not 0 <= node_id < len(circuit.nodes) or circuit.nodes[node_id].kind != "IN_B":
-            raise ValueError("b_ids must reference IN_B leaves")
+    for bus, kind, name in zip(buses, ("IN_A", "IN_B", "IN_C", "IN_D"), "abcd"):
+        for node_id in bus:
+            if not 0 <= node_id < len(circuit.nodes) or circuit.nodes[node_id].kind != kind:
+                raise ValueError(f"{name}_ids must reference {kind} leaves")
     if any(node_id < 0 or node_id >= len(circuit.nodes) for node_id in circuit.output_ids):
         raise ValueError("output_ids contains an invalid node")
 
 
-def simulate(circuit: Circuit, a: int, b: int) -> int:
-    """Evaluate a validated circuit and return its signed 18-bit raw result."""
-    values = _simulate_values(circuit, a, b)
+def simulate(circuit: Circuit, a: int, b: int, c: int = 0, d: int = 0) -> int:
+    """Evaluate a circuit and return its signed raw result."""
+    values = _simulate_values(circuit, a, b, c, d)
 
     raw = sum(values[node_id] << index for index, node_id in enumerate(circuit.output_ids))
-    return raw - (1 << OUTPUT_WIDTH) if raw & (1 << (OUTPUT_WIDTH - 1)) else raw
+    width = circuit.output_width
+    return raw - (1 << width) if raw & (1 << (width - 1)) else raw
 
 
 def _simulate_values(
-    circuit: Circuit, a: int, b: int, overrides: dict[int, int] | None = None
+    circuit: Circuit, a: int, b: int, c: int = 0, d: int = 0,
+    overrides: dict[int, int] | None = None
 ) -> list[int]:
     """Evaluate every node, optionally overriding selected node values."""
     values = [0] * len(circuit.nodes)
-    for index, node_id in enumerate(circuit.a_ids):
-        values[node_id] = (a >> index) & 1
-    for index, node_id in enumerate(circuit.b_ids):
-        values[node_id] = (b >> index) & 1
+    numbers = (a, b) if len(circuit.input_ids) == 2 * INPUT_WIDTH else (a, b, c, d)
+    for bus_index, number in enumerate(numbers):
+        start = bus_index * INPUT_WIDTH
+        for bit, node_id in enumerate(circuit.input_ids[start:start + INPUT_WIDTH]):
+            values[node_id] = (number >> bit) & 1
 
     for node_id, node in enumerate(circuit.nodes):
         if overrides is not None and node_id in overrides:
@@ -127,7 +138,7 @@ def _simulate_values(
 
 
 def simulate_many(
-    circuit: Circuit, inputs: list[tuple[int, int]], chunk_size: int = 64
+    circuit: Circuit, inputs: list[tuple[int, ...]], chunk_size: int = 64
 ) -> list[int]:
     """Evaluate inputs in small bit-parallel chunks."""
     results: list[int] = []
@@ -141,27 +152,27 @@ def simulate_many(
                 for bit, node_id in enumerate(circuit.output_ids)
             ))
 
-    sign_bit = 1 << (OUTPUT_WIDTH - 1)
-    modulus = 1 << OUTPUT_WIDTH
+    sign_bit = 1 << (circuit.output_width - 1)
+    modulus = 1 << circuit.output_width
     return [raw - modulus if raw & sign_bit else raw for raw in results]
 
 
 def _simulate_packed_values(
     circuit: Circuit,
-    inputs: Sequence[tuple[int, int]],
+    inputs: Sequence[tuple[int, ...]],
     overrides: dict[int, int] | None = None,
 ) -> list[int]:
     """Evaluate every node with one bit position per parent input."""
     mask = (1 << len(inputs)) - 1
     values = [0] * len(circuit.nodes)
-    for bit, node_id in enumerate(circuit.a_ids):
-        values[node_id] = sum(
-            ((a >> bit) & 1) << index for index, (a, _) in enumerate(inputs)
-        )
-    for bit, node_id in enumerate(circuit.b_ids):
-        values[node_id] = sum(
-            ((b >> bit) & 1) << index for index, (_, b) in enumerate(inputs)
-        )
+    bus_count = len(circuit.input_ids) // INPUT_WIDTH
+    for bus_index in range(bus_count):
+        bus = circuit.input_ids[bus_index * INPUT_WIDTH:(bus_index + 1) * INPUT_WIDTH]
+        for bit, node_id in enumerate(bus):
+            values[node_id] = sum(
+                ((sample[bus_index] if bus_index < len(sample) else 0) >> bit & 1) << index
+                for index, sample in enumerate(inputs)
+            )
 
     for node_id, node in enumerate(circuit.nodes):
         if overrides is not None and node_id in overrides:
