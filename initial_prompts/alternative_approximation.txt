@@ -1,1 +1,13 @@
-检查父代 Circuit DAG 中可被近似替换的部分，选择一种与现有结构不同的局部近似方案。只使用 AND、OR、XOR、NOT，保留无参数 build_circuit() 和统一 DAG 格式。误差由外部按 Q2.7 乘法并舍入到 Q4.7 评估，不要在候选中实现仿真或评分。
+Inspect the parent Circuit DAG for a region that can be replaced by an
+approximation, and apply a local approximation strategy that is materially
+different from the strategies already tried. The objective is the four-input
+sum `a*b + c*d`, with four 9-bit two's-complement Q2.7 inputs and a 19-bit
+two's-complement Q4.14 output. Input buses must remain in fixed `a`, `b`, `c`,
+`d` order. Explore approximation of partial products, compressors, carries,
+or shared arithmetic where appropriate; do not rewrite the entire circuit
+without a clear reason. Reuse or recombine beneficial parent subgraphs when
+their interfaces and bit-level semantics match. Use only AND, OR, XOR, and
+NOT gates, and preserve the zero-argument `build_circuit()` interface and
+shared DAG format. The external evaluator uses `(a*b + c*d) / 128` as the
+full-precision reference and quantizes only the circuit's Q4.14 result to
+Q4.7. Do not implement simulation or scoring in the candidate.

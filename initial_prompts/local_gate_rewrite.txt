@@ -1,1 +1,11 @@
-分析父代乘法器的静态 Circuit DAG，选择一个局部逻辑片段进行小规模改写。优先减少输出可达门代价，同时保持无参数 build_circuit() 接口以及 9-bit 输入、18-bit 输出不变。不要添加仿真、评分或自定义门成本代码，并在修改后验证实现可以正常导入和生成合法 DAG。
+Analyze the parent four-input multiplier's static Circuit DAG and perform one
+small, local rewrite of a logic region. The circuit computes `a*b + c*d` for
+four independent 9-bit two's-complement Q2.7 inputs `a`, `b`, `c`, and `d`, and
+exposes a 19-bit two's-complement Q4.14 output. Prefer a rewrite that reduces
+output-reachable gate cost without needlessly discarding useful parent
+structure. Preserve reusable subgraphs when possible, and consider combining
+compatible subgraphs from the two product paths if that is locally safe.
+Preserve the zero-argument `build_circuit()` interface, fixed `a`, `b`, `c`, `d`
+bus order, and the shared DAG format. Do not add simulation, scoring, or
+custom gate-cost code. After the rewrite, verify that the implementation can
+be imported and produces a valid DAG.
