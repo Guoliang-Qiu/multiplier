@@ -1,0 +1,47 @@
+{
+  "path": "/home/guoli/multiplier/generations/1/candidate_g0001_0009.py",
+  "parent_paths": [
+    "/home/guoli/multiplier/generations/1/candidate_g0001_0005.py",
+    "/home/guoli/multiplier/generations/1/candidate_g0001_0004.py"
+  ],
+  "score": 1.0,
+  "passed": true,
+  "feedback": "candidate=/home/guoli/multiplier/generations/1/candidate_g0001_0009.py, gate_cost=1054, performance={'avg_abs_error': 0.6120778654518648, 'bias': 0.010095124123854014, 'error_cases': 1044847, 'error_rate': 0.9945013629995126, 'evm_db': -50.06200093999445, 'mae': 0.6120778654518648, 'max_abs_error': 3.171875, 'mse': 0.4892308783461476, 'rmse': 0.7577740082663015, 'runtime_seconds': 12.364420234996942, 'total_cases': 1050624}",
+  "objectives": [
+    1054,
+    -50.06200093999445
+  ],
+  "details": {
+    "gate_cost": 1054,
+    "performance": {
+      "avg_abs_error": 0.6120778654518648,
+      "bias": 0.010095124123854014,
+      "error_cases": 1044847,
+      "error_rate": 0.9945013629995126,
+      "evm_db": -50.06200093999445,
+      "mae": 0.6120778654518648,
+      "max_abs_error": 3.171875,
+      "mse": 0.4892308783461476,
+      "rmse": 0.7577740082663015,
+      "runtime_seconds": 12.364420234996942,
+      "total_cases": 1050624
+    },
+    "implementation": "/home/guoli/multiplier/generations/1/candidate_g0001_0009.py"
+  },
+  "cost": {
+    "gate_cost": 1054
+  },
+  "performance": {
+    "evm_db": -50.06200093999445,
+    "avg_abs_error": 0.6120778654518648,
+    "bias": 0.010095124123854014,
+    "error_cases": 1044847,
+    "error_rate": 0.9945013629995126,
+    "mae": 0.6120778654518648,
+    "max_abs_error": 3.171875,
+    "mse": 0.4892308783461476,
+    "rmse": 0.7577740082663015,
+    "runtime_seconds": 12.364420234996942,
+    "total_cases": 1050624
+  }
+}
