@@ -4,6 +4,13 @@ This is the four-input adaptation of the supplied qgl partial-product
 generator.  In particular it keeps the special pp-column rewrites, the
 constant-aware compressor, the merged compensation constant, and the
 redundant top-bit sharing.
+
+Focused mutation: advance both product cutoffs through column 5, but restore the
+two first-product column-5 Booth terms ``(step 0, k5)`` and ``(step 2, b)``.
+Those selected terms preserve useful input-dependent information at the Q4.7
+rounding boundary while dropping the remaining low-column logic and carry
+work.  The column-6 compensation, exact top-row mux factorization, signed high
+columns, static DAG construction, and exact local gate rewrites are retained.
 """
 from __future__ import annotations
 
@@ -12,16 +19,59 @@ from multiplier.circuit import Circuit
 WIDTH = 9
 OUT_WIDTH = 18
 OUT_TOTAL = 19
-PROD_CUT_A = 0
-PROD_CUT_B = 0
+PROD_CUT_A = 6
+PROD_CUT_B = 6
+RESTORE_A_COL5 = frozenset({(0, "k5"), (2, "b")})
+RESTORE_B_COL5 = frozenset()
 COMP_COLS = (10, 11, 13, 15, 18)
-ROUND_COLS: tuple[int, ...] = ()
+ROUND_COLS: tuple[int, ...] = (6,)
 
 
-def _and(c, a, b): return c.add("AND", a, b)
-def _or(c, a, b): return c.add("OR", a, b)
-def _xor(c, a, b): return c.add("XOR", a, b)
-def _not(c, a): return c.add("NOT", a)
+def _gate(c: Circuit, kind: str, *inputs: int) -> int:
+    """Apply exact constant/complement rewrites, then hash-cons gates."""
+    zero, one = c._local_constants
+    if kind == "NOT":
+        source = inputs[0]
+        if source == zero: return one
+        if source == one: return zero
+        source_node = c.nodes[source]
+        if source_node.kind == "NOT": return source_node.inputs[0]
+    else:
+        a, b = inputs
+        if a == b:
+            return zero if kind == "XOR" else a
+        if kind == "AND":
+            if zero in inputs: return zero
+            if one in inputs: return b if a == one else a
+        elif kind == "OR":
+            if one in inputs: return one
+            if zero in inputs: return b if a == zero else a
+        else:
+            if zero in inputs: return b if a == zero else a
+            if one in inputs: return _gate(c, "NOT", b if a == one else a)
+        na, nb = c.nodes[a], c.nodes[b]
+        complements = (
+            (na.kind == "NOT" and na.inputs[0] == b) or
+            (nb.kind == "NOT" and nb.inputs[0] == a)
+        )
+        if complements:
+            return zero if kind == "AND" else one
+        if b < a:
+            inputs = (b, a)
+
+    cache = c._gate_cache
+    key = (kind, inputs)
+    node = cache.get(key)
+    if node is None:
+        node = c.add(kind, *inputs)
+        cache[key] = node
+    return node
+
+
+def _and(c, a, b): return _gate(c, "AND", a, b)
+def _or(c, a, b): return _gate(c, "OR", a, b)
+def _xor(c, a, b): return _gate(c, "XOR", a, b)
+def _not(c, a): return _gate(c, "NOT", a)
 
 
 def _fa(c, a, b, cin):
@@ -61,7 +111,7 @@ def _qsub(q, step, zero):
 
 def _product_columns(
     circuit: Circuit, q_bits: list[int], m_bits: list[int],
-    zero: int, one_const: int, cut: int,
+    zero: int, one_const: int, cut: int, restore_col5=frozenset(),
 ) -> list[list[int]]:
     """Single qgl dual-approx product's 18 column lists (low ``cut`` pruned).
 
@@ -107,8 +157,8 @@ def _product_columns(
 
         q_bits_of_step = 9 if step == 4 else 10
 
-        def place(col: int, node: int) -> None:
-            if col < cut:
+        def place(col: int, node: int, tag: str) -> None:
+            if col < cut and not (col == 5 and (step, tag) in restore_col5):
                 return
             columns[col].append(node)
 
@@ -148,22 +198,26 @@ def _product_columns(
         
         d.append(d_tmp)
 
-        place(2 * step, c)
-        place(2 * step + 1, b)
-        place(2 * step + 2, a)
+        place(2 * step, c, "c")
+        place(2 * step + 1, b, "b")
+        place(2 * step + 2, a, "a")
 
         if two == zero:
-            place(2 * step + 2, d_tmp)
+            place(2 * step + 2, d_tmp, "d")
 
         for k in range(3, q_bits_of_step):
             if two == zero:
                 mk = _bit(m_bits, k, zero)
                 val = _or(circuit, _and(circuit, one, mk), _and(circuit, negative, _not(circuit, mk)))
+            elif k == q_bits_of_step - 1:
+                # get_xor(k) and get_xor(k-1) both clamp to the same final
+                # sign expression, permitting an exact mux factorization.
+                val = _and(circuit, _or(circuit, one, two), get_xor(k))
             else:
                 val = _or(circuit, _and(circuit, one, get_xor(k)), _and(circuit, two, get_xor(k - 1)))
             if k == q_bits_of_step - 1:
                 val = _not(circuit, val)
-            place(2 * step + k, val)
+            place(2 * step + k, val, f"k{k}")
 
     return columns
 
@@ -171,14 +225,19 @@ def _product_columns(
 def build_circuit():
     c = Circuit(output_width=OUT_TOTAL)
     zero, one = c.add("ZERO"), c.add("ONE")
+    c._local_constants = (zero, one)
+    c._gate_cache = {}
     a = [c.add("IN_A") for _ in range(WIDTH)]
     b = [c.add("IN_B") for _ in range(WIDTH)]
     x = [c.add("IN_C") for _ in range(WIDTH)]
     d = [c.add("IN_D") for _ in range(WIDTH)]
     c.input_ids = a + b + x + d
     columns = [[] for _ in range(OUT_TOTAL)]
-    for left, right, cut in ((a, b, PROD_CUT_A), (x, d, PROD_CUT_B)):
-        product = _product_columns(c, right, left, zero, one, cut)
+    for left, right, cut, restore in (
+        (a, b, PROD_CUT_A, RESTORE_A_COL5),
+        (x, d, PROD_CUT_B, RESTORE_B_COL5),
+    ):
+        product = _product_columns(c, right, left, zero, one, cut, restore)
         for col in range(OUT_WIDTH): columns[col].extend(product[col])
     for col in COMP_COLS + ROUND_COLS: columns[col].append(one)
 

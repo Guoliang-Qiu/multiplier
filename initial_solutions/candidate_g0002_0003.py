@@ -4,6 +4,11 @@ This is the four-input adaptation of the supplied qgl partial-product
 generator.  In particular it keeps the special pp-column rewrites, the
 constant-aware compressor, the merged compensation constant, and the
 redundant top-bit sharing.
+
+Local mutation: hash-cons structurally identical gates (including commuted
+binary operands) during construction.  This shares repeated Booth-control and
+partial-product subexpressions without changing their Boolean functions, so it
+is an exact local DAG optimization rather than an arithmetic approximation.
 """
 from __future__ import annotations
 
@@ -18,10 +23,26 @@ COMP_COLS = (10, 11, 13, 15, 18)
 ROUND_COLS: tuple[int, ...] = ()
 
 
-def _and(c, a, b): return c.add("AND", a, b)
-def _or(c, a, b): return c.add("OR", a, b)
-def _xor(c, a, b): return c.add("XOR", a, b)
-def _not(c, a): return c.add("NOT", a)
+def _gate(c: Circuit, kind: str, *inputs: int) -> int:
+    """Hash-cons identical local gates while constructing the static DAG."""
+    cache = getattr(c, "_local_gate_cache", None)
+    if cache is None:
+        cache = {}
+        c._local_gate_cache = cache
+    if kind in ("AND", "OR", "XOR") and inputs[1] < inputs[0]:
+        inputs = (inputs[1], inputs[0])
+    key = (kind, inputs)
+    node = cache.get(key)
+    if node is None:
+        node = c.add(kind, *inputs)
+        cache[key] = node
+    return node
+
+
+def _and(c, a, b): return _gate(c, "AND", a, b)
+def _or(c, a, b): return _gate(c, "OR", a, b)
+def _xor(c, a, b): return _gate(c, "XOR", a, b)
+def _not(c, a): return _gate(c, "NOT", a)
 
 
 def _fa(c, a, b, cin):
