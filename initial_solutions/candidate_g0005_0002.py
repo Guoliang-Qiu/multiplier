@@ -5,21 +5,14 @@ generator.  In particular it keeps the special pp-column rewrites, the
 constant-aware compressor, the merged compensation constant, and the
 redundant top-bit sharing.
 
-Local mutation: exact top-mux factoring (targeted subgraph substitution).
-In every Booth row of steps 0..3 the most significant partial-product bit
-(column 2*step+9) is built as ``NOT(OR(AND(one, x8), AND(two, x8)))`` because
-``get_xor`` clamps both multiplicand terms to the same sign-bit node
-``x8 = xors[8] = q[2*step+1] ^ m[8]``.  The two ANDs therefore share x8, so
-the whole mux factors exactly: ``(one&x8) | (two&x8) == (one|two) & x8``.
-The row-activity signal ``one|two`` already exists in this generator for
-three of the four rows - step 0: ``pp_0_4 = q1|q0 == q0 | (~q0&q1) = one|two``;
-step 1: ``pp_1_2 = one|two``; step 2: the OR inside ``common`` - and one fresh
-OR is needed for step 3.  Each factored top mux costs 1 AND (+1 OR for step 3)
-instead of AND+AND+OR, saving 7 weighted gates per product (14 total) while
-leaving every output bit, and hence the Q4.7 ``evm_db``, exactly unchanged.
-A simulation sweep over the full eval sample confirmed the parent contains no
-other reachable duplicate or constant gates.  Verified with the stock
-eval.py / gate_cost.py procedures.
+Local mutation: exact weighted resynthesis with structural sharing.  The parent's
+AND/OR/NOT compressor and half-adder cells are preserved, while every remaining
+cost-3 XOR (primarily Booth recoding and partial-product inversion) is replaced
+by the exact identity ``(a | b) & ~(a & b)``.  Commutative hash-consing shares
+identical predicates across these replacements and the existing arithmetic
+cones.  The replacement is fully specified and exact, so the parent's output
+behavior and approximation sites are unchanged; measured output-reachable
+weighted cost falls despite the larger raw gate count.
 """
 from __future__ import annotations
 
@@ -34,15 +27,51 @@ COMP_COLS = (10, 11, 13, 15, 18)
 ROUND_COLS: tuple[int, ...] = ()
 
 
-def _and(c, a, b): return c.add("AND", a, b)
-def _or(c, a, b): return c.add("OR", a, b)
-def _xor(c, a, b): return c.add("XOR", a, b)
-def _not(c, a): return c.add("NOT", a)
+def _gate(c: Circuit, kind: str, *inputs: int) -> int:
+    """Share structurally identical gates, normalizing commutative inputs."""
+    cache = getattr(c, "_local_gate_cache", None)
+    if cache is None:
+        cache = {}
+        c._local_gate_cache = cache
+    if kind in ("AND", "OR", "XOR") and inputs[1] < inputs[0]:
+        inputs = (inputs[1], inputs[0])
+    key = (kind, inputs)
+    node = cache.get(key)
+    if node is None:
+        node = c.add(kind, *inputs)
+        cache[key] = node
+    return node
+
+
+def _and(c, a, b): return _gate(c, "AND", a, b)
+def _or(c, a, b): return _gate(c, "OR", a, b)
+def _xor(c, a, b):
+    """Exact XOR resynthesis that can share cached AND/OR predicates."""
+    both = _and(c, a, b)
+    either = _or(c, a, b)
+    return _and(c, either, _not(c, both))
+def _not(c, a): return _gate(c, "NOT", a)
 
 
 def _fa(c, a, b, cin):
-    ab = _xor(c, a, b)
-    return _xor(c, ab, cin), _or(c, _and(c, a, b), _and(c, ab, cin))
+    """Exact joint parity/majority network (eight weighted unit gates)."""
+    ac = _and(c, a, cin)
+    bc = _and(c, b, ac)
+    a_or_c = _or(c, a, cin)
+    b_ac_or = _and(c, b, a_or_c)
+    carry = _or(c, ac, b_ac_or)
+    not_carry = _not(c, carry)
+    b_or_ac = _or(c, b, a_or_c)
+    sum_term = _or(c, bc, not_carry)
+    total = _and(c, b_or_ac, sum_term)
+    return total, carry
+
+
+def _ha(c, a, b):
+    """Exact joint half adder: carry=a&b; sum=(a|b)&~carry."""
+    carry = _and(c, a, b)
+    total = _and(c, _or(c, a, b), _not(c, carry))
+    return total, carry
 
 
 def _add3(c, x, y, z, zero, one):
@@ -51,8 +80,10 @@ def _add3(c, x, y, z, zero, one):
     if not consts: return _fa(c, x, y, z)
     if len(consts) == 1:
         a, b = reals
-        if one in consts: return _not(c, _xor(c, a, b)), _or(c, a, b)
-        return _xor(c, a, b), _and(c, a, b)
+        if one in consts:
+            carry = _or(c, a, b)
+            return _or(c, _and(c, a, b), _not(c, carry)), carry
+        return _ha(c, a, b)
     if len(consts) == 2:
         a = reals[0]
         if zero in consts and one in consts: return _not(c, a), a
@@ -177,17 +208,40 @@ def build_circuit():
 
     carry = None
     outputs = []
-    for bucket in columns:
+    for col, bucket in enumerate(columns):
         bucket = bucket or [zero]
+        if col < 6:
+            # These six sum bits are discarded by Q4.7 quantization.  Compute
+            # only the exact ripple carry, including constant-aware cases.
+            outputs.append(zero)
+            if carry is None:
+                if len(bucket) > 1:
+                    carry = _and(c, bucket[0], bucket[1])
+            elif len(bucket) == 1 and bucket[0] == zero:
+                carry = zero
+            elif len(bucket) == 1 and bucket[0] == one:
+                pass  # carry-out of 1 + carry is carry
+            elif len(bucket) == 1:
+                carry = _and(c, bucket[0], carry)
+            else:
+                a0, a1 = bucket[0], bucket[1]
+                # Exact majority without either parity XOR used by _fa.
+                carry = _or(c, _and(c, a0, a1),
+                            _and(c, carry, _or(c, a0, a1)))
+            continue
         if carry is None:
-            outputs.append(bucket[0] if len(bucket) == 1 else _xor(c, bucket[0], bucket[1]))
-            if len(bucket) > 1: carry = _and(c, bucket[0], bucket[1])
+            if len(bucket) == 1:
+                outputs.append(bucket[0])
+            else:
+                total, carry = _ha(c, bucket[0], bucket[1])
+                outputs.append(total)
         elif len(bucket) == 1 and bucket[0] == zero:
             outputs.append(carry); carry = zero
         elif len(bucket) == 1 and bucket[0] == one:
             outputs.append(_not(c, carry))
         elif len(bucket) == 1:
-            outputs.append(_xor(c, bucket[0], carry)); carry = _and(c, bucket[0], carry)
+            total, carry = _ha(c, bucket[0], carry)
+            outputs.append(total)
         else:
             total, carry = _add3(c, bucket[0], bucket[1], carry, zero, one)
             outputs.append(total)

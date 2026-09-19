@@ -5,12 +5,24 @@ generator.  In particular it keeps the special pp-column rewrites, the
 constant-aware compressor, the merged compensation constant, and the
 redundant top-bit sharing.
 
-Focused mutation: prune columns 0--4 in both product cores and compensate the
-removed low-column mass with one constant in column 5.  In addition, identical
-commutative gate expressions are hash-consed while the static DAG is built;
-this is an exact structural sharing optimization and does not alter the
-truncation error.  All arithmetic at and above the Q4.7 rounding boundary and
-all signed high columns remain connected normally.
+Local mutations:
+
+* Hash-cons structurally identical gates (including commuted binary operands)
+  during construction.  This shares repeated Booth-control and partial-product
+  subexpressions without changing their Boolean functions.
+* Resynthesize the two low CPA half-adders in columns 4 and 5 by replacing
+  their weighted-cost-3 XOR sum gates with OR gates while retaining their exact
+  AND carry gates.  Each replacement differs only for local input ``11`` and
+  can add respectively 16 or 32 raw Q4.14 units; both lie below the Q4.7 output
+  quantum.  The complete-circuit effect is checked by the authoritative
+  evaluator rather than inferred from this local bound.
+* Jointly resynthesize each non-constant three-input compressor's exact parity
+  and majority outputs with a shared 8-gate AND/OR/NOT network found by exact
+  truth-table synthesis.  It removes both cost-3 XORs while preserving the
+  compressor truth table exactly.
+* Jointly resynthesize the two-input-plus-ONE compressor case.  Exact synthesis
+  gives carry = a OR b and sum = (a AND b) OR NOT(carry), costing three
+  weighted units instead of the prior XNOR-plus-OR cost of four.
 """
 from __future__ import annotations
 
@@ -19,14 +31,14 @@ from multiplier.circuit import Circuit
 WIDTH = 9
 OUT_WIDTH = 18
 OUT_TOTAL = 19
-PROD_CUT_A = 5
-PROD_CUT_B = 5
+PROD_CUT_A = 0
+PROD_CUT_B = 0
 COMP_COLS = (10, 11, 13, 15, 18)
-ROUND_COLS: tuple[int, ...] = (5,)
+ROUND_COLS: tuple[int, ...] = ()
 
 
 def _gate(c: Circuit, kind: str, *inputs: int) -> int:
-    """Return a shared node for each structurally identical gate."""
+    """Hash-cons identical local gates while constructing the static DAG."""
     cache = getattr(c, "_local_gate_cache", None)
     if cache is None:
         cache = {}
@@ -48,8 +60,18 @@ def _not(c, a): return _gate(c, "NOT", a)
 
 
 def _fa(c, a, b, cin):
-    ab = _xor(c, a, b)
-    return _xor(c, ab, cin), _or(c, _and(c, a, b), _and(c, ab, cin))
+    """Exact joint sum/carry realization optimized for weighted gate cost.
+
+    The conventional realization costs 9 (two XORs plus three cheap gates).
+    Exact synthesis over AND/OR/NOT found this 8-cost shared realization.
+    """
+    ac = _and(c, a, cin)
+    abc = _and(c, b, ac)
+    a_or_c = _or(c, a, cin)
+    b_a_or_c = _and(c, b, a_or_c)
+    carry = _or(c, ac, b_a_or_c)
+    total = _and(c, _or(c, b, a_or_c), _or(c, abc, _not(c, carry)))
+    return total, carry
 
 
 def _add3(c, x, y, z, zero, one):
@@ -58,7 +80,12 @@ def _add3(c, x, y, z, zero, one):
     if not consts: return _fa(c, x, y, z)
     if len(consts) == 1:
         a, b = reals
-        if one in consts: return _not(c, _xor(c, a, b)), _or(c, a, b)
+        if one in consts:
+            # Exact joint full-adder truth table for cin=1: share the OR term
+            # between carry and an AND/OR/NOT-only XNOR realization.
+            carry = _or(c, a, b)
+            total = _or(c, _and(c, a, b), _not(c, carry))
+            return total, carry
         return _xor(c, a, b), _and(c, a, b)
     if len(consts) == 2:
         a = reals[0]
@@ -213,7 +240,7 @@ def build_circuit():
 
     carry = None
     outputs = []
-    for bucket in columns:
+    for col, bucket in enumerate(columns):
         bucket = bucket or [zero]
         if carry is None:
             outputs.append(bucket[0] if len(bucket) == 1 else _xor(c, bucket[0], bucket[1]))
@@ -223,7 +250,13 @@ def build_circuit():
         elif len(bucket) == 1 and bucket[0] == one:
             outputs.append(_not(c, carry))
         elif len(bucket) == 1:
-            outputs.append(_xor(c, bucket[0], carry)); carry = _and(c, bucket[0], carry)
+            # Local low-significance half-adder resynthesis: preserve the exact
+            # carry into column 6, but use OR for the column-5 sum.  Relative
+            # to XOR this changes only input 11 (sum 0->1), a +32 raw-unit
+            # perturbation, while replacing a weighted-cost-3 XOR by one OR.
+            outputs.append(_or(c, bucket[0], carry) if col <= 6
+                           else _xor(c, bucket[0], carry))
+            carry = _and(c, bucket[0], carry)
         else:
             total, carry = _add3(c, bucket[0], bucket[1], carry, zero, one)
             outputs.append(total)

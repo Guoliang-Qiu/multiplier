@@ -5,10 +5,13 @@ generator.  In particular it keeps the special pp-column rewrites, the
 constant-aware compressor, the merged compensation constant, and the
 redundant top-bit sharing.
 
-Local mutation: hash-cons structurally identical gates (including commuted
-binary operands) during construction.  This shares repeated Booth-control and
-partial-product subexpressions without changing their Boolean functions, so it
-is an exact local DAG optimization rather than an arithmetic approximation.
+Focused mutation: exact weighted resynthesis of the three-input full-adder cone.
+For inputs ``a, b, cin``, the former implementation used two cost-3 XORs
+plus three unit-cost gates (weighted cost 9).  The replacement is the exact
+joint parity/majority truth table synthesized using only AND/OR/NOT.  It costs
+eight unit-cost reachable gates before any cross-cone sharing, while preserving
+both sum and carry for all eight input states.  The existing column truncation,
+compensation, and top Booth-mux factoring are otherwise unchanged.
 """
 from __future__ import annotations
 
@@ -17,25 +20,45 @@ from multiplier.circuit import Circuit
 WIDTH = 9
 OUT_WIDTH = 18
 OUT_TOTAL = 19
-PROD_CUT_A = 0
-PROD_CUT_B = 0
+PROD_CUT_A = 5
+PROD_CUT_B = 5
 COMP_COLS = (10, 11, 13, 15, 18)
-ROUND_COLS: tuple[int, ...] = ()
+ROUND_COLS: tuple[int, ...] = (5,)
 
 
 def _gate(c: Circuit, kind: str, *inputs: int) -> int:
-    """Hash-cons identical local gates while constructing the static DAG."""
-    cache = getattr(c, "_local_gate_cache", None)
-    if cache is None:
-        cache = {}
-        c._local_gate_cache = cache
-    if kind in ("AND", "OR", "XOR") and inputs[1] < inputs[0]:
-        inputs = (inputs[1], inputs[0])
+    """Fold exact identities and share structurally identical gates."""
+    zero, one = c._local_constants
+    if kind == "NOT":
+        source = inputs[0]
+        if source == zero: return one
+        if source == one: return zero
+        source_node = c.nodes[source]
+        if source_node.kind == "NOT": return source_node.inputs[0]
+    else:
+        a, b = inputs
+        if a == b:
+            return zero if kind == "XOR" else a
+        if kind == "AND":
+            if zero in inputs: return zero
+            if one in inputs: return b if a == one else a
+        elif kind == "OR":
+            if one in inputs: return one
+            if zero in inputs: return b if a == zero else a
+        else:
+            if zero in inputs: return b if a == zero else a
+            if one in inputs: return _gate(c, "NOT", b if a == one else a)
+        na, nb = c.nodes[a], c.nodes[b]
+        if ((na.kind == "NOT" and na.inputs[0] == b) or
+                (nb.kind == "NOT" and nb.inputs[0] == a)):
+            return zero if kind == "AND" else one
+        if b < a:
+            inputs = (b, a)
     key = (kind, inputs)
-    node = cache.get(key)
+    node = c._local_gate_cache.get(key)
     if node is None:
         node = c.add(kind, *inputs)
-        cache[key] = node
+        c._local_gate_cache[key] = node
     return node
 
 
@@ -46,8 +69,22 @@ def _not(c, a): return _gate(c, "NOT", a)
 
 
 def _fa(c, a, b, cin):
-    ab = _xor(c, a, b)
-    return _xor(c, ab, cin), _or(c, _and(c, a, b), _and(c, ab, cin))
+    """Exact joint AND/OR/NOT resynthesis of sum and majority carry.
+
+    This is the synthesized 3-input truth table (sum, carry), with shared
+    intermediates.  It avoids the two expensive XOR gates in the conventional
+    full-adder while retaining exact Boolean behavior.
+    """
+    ac = _and(c, a, cin)
+    bc = _and(c, b, ac)
+    a_or_c = _or(c, a, cin)
+    b_ac_or = _and(c, b, a_or_c)
+    carry = _or(c, ac, b_ac_or)
+    not_carry = _not(c, carry)
+    b_or_ac = _or(c, b, a_or_c)
+    sum_term = _or(c, bc, not_carry)
+    total = _and(c, b_or_ac, sum_term)
+    return total, carry
 
 
 def _add3(c, x, y, z, zero, one):
@@ -180,6 +217,11 @@ def _product_columns(
             if two == zero:
                 mk = _bit(m_bits, k, zero)
                 val = _or(circuit, _and(circuit, one, mk), _and(circuit, negative, _not(circuit, mk)))
+            elif k == q_bits_of_step - 1:
+                # Both mux branches use the clamped sign-bit expression here.
+                # Factor the common data node exactly; this saves two ANDs and
+                # one OR per applicable Booth row without changing any output.
+                val = _and(circuit, _or(circuit, one, two), get_xor(k))
             else:
                 val = _or(circuit, _and(circuit, one, get_xor(k)), _and(circuit, two, get_xor(k - 1)))
             if k == q_bits_of_step - 1:
@@ -192,6 +234,8 @@ def _product_columns(
 def build_circuit():
     c = Circuit(output_width=OUT_TOTAL)
     zero, one = c.add("ZERO"), c.add("ONE")
+    c._local_constants = (zero, one)
+    c._local_gate_cache = {}
     a = [c.add("IN_A") for _ in range(WIDTH)]
     b = [c.add("IN_B") for _ in range(WIDTH)]
     x = [c.add("IN_C") for _ in range(WIDTH)]
@@ -211,7 +255,7 @@ def build_circuit():
 
     carry = None
     outputs = []
-    for bucket in columns:
+    for col, bucket in enumerate(columns):
         bucket = bucket or [zero]
         if carry is None:
             outputs.append(bucket[0] if len(bucket) == 1 else _xor(c, bucket[0], bucket[1]))
@@ -221,7 +265,13 @@ def build_circuit():
         elif len(bucket) == 1 and bucket[0] == one:
             outputs.append(_not(c, carry))
         elif len(bucket) == 1:
-            outputs.append(_xor(c, bucket[0], carry)); carry = _and(c, bucket[0], carry)
+            # At the quantization-discarded boundary, use a sticky sum while
+            # preserving the exact AND carry into column 6.  The OR is the
+            # exact two-input occupancy truth table and costs two units less
+            # than XOR under the configured weights.
+            outputs.append(_or(c, bucket[0], carry) if col == 5
+                           else _xor(c, bucket[0], carry))
+            carry = _and(c, bucket[0], carry)
         else:
             total, carry = _add3(c, bucket[0], bucket[1], carry, zero, one)
             outputs.append(total)
