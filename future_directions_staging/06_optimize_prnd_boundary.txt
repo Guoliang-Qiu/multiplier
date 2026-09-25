@@ -1,0 +1,15 @@
+Optimize one assigned static gate-level circuit for signed 9-bit four-input `a*b + c*d` by treating the low-column reduction and the Q4.14-to-Q4.7 rounding boundary as one arithmetic network. The goal is to compute only the information needed by the evaluator-visible result and to eliminate low sum logic that does not affect carry into the retained region.
+
+The runtime configuration supplies the authoritative performance constraint. Do not hard-code an EVM, MSE, RMSE, or maximum-error threshold, and do not change or bypass `eval.py`. Minimize output-reachable weighted cost using AND=1, OR=1, XOR=3, and NOT=0. Modify only the assigned candidate under `generations/`, preserve a recoverable verified parent, and restore it if no trial qualifies.
+
+Preserve a zero-argument `build_circuit()` returning `multiplier.circuit.Circuit`, exactly 36 LSB-first inputs in fixed a, b, c, d order, signed two's-complement behavior, and exactly 19 LSB-first Q4.14 outputs. Build a static input-independent acyclic graph using only AND, OR, XOR, and NOT plus ZERO and ONE. Approximation must be encoded in the circuit and not implemented as evaluator or runtime post-processing.
+
+Use the evaluator's exact semantics: `floor(raw / 128 + 0.5)`. For signed integer raw values, bits 0 through 5 are not directly visible, bit 6 controls rounding, and bits 7 and above form the retained signed value. Low bits can still affect the visible result through carry into bit 6 or higher, so distinguish dead low sums from live carry information.
+
+Trace all paths from partial-product columns 0 through 6 into bit 6 and retained outputs. Identify the last low-column carry-save cells, final-adder carry logic, correction constants, and rounding-bit generation. Search for a joint module that consumes the relevant low-column boundary signals and directly produces carry into bit 6, bit 6 itself, or the smallest sufficient state needed by the retained adder. Do not generate exact low sums with no external consumer.
+
+Explore exact carry-only implementations before approximate carry predictors. Consider absorbing low-column constants, Booth correction terms, and final-adder carry propagation into the same multi-output cone. When approximation is necessary, define it relative to the correctly rounded true `a*b + c*d` output rather than agreement with the parent low-column sum/carry representation. Keep raw error, quantized-output error, and evaluator metrics distinct.
+
+Do not assume sampled states are logically unreachable. Prove exact replacements over the complete local interface. Use sampled evaluator behavior only to rank explicit approximations. Measure changes in upstream reachability, compressor count, final-adder structure, and sharing; removing output references alone is not sufficient if their logic still feeds a carry or shared predicate.
+
+Before retaining a result, compile and import the source, validate the static DAG and interface, independently measure output-reachable weighted cost, and run the unmodified full `eval.py`. Apply the runtime performance constraint exactly as supplied and retain only a genuinely non-dominated candidate.

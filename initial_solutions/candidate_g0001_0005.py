@@ -31,21 +31,40 @@ from multiplier.circuit import Circuit
 WIDTH = 9
 OUT_WIDTH = 18
 OUT_TOTAL = 19
-PROD_CUT_A = 0
-PROD_CUT_B = 0
+PROD_CUT_A = 2
+PROD_CUT_B = 2
 COMP_COLS = (10, 11, 13, 15, 18)
 ROUND_COLS: tuple[int, ...] = ()
 
 
 def _gate(c: Circuit, kind: str, *inputs: int) -> int:
-    """Hash-cons identical local gates while constructing the static DAG."""
-    cache = getattr(c, "_local_gate_cache", None)
-    if cache is None:
-        cache = {}
-        c._local_gate_cache = cache
-    if kind in ("AND", "OR", "XOR") and inputs[1] < inputs[0]:
-        inputs = (inputs[1], inputs[0])
+    """Constant-fold and hash-cons local gates during construction."""
+    zero, one = c._local_constants
+    if kind == "NOT":
+        source = inputs[0]
+        if source == zero: return one
+        if source == one: return zero
+        node = c.nodes[source]
+        if node.kind == "NOT": return node.inputs[0]
+    else:
+        a, b = inputs
+        if a == b: return zero if kind == "XOR" else a
+        if kind == "AND":
+            if zero in inputs: return zero
+            if one in inputs: return b if a == one else a
+        elif kind == "OR":
+            if one in inputs: return one
+            if zero in inputs: return b if a == zero else a
+        elif kind == "XOR":
+            if zero in inputs: return b if a == zero else a
+            if one in inputs: return _not(c, b if a == one else a)
+        na, nb = c.nodes[a], c.nodes[b]
+        if ((na.kind == "NOT" and na.inputs[0] == b) or
+                (nb.kind == "NOT" and nb.inputs[0] == a)):
+            return zero if kind == "AND" else one
+        if inputs[1] < inputs[0]: inputs = (inputs[1], inputs[0])
     key = (kind, inputs)
+    cache = c._local_gate_cache
     node = cache.get(key)
     if node is None:
         node = c.add(kind, *inputs)
@@ -60,17 +79,13 @@ def _not(c, a): return _gate(c, "NOT", a)
 
 
 def _fa(c, a, b, cin):
-    """Exact joint sum/carry realization optimized for weighted gate cost.
-
-    The conventional realization costs 9 (two XORs plus three cheap gates).
-    Exact synthesis over AND/OR/NOT found this 8-cost shared realization.
-    """
+    """Exact parity/majority compressor with shared OR/XNOR terms."""
     ac = _and(c, a, cin)
-    abc = _and(c, b, ac)
-    a_or_c = _or(c, a, cin)
-    b_a_or_c = _and(c, b, a_or_c)
-    carry = _or(c, ac, b_a_or_c)
-    total = _and(c, _or(c, b, a_or_c), _or(c, abc, _not(c, carry)))
+    aoc = _or(c, a, cin)
+    xn = _or(c, ac, _not(c, aoc))
+    b_or_xn = _or(c, b, xn)
+    total = _or(c, _not(c, b_or_xn), _and(c, b, xn))
+    carry = _and(c, aoc, b_or_xn)
     return total, carry
 
 
@@ -221,6 +236,8 @@ def _product_columns(
 def build_circuit():
     c = Circuit(output_width=OUT_TOTAL)
     zero, one = c.add("ZERO"), c.add("ONE")
+    c._local_constants = (zero, one)
+    c._local_gate_cache = {}
     a = [c.add("IN_A") for _ in range(WIDTH)]
     b = [c.add("IN_B") for _ in range(WIDTH)]
     x = [c.add("IN_C") for _ in range(WIDTH)]
@@ -232,6 +249,7 @@ def build_circuit():
         for col in range(OUT_WIDTH): columns[col].extend(product[col])
     for col in COMP_COLS + ROUND_COLS: columns[col].append(one)
 
+    c._partial_product_columns = [list(bucket) for bucket in columns]
     for col in range(OUT_TOTAL):
         while len(columns[col]) >= 3:
             total, carry = _add3(c, columns[col].pop(), columns[col].pop(), columns[col].pop(), zero, one)
@@ -262,3 +280,13 @@ def build_circuit():
             outputs.append(total)
     c.output_ids = outputs[:18] + [outputs[17]]
     return c
+
+
+def build_partial_product_layout():
+    c = build_circuit()
+    return c, c._partial_product_columns
+
+
+def build_circuit_from_columns(circuit, columns):
+    from multiplier.placement import rebuild_columns
+    return rebuild_columns(circuit, columns)

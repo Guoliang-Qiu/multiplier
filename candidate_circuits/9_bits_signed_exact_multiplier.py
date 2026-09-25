@@ -98,7 +98,7 @@ def _add_product(
             columns[col].append(one_const)
 
 
-def build_circuit() -> Circuit:
+def build_partial_product_layout() -> tuple[Circuit, list[list[int]]]:
     circuit = Circuit()
     zero = circuit.add("ZERO")
     one_const = circuit.add("ONE")
@@ -111,6 +111,12 @@ def build_circuit() -> Circuit:
     columns: list[list[int]] = [[] for _ in range(OUT_WIDTH)]
     _add_product(columns, a_bits, b_bits, zero, one_const, circuit)
     _add_product(columns, c_bits, d_bits, zero, one_const, circuit)
+    return circuit, columns
+
+
+def build_circuit_from_columns(circuit: Circuit, columns: list[list[int]]) -> Circuit:
+    """Compress a pre-CSA partial-product layout into the final circuit."""
+    zero = next(node_id for node_id, node in enumerate(circuit.nodes) if node.kind == "ZERO")
 
     # Wallace carry-save compression.
     for col in range(OUT_WIDTH):
@@ -145,3 +151,8 @@ def build_circuit() -> Circuit:
     circuit.output_ids = output_ids
     circuit.output_width = OUT_WIDTH
     return circuit
+
+
+def build_circuit() -> Circuit:
+    circuit, columns = build_partial_product_layout()
+    return build_circuit_from_columns(circuit, columns)

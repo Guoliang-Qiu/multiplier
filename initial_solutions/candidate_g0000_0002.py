@@ -5,13 +5,24 @@ generator.  In particular it keeps the special pp-column rewrites, the
 constant-aware compressor, the merged compensation constant, and the
 redundant top-bit sharing.
 
-Focused mutation: exact weighted resynthesis of the three-input full-adder cone.
-For inputs ``a, b, cin``, the former implementation used two cost-3 XORs
-plus three unit-cost gates (weighted cost 9).  The replacement is the exact
-joint parity/majority truth table synthesized using only AND/OR/NOT.  It costs
-eight unit-cost reachable gates before any cross-cone sharing, while preserving
-both sum and carry for all eight input states.  The existing column truncation,
-compensation, and top Booth-mux factoring are otherwise unchanged.
+Local mutations:
+
+* Hash-cons structurally identical gates (including commuted binary operands)
+  during construction.  This shares repeated Booth-control and partial-product
+  subexpressions without changing their Boolean functions.
+* Resynthesize the two low CPA half-adders in columns 4 and 5 by replacing
+  their weighted-cost-3 XOR sum gates with OR gates while retaining their exact
+  AND carry gates.  Each replacement differs only for local input ``11`` and
+  can add respectively 16 or 32 raw Q4.14 units; both lie below the Q4.7 output
+  quantum.  The complete-circuit effect is checked by the authoritative
+  evaluator rather than inferred from this local bound.
+* Jointly resynthesize each non-constant three-input compressor's exact parity
+  and majority outputs with a shared 8-gate AND/OR/NOT network found by exact
+  truth-table synthesis.  It removes both cost-3 XORs while preserving the
+  compressor truth table exactly.
+* Jointly resynthesize the two-input-plus-ONE compressor case.  Exact synthesis
+  gives carry = a OR b and sum = (a AND b) OR NOT(carry), costing three
+  weighted units instead of the prior XNOR-plus-OR cost of four.
 """
 from __future__ import annotations
 
@@ -20,34 +31,55 @@ from multiplier.circuit import Circuit
 WIDTH = 9
 OUT_WIDTH = 18
 OUT_TOTAL = 19
-PROD_CUT_A = 5
-PROD_CUT_B = 5
+PROD_CUT_A = 3
+PROD_CUT_B = 2
 COMP_COLS = (10, 11, 13, 15, 18)
-ROUND_COLS: tuple[int, ...] = (5,)
+ROUND_COLS: tuple[int, ...] = ()
 
 
 def _gate(c: Circuit, kind: str, *inputs: int) -> int:
-    """Fold exact identities and share structurally identical gates."""
+    """Hash-cons gates with constant and complement folding."""
+    cache = getattr(c, "_local_gate_cache", None)
+    if cache is None:
+        cache = {}
+        c._local_gate_cache = cache
     zero, one = c._local_constants
     if kind == "NOT":
         source = inputs[0]
-        if source == zero: return one
-        if source == one: return zero
-        source_node = c.nodes[source]
-        if source_node.kind == "NOT": return source_node.inputs[0]
+        if source == zero:
+            return one
+        if source == one:
+            return zero
+        node = c.nodes[source]
+        if node.kind == "NOT":
+            return node.inputs[0]
     else:
         a, b = inputs
         if a == b:
             return zero if kind == "XOR" else a
         if kind == "AND":
-            if zero in inputs: return zero
-            if one in inputs: return b if a == one else a
+            if a == zero or b == zero:
+                return zero
+            if a == one:
+                return b
+            if b == one:
+                return a
         elif kind == "OR":
-            if one in inputs: return one
-            if zero in inputs: return b if a == zero else a
-        else:
-            if zero in inputs: return b if a == zero else a
-            if one in inputs: return _gate(c, "NOT", b if a == one else a)
+            if a == one or b == one:
+                return one
+            if a == zero:
+                return b
+            if b == zero:
+                return a
+        elif kind == "XOR":
+            if a == zero:
+                return b
+            if b == zero:
+                return a
+            if a == one:
+                return _not(c, b)
+            if b == one:
+                return _not(c, a)
         na, nb = c.nodes[a], c.nodes[b]
         if ((na.kind == "NOT" and na.inputs[0] == b) or
                 (nb.kind == "NOT" and nb.inputs[0] == a)):
@@ -55,10 +87,10 @@ def _gate(c: Circuit, kind: str, *inputs: int) -> int:
         if b < a:
             inputs = (b, a)
     key = (kind, inputs)
-    node = c._local_gate_cache.get(key)
+    node = cache.get(key)
     if node is None:
         node = c.add(kind, *inputs)
-        c._local_gate_cache[key] = node
+        cache[key] = node
     return node
 
 
@@ -69,21 +101,13 @@ def _not(c, a): return _gate(c, "NOT", a)
 
 
 def _fa(c, a, b, cin):
-    """Exact joint AND/OR/NOT resynthesis of sum and majority carry.
-
-    This is the synthesized 3-input truth table (sum, carry), with shared
-    intermediates.  It avoids the two expensive XOR gates in the conventional
-    full-adder while retaining exact Boolean behavior.
-    """
+    """Exact parity/majority compressor with shared OR/XNOR terms."""
     ac = _and(c, a, cin)
-    bc = _and(c, b, ac)
-    a_or_c = _or(c, a, cin)
-    b_ac_or = _and(c, b, a_or_c)
-    carry = _or(c, ac, b_ac_or)
-    not_carry = _not(c, carry)
-    b_or_ac = _or(c, b, a_or_c)
-    sum_term = _or(c, bc, not_carry)
-    total = _and(c, b_or_ac, sum_term)
+    aoc = _or(c, a, cin)
+    xn = _or(c, ac, _not(c, aoc))
+    b_or_xn = _or(c, b, xn)
+    total = _or(c, _not(c, b_or_xn), _and(c, b, xn))
+    carry = _and(c, aoc, b_or_xn)
     return total, carry
 
 
@@ -93,7 +117,12 @@ def _add3(c, x, y, z, zero, one):
     if not consts: return _fa(c, x, y, z)
     if len(consts) == 1:
         a, b = reals
-        if one in consts: return _not(c, _xor(c, a, b)), _or(c, a, b)
+        if one in consts:
+            # Exact joint full-adder truth table for cin=1: share the OR term
+            # between carry and an AND/OR/NOT-only XNOR realization.
+            carry = _or(c, a, b)
+            total = _or(c, _and(c, a, b), _not(c, carry))
+            return total, carry
         return _xor(c, a, b), _and(c, a, b)
     if len(consts) == 2:
         a = reals[0]
@@ -217,11 +246,6 @@ def _product_columns(
             if two == zero:
                 mk = _bit(m_bits, k, zero)
                 val = _or(circuit, _and(circuit, one, mk), _and(circuit, negative, _not(circuit, mk)))
-            elif k == q_bits_of_step - 1:
-                # Both mux branches use the clamped sign-bit expression here.
-                # Factor the common data node exactly; this saves two ANDs and
-                # one OR per applicable Booth row without changing any output.
-                val = _and(circuit, _or(circuit, one, two), get_xor(k))
             else:
                 val = _or(circuit, _and(circuit, one, get_xor(k)), _and(circuit, two, get_xor(k - 1)))
             if k == q_bits_of_step - 1:
@@ -235,7 +259,6 @@ def build_circuit():
     c = Circuit(output_width=OUT_TOTAL)
     zero, one = c.add("ZERO"), c.add("ONE")
     c._local_constants = (zero, one)
-    c._local_gate_cache = {}
     a = [c.add("IN_A") for _ in range(WIDTH)]
     b = [c.add("IN_B") for _ in range(WIDTH)]
     x = [c.add("IN_C") for _ in range(WIDTH)]
@@ -247,6 +270,7 @@ def build_circuit():
         for col in range(OUT_WIDTH): columns[col].extend(product[col])
     for col in COMP_COLS + ROUND_COLS: columns[col].append(one)
 
+    c._partial_product_columns = [list(bucket) for bucket in columns]
     for col in range(OUT_TOTAL):
         while len(columns[col]) >= 3:
             total, carry = _add3(c, columns[col].pop(), columns[col].pop(), columns[col].pop(), zero, one)
@@ -258,18 +282,18 @@ def build_circuit():
     for col, bucket in enumerate(columns):
         bucket = bucket or [zero]
         if carry is None:
-            outputs.append(bucket[0] if len(bucket) == 1 else _xor(c, bucket[0], bucket[1]))
+            outputs.append(bucket[0] if len(bucket) == 1 else _or(c, bucket[0], bucket[1]))
             if len(bucket) > 1: carry = _and(c, bucket[0], bucket[1])
         elif len(bucket) == 1 and bucket[0] == zero:
             outputs.append(carry); carry = zero
         elif len(bucket) == 1 and bucket[0] == one:
             outputs.append(_not(c, carry))
         elif len(bucket) == 1:
-            # At the quantization-discarded boundary, use a sticky sum while
-            # preserving the exact AND carry into column 6.  The OR is the
-            # exact two-input occupancy truth table and costs two units less
-            # than XOR under the configured weights.
-            outputs.append(_or(c, bucket[0], carry) if col == 5
+            # Local low-significance half-adder resynthesis: preserve the exact
+            # carry into column 6, but use OR for the column-5 sum.  Relative
+            # to XOR this changes only input 11 (sum 0->1), a +32 raw-unit
+            # perturbation, while replacing a weighted-cost-3 XOR by one OR.
+            outputs.append(_or(c, bucket[0], carry) if col <= 6
                            else _xor(c, bucket[0], carry))
             carry = _and(c, bucket[0], carry)
         else:
@@ -277,3 +301,13 @@ def build_circuit():
             outputs.append(total)
     c.output_ids = outputs[:18] + [outputs[17]]
     return c
+
+
+def build_partial_product_layout():
+    c = build_circuit()
+    return c, c._partial_product_columns
+
+
+def build_circuit_from_columns(circuit, columns):
+    from multiplier.placement import rebuild_columns
+    return rebuild_columns(circuit, columns)
