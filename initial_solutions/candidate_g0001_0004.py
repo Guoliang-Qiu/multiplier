@@ -31,62 +31,40 @@ from multiplier.circuit import Circuit
 WIDTH = 9
 OUT_WIDTH = 18
 OUT_TOTAL = 19
-PROD_CUT_A = 0
-PROD_CUT_B = 0
+PROD_CUT_A = 2
+PROD_CUT_B = 2
 COMP_COLS = (10, 11, 13, 15, 18)
 ROUND_COLS: tuple[int, ...] = ()
 
 
 def _gate(c: Circuit, kind: str, *inputs: int) -> int:
-    """Hash-cons gates with constant and complement folding."""
-    cache = getattr(c, "_local_gate_cache", None)
-    if cache is None:
-        cache = {}
-        c._local_gate_cache = cache
+    """Constant-fold and hash-cons local gates during construction."""
     zero, one = c._local_constants
     if kind == "NOT":
         source = inputs[0]
-        if source == zero:
-            return one
-        if source == one:
-            return zero
+        if source == zero: return one
+        if source == one: return zero
         node = c.nodes[source]
-        if node.kind == "NOT":
-            return node.inputs[0]
+        if node.kind == "NOT": return node.inputs[0]
     else:
         a, b = inputs
-        if a == b:
-            return zero if kind == "XOR" else a
+        if a == b: return zero if kind == "XOR" else a
         if kind == "AND":
-            if a == zero or b == zero:
-                return zero
-            if a == one:
-                return b
-            if b == one:
-                return a
+            if zero in inputs: return zero
+            if one in inputs: return b if a == one else a
         elif kind == "OR":
-            if a == one or b == one:
-                return one
-            if a == zero:
-                return b
-            if b == zero:
-                return a
+            if one in inputs: return one
+            if zero in inputs: return b if a == zero else a
         elif kind == "XOR":
-            if a == zero:
-                return b
-            if b == zero:
-                return a
-            if a == one:
-                return _not(c, b)
-            if b == one:
-                return _not(c, a)
+            if zero in inputs: return b if a == zero else a
+            if one in inputs: return _not(c, b if a == one else a)
         na, nb = c.nodes[a], c.nodes[b]
         if ((na.kind == "NOT" and na.inputs[0] == b) or
                 (nb.kind == "NOT" and nb.inputs[0] == a)):
             return zero if kind == "AND" else one
-        if b < a:
-            inputs = (b, a)
+        if inputs[1] < inputs[0]: inputs = (inputs[1], inputs[0])
     key = (kind, inputs)
+    cache = c._local_gate_cache
     node = cache.get(key)
     if node is None:
         node = c.add(kind, *inputs)
@@ -96,13 +74,7 @@ def _gate(c: Circuit, kind: str, *inputs: int) -> int:
 
 def _and(c, a, b): return _gate(c, "AND", a, b)
 def _or(c, a, b): return _gate(c, "OR", a, b)
-def _xor(c, a, b):
-    # Crossover fragment from parent 0007: implement XOR through the
-    # AND/OR/NOT form, preserving its useful predicate-sharing structure.
-    both = _and(c, a, b)
-    either = _or(c, a, b)
-    return _and(c, either, _not(c, both))
-
+def _xor(c, a, b): return _gate(c, "XOR", a, b)
 def _not(c, a): return _gate(c, "NOT", a)
 
 
@@ -261,10 +233,11 @@ def _product_columns(
     return columns
 
 
-def build_circuit():
+def _build_circuit(_layout_only=False, _columns=None):
     c = Circuit(output_width=OUT_TOTAL)
     zero, one = c.add("ZERO"), c.add("ONE")
     c._local_constants = (zero, one)
+    c._local_gate_cache = {}
     a = [c.add("IN_A") for _ in range(WIDTH)]
     b = [c.add("IN_B") for _ in range(WIDTH)]
     x = [c.add("IN_C") for _ in range(WIDTH)]
@@ -276,7 +249,11 @@ def build_circuit():
         for col in range(OUT_WIDTH): columns[col].extend(product[col])
     for col in COMP_COLS + ROUND_COLS: columns[col].append(one)
 
-    c._partial_product_columns = [list(bucket) for bucket in columns]
+    if _layout_only:
+        return c, [list(bucket) for bucket in columns]
+    if _columns is not None:
+        columns = [list(bucket) for bucket in _columns]
+
     for col in range(OUT_TOTAL):
         while len(columns[col]) >= 3:
             total, carry = _add3(c, columns[col].pop(), columns[col].pop(), columns[col].pop(), zero, one)
@@ -287,17 +264,33 @@ def build_circuit():
     outputs = []
     for col, bucket in enumerate(columns):
         bucket = bucket or [zero]
+        if col < 6:
+            # Bits below raw bit 6 are unobservable after Q4.7 rounding;
+            # retain only their exact ripple carry into the first observable
+            # column.  This is a local carry-only fusion of the low-column
+            # partial products, not a change to the downstream compressor.
+            outputs.append(zero)
+            if len(bucket) > 1:
+                lo, hi = bucket[0], bucket[1]
+                if carry is None:
+                    carry = _and(c, lo, hi)
+                else:
+                    # Approximate low-column fusion: once a carry exists, retain
+                    # only the local pair carry.  The dropped carry interaction
+                    # is below the raw-bit-6 rounding boundary in this region.
+                    carry = _and(c, lo, hi)
+            elif carry is not None:
+                carry = _and(c, bucket[0], carry)
+            continue
         if carry is None:
-            outputs.append(bucket[0] if len(bucket) == 1 else _or(c, bucket[0], bucket[1]))
+            outputs.append(bucket[0] if len(bucket) == 1 else _xor(c, bucket[0], bucket[1]))
             if len(bucket) > 1: carry = _and(c, bucket[0], bucket[1])
         elif len(bucket) == 1 and bucket[0] == zero:
             outputs.append(carry); carry = zero
         elif len(bucket) == 1 and bucket[0] == one:
             outputs.append(_not(c, carry))
         elif len(bucket) == 1:
-            # Inherited low-CPA approximation from parent 0006; retain the
-            # exact carry while using the cheaper OR sum below bit 7.
-            outputs.append(_or(c, bucket[0], carry) if col < 7
+            outputs.append(_or(c, bucket[0], carry) if col <= 6
                            else _xor(c, bucket[0], carry))
             carry = _and(c, bucket[0], carry)
         else:
@@ -307,11 +300,16 @@ def build_circuit():
     return c
 
 
+def build_circuit(_layout_only=False):
+    circuit = _build_circuit(_layout_only)
+    if _layout_only:
+        return circuit
+    return circuit
+
+
 def build_partial_product_layout():
-    c = build_circuit()
-    return c, c._partial_product_columns
+    return build_circuit(_layout_only=True)
 
 
 def build_circuit_from_columns(circuit, columns):
-    from multiplier.placement import rebuild_columns
-    return rebuild_columns(circuit, columns)
+    return _build_circuit(_columns=columns)

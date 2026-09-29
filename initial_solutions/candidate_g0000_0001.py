@@ -98,10 +98,13 @@ def _gate(c: Circuit, kind: str, *inputs: int) -> int:
 def _and(c, a, b): return _gate(c, "AND", a, b)
 def _or(c, a, b): return _gate(c, "OR", a, b)
 def _xor(c, a, b):
-    """Exact XOR resynthesis that can share cached AND/OR predicates."""
-    both = _and(c, a, b)
-    either = _or(c, a, b)
-    return _and(c, either, _not(c, both))
+    """Use the native XOR cell: same weighted cost, shallower local cone.
+
+    XOR is priced at three, exactly matching the three two-input gates in
+    the former AND/OR decomposition.  This is a localized gate-level
+    resynthesis and does not alter the Boolean function or any approximation.
+    """
+    return _gate(c, "XOR", a, b)
 def _not(c, a): return _gate(c, "NOT", a)
 
 
@@ -251,7 +254,7 @@ def _product_columns(c, q, m, zero, one_const, cut):
     return columns
 
 
-def build_circuit():
+def _build_circuit(_layout_only=False, _columns=None):
     c = Circuit(output_width=OUT_TOTAL)
     zero, one = c.add("ZERO"), c.add("ONE")
     c._local_constants = (zero, one)
@@ -270,7 +273,11 @@ def build_circuit():
     # only their carry path below while leaving all parent partial products and
     # higher-column behavior unchanged.
 
-    c._partial_product_columns = [list(bucket) for bucket in columns]
+    if _layout_only:
+        return c, [list(bucket) for bucket in columns]
+    if _columns is not None:
+        columns = [list(bucket) for bucket in _columns]
+
     for col in range(OUT_TOTAL):
         while len(columns[col]) >= 3:
             total, carry = _add3(c, columns[col].pop(), columns[col].pop(), columns[col].pop(), zero, one)
@@ -320,11 +327,17 @@ def build_circuit():
     return c
 
 
+def build_circuit(_layout_only=False):
+    circuit = _build_circuit(_layout_only)
+    if _layout_only:
+        return circuit
+    return circuit
+
+
 def build_partial_product_layout():
-    c = build_circuit()
-    return c, c._partial_product_columns
+    circuit, columns = build_circuit(_layout_only=True)
+    return circuit, columns
 
 
 def build_circuit_from_columns(circuit, columns):
-    from multiplier.placement import rebuild_columns
-    return rebuild_columns(circuit, columns)
+    return _build_circuit(_columns=columns)

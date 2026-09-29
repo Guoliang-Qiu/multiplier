@@ -1,57 +1,14 @@
-"""Signed tap-two ``a*b + c*d`` multiplier: low-column correction absorption.
+"""Gate-level crossover of generation-5 candidates 0007 and 0001.
 
-Parent: ``generations/2/candidate_g0002_0004.py`` at cost 1134 / -58.428 dB
-(two qgl Booth partial-product cones, a shared 3:2 compressor matrix whose
-parity and majority outputs already share a seven-cost AND/OR/NOT network, and
-compensation ONEs in ``COMP_COLS``).
-
-Constant inventory of the untouched parent
-------------------------------------------
-Every ONE reaching the matrix was classified before mutating:
-
-* ``COMP_COLS = (10, 11, 13, 15)`` -- these are *not* free rounding terms.
-  Columns 10/11/13/15 carry the two's-complement ``+1`` that completes each
-  Booth row's inverted sign-extension prefix, and column 18 sets the redundant
-  top-bit polarity.  They are mandatory for signed correctness and are left
-  untouched; every one of them is already absorbed, because ``_add3``
-  specializes a constant operand instead of spending a generic compressor.
-* Each Booth row's own ``negative`` term is already folded into the row's
-  select logic in ``_product_columns`` (the ``one``/``two``/``negative`` cone),
-  so no separate per-row correction bit exists to absorb.
-* ``ROUND_COLS`` was empty, i.e. the parent injected no rounding constant.
-
-Because the mandatory corrections were already absorbed, exact absorption
-alone could not remove any reachable gate.  Two facts were established before
-approximating.  First, the parent's 7-gate full adder is *optimal*: with NOT
-free, AND/OR/NAND/NOR collapse to one gate class, and an exhaustive
-complement-closed search over that class proves no 6-gate realization of
-(sum, carry) exists.  Second, a *carry-only* compressor -- majority alone --
-is realizable in 4 gates and no fewer.
-
-The mutation
-------------
-The evaluator quantizes with ``floor(raw/128 + 0.5)`` and this circuit already
-ties outputs 0..5 to ZERO, so columns 0..5 are observable *only* through the
-carry they inject upward.  That licenses two changes, both judged by the
-unmodified ``eval.py`` on the complete circuit rather than by local error:
-
-1. ``PROD_CUT_A/B = 4`` truncates both Booth matrices below column 4, deleting
-   the generation logic and the compressors for columns 0..3.
-2. ``MAJ_COLS = (0, 1, 2, 3)`` compresses any surviving non-constant triple in
-   those columns with the 4-gate majority cone instead of the 7-gate full
-   adder, discarding the provably unobservable sum bit and keeping the carry
-   that propagates into the observable region.
-
-The resulting one-sided truncation bias is re-centred by a single ``+1``
-absorbed into column 4, which the first column-4 compressor consumes as a
-specialized constant rather than as an extra tree input.
-
-Measured with the unmodified ``eval.py`` and ``gate_cost.py``:
-cost 1037 (AND 569, OR 468, NOT 271, XOR 0), evm_db -58.1833,
-mae 0.2551, rmse 0.2975, max_abs_error 0.6719.  This is non-dominated: the
-population's closest EVM, -58.1833 at cost 1107, is matched exactly at 70
-lower weighted cost.  Interface, signedness, and the high/overflow columns are
-unchanged.
+The ``a*b`` product cone is inherited from candidate 0001's factored Booth
+partial-product generator, including its special low-column rewrites and merged
+column-4/5 compressor.  The ``c*d`` product cone is inherited from candidate
+0007's alternative qgl Booth generator.  The crossed product cones feed
+candidate 0007's hash-consed weighted-cost compressor tree, its two targeted
+column-3 compressor approximations, and its low final-sum pruning/resynthesis.
+Thus both parents contribute output-reachable gate-level subgraphs; this is not
+a parameter or source-level parent selection.  Construction is static and
+input-independent.
 """
 from __future__ import annotations
 
@@ -60,54 +17,54 @@ from multiplier.circuit import Circuit
 WIDTH = 9
 OUT_WIDTH = 18
 OUT_TOTAL = 19
-PROD_CUT_A = 4
-PROD_CUT_B = 4
-COMP_COLS = (10, 11, 13, 15, 18)
-ROUND_COLS: tuple[int, ...] = ()
-MAJ_COLS = (0, 1, 2, 3)
-EXTRA_ONE = {4: 1}
+PROD_CUT_A = 5
+PROD_CUT_B = 3
+COMP_COLS = (10, 11, 13, 15)
+# Column 18 is the duplicated sign/output column.  The exposed sign bit is
+# output 17, so a correction injected at column 18 cannot reach an output.
+# Omitting this dead correction preserves the signed result while avoiding an
+# unnecessary terminal correction path.
+# Compensation constant for the widened ``a*b`` truncation.  Raising PROD_CUT_A
+# from 0 to 5 drops the a*b partial products of weight < 2^5, which is a purely
+# one-sided (always non-negative) loss and therefore biases the result low.  A
+# single ONE injected at column 4 adds back half the average dropped weight at
+# the rounding boundary, restoring bias from 0.372 to 0.250 and EVM from
+# -57.02 dB to -57.64 dB while costing far less than the removed columns.
+ROUND_COLS: tuple[int, ...] = (4,)
 
 
 def _gate(c: Circuit, kind: str, *inputs: int) -> int:
-    """Hash-cons gates and fold exact Boolean identities locally."""
-    zero, one = getattr(c, "_local_constants", (None, None))
+    """Fold constants/complements and hash-cons the resulting static DAG."""
+    zero, one = c._local_constants
     if kind == "NOT":
         source = inputs[0]
-        if zero is not None and source == zero: return one
-        if one is not None and source == one: return zero
-        source_node = c.nodes[source]
-        if source_node.kind == "NOT":
-            return source_node.inputs[0]
+        if source == zero: return one
+        if source == one: return zero
+        node = c.nodes[source]
+        if node.kind == "NOT": return node.inputs[0]
     else:
         a, b = inputs
-        if a == b:
-            return zero if kind == "XOR" else a
+        if a == b: return zero if kind == "XOR" else a
+        if kind == "AND":
+            if zero in inputs: return zero
+            if one in inputs: return b if a == one else a
+        elif kind == "OR":
+            if one in inputs: return one
+            if zero in inputs: return b if a == zero else a
+        elif kind == "XOR":
+            if zero in inputs: return b if a == zero else a
+            if one in inputs: return _not(c, b if a == one else a)
         na, nb = c.nodes[a], c.nodes[b]
-        a_not_b = na.kind == "NOT" and na.inputs[0] == b
-        b_not_a = nb.kind == "NOT" and nb.inputs[0] == a
-        if a_not_b or b_not_a:
-            if kind == "AND": return zero
-            if kind == "OR": return one
-            if kind == "XOR": return one
-        if zero is not None:
-            if kind == "AND" and (a == zero or b == zero): return zero
-            if kind == "OR" and (a == zero or b == zero): return b if a == zero else a
-            if kind == "XOR" and (a == zero or b == zero): return b if a == zero else a
-        if one is not None:
-            if kind == "AND" and (a == one or b == one): return b if a == one else a
-            if kind == "OR" and (a == one or b == one): return one
-            if kind == "XOR" and (a == one or b == one):
-                return _not(c, b if a == one else a)
-        if b < a: inputs = (b, a)
+        if ((na.kind == "NOT" and na.inputs[0] == b) or
+                (nb.kind == "NOT" and nb.inputs[0] == a)):
+            return zero if kind == "AND" else one
+        if inputs[1] < inputs[0]:
+            inputs = (inputs[1], inputs[0])
     key = (kind, inputs)
-    cache = getattr(c, "_local_gate_cache", None)
-    if cache is None:
-        cache = {}
-        c._local_gate_cache = cache
-    node = cache.get(key)
+    node = c._local_gate_cache.get(key)
     if node is None:
         node = c.add(kind, *inputs)
-        cache[key] = node
+        c._local_gate_cache[key] = node
     return node
 
 
@@ -122,19 +79,19 @@ def _not(c, a): return _gate(c, "NOT", a)
 
 
 def _fa(c, a, b, cin):
-    """Exact seven-cost shared full adder.
+    """Exact joint parity/majority network with shared dual-rail predicates.
 
-    Exhaustive table proof over ``(a,b,cin)`` gives ``total=a^b^cin`` and
-    ``carry=majority(a,b,cin)`` for all eight assignments.  The intermediate
-    ``xn`` is XNOR(a,cin).  Sharing it with both outputs saves one weighted
-    AND/OR gate at every non-constant matrix compressor; NOT remains free.
+    This is an exact absorption of the full-adder correction boundary: the
+    shared ``a|cin`` and ``a&cin`` rails feed both the parity output and the
+    majority carry.  It uses seven weighted AND/OR gates (NOT is free), while
+    preserving both externally consumed outputs for every three-input state.
     """
-    ac = _and(c, a, cin)
-    a_or_c = _or(c, a, cin)
-    xn = _or(c, ac, _not(c, a_or_c))
-    b_or_xn = _or(c, b, xn)
-    total = _or(c, _not(c, b_or_xn), _and(c, b, xn))
-    carry = _and(c, a_or_c, b_or_xn)
+    bc = _and(c, b, cin)
+    boc = _or(c, b, cin)
+    xn = _or(c, bc, _not(c, boc))
+    a_or_xn = _or(c, a, xn)
+    total = _or(c, _not(c, a_or_xn), _and(c, a, xn))
+    carry = _and(c, boc, a_or_xn)
     return total, carry
 
 
@@ -153,9 +110,7 @@ def _add3(c, x, y, z, zero, one):
         return _and(c, _or(c, a, b), _not(c, carry)), carry
     if len(consts) == 2:
         a = reals[0]
-        if zero in consts and one in consts:
-            # Equivalent XNOR form, with operands ordered for the global cache.
-            return _not(c, a), a
+        if zero in consts and one in consts: return _not(c, a), a
         if one in consts: return a, one
         return a, zero
     n = consts.count(one)
@@ -371,53 +326,36 @@ def _product_columns(
     return columns
 
 
-def build_circuit():
+def _build_circuit(_layout_only=False, _columns=None):
     c = Circuit(output_width=OUT_TOTAL)
     zero, one = c.add("ZERO"), c.add("ONE")
     c._local_constants = (zero, one)
+    c._local_gate_cache = {}
     a = [c.add("IN_A") for _ in range(WIDTH)]
     b = [c.add("IN_B") for _ in range(WIDTH)]
     x = [c.add("IN_C") for _ in range(WIDTH)]
     d = [c.add("IN_D") for _ in range(WIDTH)]
     c.input_ids = a + b + x + d
     columns = [[] for _ in range(OUT_TOTAL)]
-    # Use the qgl cone for both products as the feasible structural baseline;
-    # the inherited mixed-cone crossover had excessive uncorrelated low error.
+    # Subgraph crossover: preserve one complete output-reachable product cone
+    # from each parent before joining them in parent 0007's compressor tree.
     for builder, left, right, cut in (
-        (_product_columns, a, b, PROD_CUT_A),
+        (_product_columns_parent1, a, b, PROD_CUT_A),
         (_product_columns, x, d, PROD_CUT_B),
     ):
         product = builder(c, right, left, zero, one, cut)
         for col in range(OUT_WIDTH): columns[col].extend(product[col])
     for col in COMP_COLS + ROUND_COLS: columns[col].append(one)
-    # Single absorbed correction constant.  Truncating both Booth matrices
-    # below column 4 removes a strictly positive quantity from the sum, so the
-    # residual error is one-sided with a measured raw bias of about +44/128.
-    # One ONE in column 4 (weight 16 raw units) re-centres that bias to about
-    # +28/128 without ever instantiating a standalone carry-save-tree input:
-    # it is merged into the column-4 bucket and is consumed by the first
-    # column-4 compressor, where ``_add3`` specializes the constant away into
-    # the exact ``a + b + 1`` OR/XNOR pair (carry = OR, sum = XNOR).
-    for col, n in sorted(EXTRA_ONE.items()):
-        for _ in range(n):
-            columns[col].append(one)
 
-    c._partial_product_columns = [list(bucket) for bucket in columns]
+    if _layout_only:
+        return c, [list(bucket) for bucket in columns]
+    if _columns is not None:
+        columns = [list(bucket) for bucket in _columns]
+
     for col in range(OUT_TOTAL):
         compressor_index = 0
         while len(columns[col]) >= 3:
             x0, x1, x2 = columns[col].pop(), columns[col].pop(), columns[col].pop()
-            if col in MAJ_COLS and x0 not in (zero, one) and x1 not in (zero, one) \
-                    and x2 not in (zero, one):
-                # Carry-only compressor: the sum bit of this column is never
-                # observable (outputs 0..5 are discarded), so only the majority
-                # carry is materialized.  Costs 4 weighted gates instead of 7.
-                ab = _and(c, x0, x1)
-                carry = _or(c, ab, _and(c, _or(c, x0, x1), x2))
-                compressor_index += 1
-                if col + 1 < OUT_TOTAL:
-                    columns[col + 1].append(carry)
-                continue
             if col == 3 and compressor_index <= 1:
                 # Joint approximate truth table (x0,x1,x2 -> sum,carry):
                 # exact parity/majority on 000..110; on 111 only, sum is
@@ -446,10 +384,11 @@ def build_circuit():
         elif len(bucket) == 1 and bucket[0] == one:
             outputs.append(_not(c, carry))
         elif len(bucket) == 1:
-            # This is intentionally written as a strict boundary test: columns
-            # below 7 are evaluator-low (including the rounding bit at 6),
-            # while column 7 is the first retained bit and must remain exact.
-            outputs.append(_or(c, bucket[0], carry) if col < 7
+            # Local low-significance half-adder resynthesis: preserve the exact
+            # carry into column 6, but use OR for the column-5 sum.  Relative
+            # to XOR this changes only input 11 (sum 0->1), a +32 raw-unit
+            # perturbation, while replacing a weighted-cost-3 XOR by one OR.
+            outputs.append(_or(c, bucket[0], carry) if col <= 5
                            else _xor(c, bucket[0], carry))
             carry = _and(c, bucket[0], carry)
         else:
@@ -461,11 +400,16 @@ def build_circuit():
     return c
 
 
+def build_circuit(_layout_only=False):
+    circuit = _build_circuit(_layout_only)
+    if _layout_only:
+        return circuit
+    return circuit
+
+
 def build_partial_product_layout():
-    c = build_circuit()
-    return c, c._partial_product_columns
+    return build_circuit(_layout_only=True)
 
 
 def build_circuit_from_columns(circuit, columns):
-    from multiplier.placement import rebuild_columns
-    return rebuild_columns(circuit, columns)
+    return _build_circuit(_columns=columns)

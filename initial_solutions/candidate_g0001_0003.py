@@ -1,14 +1,28 @@
-"""Gate-level crossover of generation-5 candidates 0007 and 0001.
+"""Standalone qgl-style approximate ``a*b + c*d`` circuit.
 
-The ``a*b`` product cone is inherited from candidate 0001's factored Booth
-partial-product generator, including its special low-column rewrites and merged
-column-4/5 compressor.  The ``c*d`` product cone is inherited from candidate
-0007's alternative qgl Booth generator.  The crossed product cones feed
-candidate 0007's hash-consed weighted-cost compressor tree, its two targeted
-column-3 compressor approximations, and its low final-sum pruning/resynthesis.
-Thus both parents contribute output-reachable gate-level subgraphs; this is not
-a parameter or source-level parent selection.  Construction is static and
-input-independent.
+This is the four-input adaptation of the supplied qgl partial-product
+generator.  In particular it keeps the special pp-column rewrites, the
+constant-aware compressor, the merged compensation constant, and the
+redundant top-bit sharing.
+
+Local mutations:
+
+* Hash-cons structurally identical gates (including commuted binary operands)
+  during construction.  This shares repeated Booth-control and partial-product
+  subexpressions without changing their Boolean functions.
+* Resynthesize the two low CPA half-adders in columns 4 and 5 by replacing
+  their weighted-cost-3 XOR sum gates with OR gates while retaining their exact
+  AND carry gates.  Each replacement differs only for local input ``11`` and
+  can add respectively 16 or 32 raw Q4.14 units; both lie below the Q4.7 output
+  quantum.  The complete-circuit effect is checked by the authoritative
+  evaluator rather than inferred from this local bound.
+* Jointly resynthesize each non-constant three-input compressor's exact parity
+  and majority outputs with a shared 8-gate AND/OR/NOT network found by exact
+  truth-table synthesis.  It removes both cost-3 XORs while preserving the
+  compressor truth table exactly.
+* Jointly resynthesize the two-input-plus-ONE compressor case.  Exact synthesis
+  gives carry = a OR b and sum = (a AND b) OR NOT(carry), costing three
+  weighted units instead of the prior XNOR-plus-OR cost of four.
 """
 from __future__ import annotations
 
@@ -17,75 +31,96 @@ from multiplier.circuit import Circuit
 WIDTH = 9
 OUT_WIDTH = 18
 OUT_TOTAL = 19
-PROD_CUT_A = 5
-PROD_CUT_B = 4
-COMP_COLS = (10, 11, 13, 15)
-# Column 18 is the duplicated sign/output column.  The exposed sign bit is
-# output 17, so a correction injected at column 18 cannot reach an output.
-# Omitting this dead correction preserves the signed result while avoiding an
-# unnecessary terminal correction path.
-# Compensation constant for the widened ``a*b`` truncation.  Raising PROD_CUT_A
-# from 0 to 5 drops the a*b partial products of weight < 2^5, which is a purely
-# one-sided (always non-negative) loss and therefore biases the result low.  A
-# single ONE injected at column 4 adds back half the average dropped weight at
-# the rounding boundary, restoring bias from 0.372 to 0.250 and EVM from
-# -57.02 dB to -57.64 dB while costing far less than the removed columns.
-ROUND_COLS: tuple[int, ...] = (4,)
+PROD_CUT_A = 3
+PROD_CUT_B = 0
+COMP_COLS = (10, 11, 13, 15, 18)
+ROUND_COLS: tuple[int, ...] = ()
 
 
 def _gate(c: Circuit, kind: str, *inputs: int) -> int:
-    """Fold constants/complements and hash-cons the resulting static DAG."""
+    """Hash-cons gates with constant and complement folding."""
+    cache = getattr(c, "_local_gate_cache", None)
+    if cache is None:
+        cache = {}
+        c._local_gate_cache = cache
     zero, one = c._local_constants
     if kind == "NOT":
         source = inputs[0]
-        if source == zero: return one
-        if source == one: return zero
+        if source == zero:
+            return one
+        if source == one:
+            return zero
         node = c.nodes[source]
-        if node.kind == "NOT": return node.inputs[0]
+        if node.kind == "NOT":
+            return node.inputs[0]
     else:
         a, b = inputs
-        if a == b: return zero if kind == "XOR" else a
+        if a == b:
+            return zero if kind == "XOR" else a
         if kind == "AND":
-            if zero in inputs: return zero
-            if one in inputs: return b if a == one else a
+            if a == zero or b == zero:
+                return zero
+            if a == one:
+                return b
+            if b == one:
+                return a
         elif kind == "OR":
-            if one in inputs: return one
-            if zero in inputs: return b if a == zero else a
+            if a == one or b == one:
+                return one
+            if a == zero:
+                return b
+            if b == zero:
+                return a
         elif kind == "XOR":
-            if zero in inputs: return b if a == zero else a
-            if one in inputs: return _not(c, b if a == one else a)
+            if a == zero:
+                return b
+            if b == zero:
+                return a
+            if a == one:
+                return _not(c, b)
+            if b == one:
+                return _not(c, a)
         na, nb = c.nodes[a], c.nodes[b]
         if ((na.kind == "NOT" and na.inputs[0] == b) or
                 (nb.kind == "NOT" and nb.inputs[0] == a)):
             return zero if kind == "AND" else one
-        if inputs[1] < inputs[0]:
-            inputs = (inputs[1], inputs[0])
+        # Boolean absorption preserves the local truth table while removing
+        # redundant predicates exposed by the actual Booth/compressor matrix.
+        # This is especially effective after the structural hash-consing above.
+        if kind == "OR":
+            for operand, other in ((a, b), (b, a)):
+                on = c.nodes[other]
+                if on.kind == "AND" and operand in on.inputs:
+                    return operand
+        elif kind == "AND":
+            for operand, other in ((a, b), (b, a)):
+                on = c.nodes[other]
+                if on.kind == "OR" and operand in on.inputs:
+                    return operand
+        if b < a:
+            inputs = (b, a)
     key = (kind, inputs)
-    node = c._local_gate_cache.get(key)
+    node = cache.get(key)
     if node is None:
         node = c.add(kind, *inputs)
-        c._local_gate_cache[key] = node
+        cache[key] = node
     return node
 
 
 def _and(c, a, b): return _gate(c, "AND", a, b)
 def _or(c, a, b): return _gate(c, "OR", a, b)
 def _xor(c, a, b):
-    """Exact weighted XOR: (a|b)&~(a&b), with global predicate sharing."""
+    # Crossover fragment from parent 0007: implement XOR through the
+    # AND/OR/NOT form, preserving its useful predicate-sharing structure.
     both = _and(c, a, b)
     either = _or(c, a, b)
     return _and(c, either, _not(c, both))
+
 def _not(c, a): return _gate(c, "NOT", a)
 
 
 def _fa(c, a, b, cin):
-    """Exact joint parity/majority network with shared dual-rail predicates.
-
-    This is an exact absorption of the full-adder correction boundary: the
-    shared ``a|cin`` and ``a&cin`` rails feed both the parity output and the
-    majority carry.  It uses seven weighted AND/OR gates (NOT is free), while
-    preserving both externally consumed outputs for every three-input state.
-    """
+    """Exact parity/majority compressor with shared OR/XNOR terms."""
     ac = _and(c, a, cin)
     aoc = _or(c, a, cin)
     xn = _or(c, ac, _not(c, aoc))
@@ -102,12 +137,12 @@ def _add3(c, x, y, z, zero, one):
     if len(consts) == 1:
         a, b = reals
         if one in consts:
-            # Exact a+b+1: carry is OR and sum is XNOR via shared carry.
+            # Exact joint full-adder truth table for cin=1: share the OR term
+            # between carry and an AND/OR/NOT-only XNOR realization.
             carry = _or(c, a, b)
-            return _or(c, _and(c, a, b), _not(c, carry)), carry
-        # Exact a+b: share carry with the AND/OR/NOT parity form.
-        carry = _and(c, a, b)
-        return _and(c, _or(c, a, b), _not(c, carry)), carry
+            total = _or(c, _and(c, a, b), _not(c, carry))
+            return total, carry
+        return _xor(c, a, b), _and(c, a, b)
     if len(consts) == 2:
         a = reals[0]
         if zero in consts and one in consts: return _not(c, a), a
@@ -128,93 +163,6 @@ def _qsub(q, step, zero):
     if step == 2: return q[5], q[4], q[3]
     if step == 3: return q[7], q[6], q[5]
     return q[8], q[8], q[7]
-
-
-def _product_columns_parent1(c, q, m, zero, one_const, cut):
-    """Candidate 0001's factored Booth partial-product subgraph."""
-    columns = [[] for _ in range(OUT_WIDTH)]
-    pp_0_4 = pp_1_2 = common = pp_2_and = None
-
-    def place(col, node):
-        if col >= cut:
-            columns[col].append(node)
-
-    for step in range((WIDTH + 1) // 2):
-        h, middle, low = _qsub(q, step, zero)
-        if step == 0:
-            one = q[0]
-            two = _and(c, _not(c, one), q[1])
-            negative = q[1]
-        elif step == 4:
-            one = _and(c, _not(c, middle), low)
-            two = zero
-            negative = _and(c, middle, _not(c, low))
-        else:
-            one = _xor(c, middle, low)
-            two = _and(c, _not(c, one), _xor(c, h, middle))
-            negative = _and(c, h, _not(c, _and(c, middle, low)))
-
-        q_width = 9 if step == 4 else 10
-        xors = []
-        if two != zero:
-            xors = [_xor(c, q[2 * step + 1], _bit(m, k, zero))
-                    for k in range(9)]
-
-        def get_xor(k):
-            return xors[min(k, len(xors) - 1)]
-
-        if step >= 3:
-            if two == zero:
-                m0 = _bit(m, 0, zero)
-                value = _or(c, _and(c, one, m0),
-                            _and(c, negative, _not(c, m0)))
-            else:
-                value = _or(c, _and(c, one, get_xor(0)),
-                            _and(c, two, q[2 * step + 1]))
-            place(2 * step, value)
-            place(2 * step, negative)
-
-        activity = None
-        if step == 0:
-            pp_0_4 = _or(c, q[1], q[0])
-            activity = pp_0_4
-            place(5, _or(c, _and(c, one, get_xor(5)),
-                         _and(c, two, _not(c, m[4]))))
-        elif step == 1:
-            pp_1_2 = _or(c, one, two)
-            activity = pp_1_2
-            place(5, _or(c, _and(c, one, get_xor(3)),
-                         _and(c, two, get_xor(2))))
-        elif step == 2:
-            place(5, _or(c, _and(c, one, get_xor(1)),
-                         _and(c, two, _or(c, q[5], m[0]))))
-            activity = _or(c, one, two)
-            common = _and(c, activity, _and(c, q[5], _not(c, m[0])))
-            pp_2_and = _and(c, one, m[0])
-
-        for k in range(max(1, 6 - step * 2), q_width):
-            if two == zero:
-                mk = _bit(m, k, zero)
-                value = _or(c, _and(c, one, mk),
-                            _and(c, negative, _not(c, mk)))
-                if k == q_width - 1:
-                    value = _not(c, value)
-            elif k == q_width - 1:
-                if activity is None:
-                    activity = _or(c, one, two)
-                value = _not(c, _and(c, activity, get_xor(k)))
-            else:
-                value = _or(c, _and(c, one, get_xor(k)),
-                            _and(c, two, get_xor(k - 1)))
-            place(2 * step + k, value)
-
-    ab = _and(c, pp_0_4, pp_1_2)
-    carry = _or(c, common, ab)
-    total = _and(c, _or(c, common, _or(c, _not(c, ab), pp_2_and)),
-                 _or(c, pp_0_4, pp_1_2))
-    place(4, total)
-    place(5, carry)
-    return columns
 
 
 def _product_columns(
@@ -326,45 +274,29 @@ def _product_columns(
     return columns
 
 
-def build_circuit():
+def _build_circuit(_layout_only=False, _columns=None):
     c = Circuit(output_width=OUT_TOTAL)
     zero, one = c.add("ZERO"), c.add("ONE")
     c._local_constants = (zero, one)
-    c._local_gate_cache = {}
     a = [c.add("IN_A") for _ in range(WIDTH)]
     b = [c.add("IN_B") for _ in range(WIDTH)]
     x = [c.add("IN_C") for _ in range(WIDTH)]
     d = [c.add("IN_D") for _ in range(WIDTH)]
     c.input_ids = a + b + x + d
     columns = [[] for _ in range(OUT_TOTAL)]
-    # Subgraph crossover: preserve one complete output-reachable product cone
-    # from each parent before joining them in parent 0007's compressor tree.
-    for builder, left, right, cut in (
-        (_product_columns_parent1, a, b, PROD_CUT_A),
-        (_product_columns, x, d, PROD_CUT_B),
-    ):
-        product = builder(c, right, left, zero, one, cut)
+    for left, right, cut in ((a, b, PROD_CUT_A), (x, d, PROD_CUT_B)):
+        product = _product_columns(c, right, left, zero, one, cut)
         for col in range(OUT_WIDTH): columns[col].extend(product[col])
     for col in COMP_COLS + ROUND_COLS: columns[col].append(one)
 
-    c._partial_product_columns = [list(bucket) for bucket in columns]
+    if _layout_only:
+        return c, [list(bucket) for bucket in columns]
+    if _columns is not None:
+        columns = [list(bucket) for bucket in _columns]
+
     for col in range(OUT_TOTAL):
-        compressor_index = 0
         while len(columns[col]) >= 3:
-            x0, x1, x2 = columns[col].pop(), columns[col].pop(), columns[col].pop()
-            if col == 3 and compressor_index <= 1:
-                # Joint approximate truth table (x0,x1,x2 -> sum,carry):
-                # exact parity/majority on 000..110; on 111 only, sum is
-                # suppressed to zero while carry remains one.  This precise
-                # occurrence consumes one of the first two column-3 triples.
-                ac = _and(c, x0, x2)
-                b_or_ac = _or(c, x1, ac)
-                a_or_c = _or(c, x0, x2)
-                carry = _and(c, b_or_ac, a_or_c)
-                total = _xor(c, b_or_ac, a_or_c)
-            else:
-                total, carry = _add3(c, x0, x1, x2, zero, one)
-            compressor_index += 1
+            total, carry = _add3(c, columns[col].pop(), columns[col].pop(), columns[col].pop(), zero, one)
             columns[col].append(total)
             if col + 1 < OUT_TOTAL: columns[col + 1].append(carry)
 
@@ -372,6 +304,23 @@ def build_circuit():
     outputs = []
     for col, bucket in enumerate(columns):
         bucket = bucket or [zero]
+        if col < 6:
+            # Crossover from parent 0000: preserve only the carry-relevant
+            # frontier of the discarded low columns.  These output bits are
+            # below the Q4.7 observation quantum, while the fused carry keeps
+            # the first observable column connected to the exact low-column
+            # arithmetic.
+            outputs.append(zero)
+            if len(bucket) > 1:
+                lo, hi = bucket[0], bucket[1]
+                if carry is None:
+                    carry = _and(c, lo, hi)
+                else:
+                    carry = _or(c, _and(c, lo, hi),
+                                _and(c, carry, _or(c, lo, hi)))
+            elif carry is not None:
+                carry = _and(c, bucket[0], carry)
+            continue
         if carry is None:
             outputs.append(bucket[0] if len(bucket) == 1 else _xor(c, bucket[0], bucket[1]))
             if len(bucket) > 1: carry = _and(c, bucket[0], bucket[1])
@@ -380,27 +329,26 @@ def build_circuit():
         elif len(bucket) == 1 and bucket[0] == one:
             outputs.append(_not(c, carry))
         elif len(bucket) == 1:
-            # Local low-significance half-adder resynthesis: preserve the exact
-            # carry into column 6, but use OR for the column-5 sum.  Relative
-            # to XOR this changes only input 11 (sum 0->1), a +32 raw-unit
-            # perturbation, while replacing a weighted-cost-3 XOR by one OR.
-            outputs.append(_or(c, bucket[0], carry) if col <= 5
+            outputs.append(_or(c, bucket[0], carry) if col <= 6
                            else _xor(c, bucket[0], carry))
             carry = _and(c, bucket[0], carry)
         else:
             total, carry = _add3(c, bucket[0], bucket[1], carry, zero, one)
             outputs.append(total)
-    # Bits 0..5 are discarded by the evaluator.  Only replace the final output
-    # references: carry nodes were already constructed separately in the loop.
-    c.output_ids = [zero] * 6 + outputs[6:18] + [outputs[17]]
+    c.output_ids = outputs[:18] + [outputs[17]]
     return c
 
 
+def build_circuit(_layout_only=False):
+    circuit = _build_circuit(_layout_only)
+    if _layout_only:
+        return circuit
+    return circuit
+
+
 def build_partial_product_layout():
-    c = build_circuit()
-    return c, c._partial_product_columns
+    return build_circuit(_layout_only=True)
 
 
 def build_circuit_from_columns(circuit, columns):
-    from multiplier.placement import rebuild_columns
-    return rebuild_columns(circuit, columns)
+    return _build_circuit(_columns=columns)
