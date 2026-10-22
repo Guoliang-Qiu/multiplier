@@ -28,7 +28,23 @@ Constraints:
   the reference implementations `_compress_columns_reference()` and
   `_build_outputs_reference()` or implement custom approximate, fused, wider,
   truncated, or low-bit carry logic. The construction must still return a
-  complete valid circuit and set the required output bus.
+   complete valid circuit and set the required output bus.
+- Reuse the implementations provided by
+  `multiplier.circuit.multiplier.tap2_9bit_multiplier.MultiplierCircuit`.
+  Before adding or changing a helper, check whether tap2 already provides it.
+  Do not copy or reimplement equivalent gate primitives, constant folding,
+  hash-consing, input setup, full/half adders (`_fa`, `_ha`), or constant-aware
+  compressors (`_add3`). When a construction stage matches the library's
+  reference algorithm, delegate to that reference implementation instead of
+  duplicating its body. Do not add no-op overrides or forwarding wrappers.
+- Override a tap2 implementation only when the candidate genuinely needs a
+  different realization, such as a different gate-sharing structure, an
+  approximate compressor, or specialized carry handling. Document the specific
+  difference and why it is needed; keep the override limited to that behavior.
+  For refactoring intended to preserve the circuit, verify graph/output
+  equivalence and weighted cost. For algorithmic changes, validate the complete
+  circuit with `gate_cost.py` and `eval.py` rather than assuming a shorter
+  expression is cheaper or equally accurate.
 - Approximation must be implemented as a runnable circuit, not as a post-processing
   rule or a predicted score. Every approximation scheme must be evaluated by the
   existing `eval.py` procedure, including its fixed input generation, Q4.7

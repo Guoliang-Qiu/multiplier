@@ -3,14 +3,11 @@ from __future__ import annotations
 from multiplier.circuit.multiplier.tap2_9bit_multiplier import Circuit, MultiplierCircuit, WIDTH, OUT_WIDTH, OUT_TOTAL
 
 class Candidate(MultiplierCircuit):
-    _USE_ABSORPTION = False
     PROD_CUT_A = 2
     PROD_CUT_B = 2
     COMP_COLS = (10, 11, 13, 15, 18)
     ROUND_COLS = ()
 
-    def _gate(self, kind, *inputs, absorption=False):
-        return super()._gate(kind, *inputs, absorption=absorption or self._USE_ABSORPTION)
 
     @staticmethod
     def _bit(bits, index, zero):
@@ -26,8 +23,6 @@ class Candidate(MultiplierCircuit):
         """Single qgl dual-approx product's 18 column lists (low ``cut`` pruned)."""
         columns: list[list[int]] = [[] for _ in range(OUT_WIDTH)]
         num_steps = (WIDTH + 1) // 2
-        step1_one: int | None = None
-        step1_two: int | None = None
         x_and = self._not(self._and(m_bits[0], m_bits[1]))
         x_or = self._not(self._or(m_bits[0], m_bits[1]))
         d = []

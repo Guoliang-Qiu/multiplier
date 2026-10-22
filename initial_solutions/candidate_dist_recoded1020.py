@@ -32,8 +32,6 @@ class Candidate(MultiplierCircuit):
     def _one_product_columns(self, q, m, zero, one, cut):
         cols: list[list[int]] = [[] for _ in range(OUT_WIDTH)]
         num_steps = (WIDTH + 1) // 2
-        step1_one: int | None = None
-        step1_two: int | None = None
         x_and = self._not(self._and(m[0], m[1]))
         x_or = self._not(self._or(m[0], m[1]))
         d = []

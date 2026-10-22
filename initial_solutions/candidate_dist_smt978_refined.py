@@ -1,4 +1,8 @@
-"""Standalone three-stage candidate; generic arithmetic is inherited from tap2."""
+"""984-cost exact top-row reuse, including the k=2 boundary term.
+
+The k=0/1 terms have specialized correction semantics and are not rewritten.
+Only tap2 is required; no candidate or experiment imports.
+"""
 from __future__ import annotations
 from multiplier.circuit.multiplier.tap2_9bit_multiplier import Circuit, MultiplierCircuit, WIDTH, OUT_WIDTH, OUT_TOTAL
 
@@ -10,7 +14,7 @@ class Candidate(MultiplierCircuit):
     ROUND_COLS: tuple[int, ...] = ()
     MAJ_COLS = (0, 1, 2, 3)
     EXTRA_ONE = {4: 1}
-    SIDE_MASK = 3
+    SIDE_MASK = 2
 
     def _gate(self, kind, *inputs, absorption=False):
         return super()._gate(kind, *inputs, absorption=absorption or self._USE_ABSORPTION)
@@ -33,8 +37,6 @@ class Candidate(MultiplierCircuit):
     def _one_product_columns(self, q, m, zero, one, cut):
         cols: list[list[int]] = [[] for _ in range(OUT_WIDTH)]
         num_steps = (WIDTH + 1) // 2
-        step1_one: int | None = None
-        step1_two: int | None = None
         x_and = self._not(self._and(m[0], m[1]))
         x_or = self._not(self._or(m[0], m[1]))
         d = []
@@ -119,17 +121,53 @@ class Candidate(MultiplierCircuit):
         return cols
 
     def _product_columns(self, a, b, c, d, zero, one):
-        all_columns = [[] for _ in range(OUT_TOTAL)]
+        cols = [[] for _ in range(OUT_TOTAL)]
         for builder, left, right, cut in ((self._one_product_columns, a, b, self.PROD_CUT_A), (self._one_product_columns, c, d, self.PROD_CUT_B)):
             product = builder(right, left, zero, one, cut)
             for col in range(OUT_WIDTH):
-                all_columns[col].extend(product[col])
+                cols[col].extend(product[col])
         for col in self.COMP_COLS + self.ROUND_COLS:
-            all_columns[col].append(one)
+            cols[col].append(one)
         for col, n in sorted(self.EXTRA_ONE.items()):
             for _ in range(n):
-                all_columns[col].append(one)
-        return all_columns
+                cols[col].append(one)
+        one_sel = b[0]
+        two = self._and(b[1], self._not(b[0]))
+        old = self._or(self._and(one_sel, self._xor(b[1], a[4])), self._and(two, self._xor(b[1], a[3])))
+        assert cols[4][0] == old
+        cols[4][0] = self._or(self._and(one_sel, self._xor(b[1], a[4])), self._and(two, self._not(a[3])))
+        for m, q in ((a, b), (c, d)):
+            pos = self._and(self._not(q[8]), q[7])
+            neg = self._and(q[8], self._not(q[7]))
+            active = self._or(pos, neg)
+            for k in range(2, 9):
+                old = self._or(self._and(pos, m[k]), self._and(neg, self._not(m[k])))
+                new = self._and(active, self._not(self._xor(q[7], m[k])))
+                if k == 8:
+                    old = self._not(old)
+                    new = self._not(new)
+                assert cols[8 + k].count(old) == 1
+                cols[8 + k][cols[8 + k].index(old)] = new
+        # SMT-selected G for AB column 4: (one & data) | two.
+        # Original term is (one & data) | (two & low_boundary).
+        root_node = self.nodes[cols[4][1]]
+        assert root_node.kind == 'OR'
+        selected, boundary = root_node.inputs
+        boundary_node = self.nodes[boundary]
+        assert boundary_node.kind == 'AND'
+        two = boundary_node.inputs[0]
+        cols[4][1] = self._or(selected, two)
+        # Two-output SMT approximation of the CD column-4 triple.
+        # u=a, v=b|c; u+v = sum + 2*carry.
+        p0, p1, p2 = cols[4][3:6]
+        # Refined SMT choice: retain p1, merge p0 and p2.
+        either = self._or(p0, p2)
+        carry = self._and(p1, either)
+        total = self._gate('XOR', p1, either)
+        del cols[4][3:6]
+        cols[4].insert(3, total)
+        cols[5].append(carry)
+        return cols
 
     def _compress_columns(self):
         all_columns = self._columns
