@@ -1,0 +1,333 @@
+{
+  "baseline_cost": 1012,
+  "best_cost": 988,
+  "tested": 3007,
+  "substitutions": {
+    "359": [
+      "NOT",
+      [
+        "OR",
+        283,
+        [
+          "NOT",
+          352
+        ]
+      ]
+    ],
+    "363": [
+      "NOT",
+      [
+        "OR",
+        287,
+        [
+          "NOT",
+          352
+        ]
+      ]
+    ],
+    "367": [
+      "NOT",
+      [
+        "OR",
+        291,
+        [
+          "NOT",
+          352
+        ]
+      ]
+    ],
+    "371": [
+      "NOT",
+      [
+        "OR",
+        295,
+        [
+          "NOT",
+          352
+        ]
+      ]
+    ],
+    "375": [
+      "NOT",
+      [
+        "OR",
+        299,
+        [
+          "NOT",
+          352
+        ]
+      ]
+    ],
+    "379": [
+      "NOT",
+      [
+        "OR",
+        303,
+        [
+          "NOT",
+          352
+        ]
+      ]
+    ],
+    "702": [
+      "NOT",
+      [
+        "OR",
+        626,
+        [
+          "NOT",
+          695
+        ]
+      ]
+    ],
+    "706": [
+      "NOT",
+      [
+        "OR",
+        630,
+        [
+          "NOT",
+          695
+        ]
+      ]
+    ],
+    "710": [
+      "NOT",
+      [
+        "OR",
+        634,
+        [
+          "NOT",
+          695
+        ]
+      ]
+    ],
+    "714": [
+      "NOT",
+      [
+        "OR",
+        638,
+        [
+          "NOT",
+          695
+        ]
+      ]
+    ],
+    "718": [
+      "NOT",
+      [
+        "OR",
+        642,
+        [
+          "NOT",
+          695
+        ]
+      ]
+    ],
+    "722": [
+      "NOT",
+      [
+        "OR",
+        646,
+        [
+          "NOT",
+          695
+        ]
+      ]
+    ]
+  },
+  "history": [
+    {
+      "node": 359,
+      "expression": [
+        "NOT",
+        [
+          "OR",
+          283,
+          [
+            "NOT",
+            352
+          ]
+        ]
+      ],
+      "cost": 1010,
+      "exhaustive_inputs": 3
+    },
+    {
+      "node": 363,
+      "expression": [
+        "NOT",
+        [
+          "OR",
+          287,
+          [
+            "NOT",
+            352
+          ]
+        ]
+      ],
+      "cost": 1008,
+      "exhaustive_inputs": 3
+    },
+    {
+      "node": 367,
+      "expression": [
+        "NOT",
+        [
+          "OR",
+          291,
+          [
+            "NOT",
+            352
+          ]
+        ]
+      ],
+      "cost": 1006,
+      "exhaustive_inputs": 3
+    },
+    {
+      "node": 371,
+      "expression": [
+        "NOT",
+        [
+          "OR",
+          295,
+          [
+            "NOT",
+            352
+          ]
+        ]
+      ],
+      "cost": 1004,
+      "exhaustive_inputs": 3
+    },
+    {
+      "node": 375,
+      "expression": [
+        "NOT",
+        [
+          "OR",
+          299,
+          [
+            "NOT",
+            352
+          ]
+        ]
+      ],
+      "cost": 1002,
+      "exhaustive_inputs": 3
+    },
+    {
+      "node": 379,
+      "expression": [
+        "NOT",
+        [
+          "OR",
+          303,
+          [
+            "NOT",
+            352
+          ]
+        ]
+      ],
+      "cost": 1000,
+      "exhaustive_inputs": 3
+    },
+    {
+      "node": 702,
+      "expression": [
+        "NOT",
+        [
+          "OR",
+          626,
+          [
+            "NOT",
+            695
+          ]
+        ]
+      ],
+      "cost": 998,
+      "exhaustive_inputs": 3
+    },
+    {
+      "node": 706,
+      "expression": [
+        "NOT",
+        [
+          "OR",
+          630,
+          [
+            "NOT",
+            695
+          ]
+        ]
+      ],
+      "cost": 996,
+      "exhaustive_inputs": 3
+    },
+    {
+      "node": 710,
+      "expression": [
+        "NOT",
+        [
+          "OR",
+          634,
+          [
+            "NOT",
+            695
+          ]
+        ]
+      ],
+      "cost": 994,
+      "exhaustive_inputs": 3
+    },
+    {
+      "node": 714,
+      "expression": [
+        "NOT",
+        [
+          "OR",
+          638,
+          [
+            "NOT",
+            695
+          ]
+        ]
+      ],
+      "cost": 992,
+      "exhaustive_inputs": 3
+    },
+    {
+      "node": 718,
+      "expression": [
+        "NOT",
+        [
+          "OR",
+          642,
+          [
+            "NOT",
+            695
+          ]
+        ]
+      ],
+      "cost": 990,
+      "exhaustive_inputs": 3
+    },
+    {
+      "node": 722,
+      "expression": [
+        "NOT",
+        [
+          "OR",
+          646,
+          [
+            "NOT",
+            695
+          ]
+        ]
+      ],
+      "cost": 988,
+      "exhaustive_inputs": 3
+    }
+  ]
+}

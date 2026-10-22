@@ -149,7 +149,6 @@ def build_circuit_from_columns(circuit: Circuit, columns: list[list[int]]) -> Ci
             output_ids.append(total)
 
     circuit.output_ids = output_ids
-    circuit.output_width = OUT_WIDTH
     return circuit
 
 

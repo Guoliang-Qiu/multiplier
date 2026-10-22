@@ -1,0 +1,160 @@
+{
+  "per_sample_action_oracle_evm": -56.67364702586941,
+  "experiments": [
+    {
+      "name": "raw_dependencies",
+      "node_ids": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        11,
+        12,
+        13,
+        14
+      ],
+      "best_unrestricted": {
+        "scaled_squared_error_sum": 2492505187,
+        "mse": 0.14480008408572473,
+        "evm_db": -56.04510689632239
+      },
+      "best_wire": [
+        -55.613800012390556,
+        "ZERO"
+      ],
+      "synthesis": {
+        "saved_cost": 24,
+        "max_gates": 4,
+        "target_evm_db": -57.85,
+        "integer_error_budget": 1644927496,
+        "gate_costs": {
+          "AND": 1,
+          "OR": 1,
+          "XOR": 3,
+          "NOT": 0
+        },
+        "status": "unsat",
+        "reason": "Even unrestricted G truth tables exceed the error budget"
+      }
+    },
+    {
+      "name": "retained_subfunctions",
+      "node_ids": [
+        11,
+        43,
+        55,
+        110,
+        119,
+        123,
+        94,
+        166
+      ],
+      "best_unrestricted": {
+        "scaled_squared_error_sum": 2521500003,
+        "mse": 0.14648451460035225,
+        "evm_db": -55.99487787388678
+      },
+      "best_wire": [
+        -55.808241951294804,
+        "94"
+      ],
+      "synthesis": {
+        "saved_cost": 24,
+        "max_gates": 4,
+        "target_evm_db": -57.85,
+        "integer_error_budget": 1644927496,
+        "gate_costs": {
+          "AND": 1,
+          "OR": 1,
+          "XOR": 3,
+          "NOT": 0
+        },
+        "status": "unsat",
+        "reason": "Even unrestricted G truth tables exceed the error budget"
+      }
+    },
+    {
+      "name": "boundary_context",
+      "node_ids": [
+        239,
+        432,
+        496,
+        582,
+        94,
+        166,
+        238,
+        437,
+        509,
+        581
+      ],
+      "best_unrestricted": {
+        "scaled_squared_error_sum": 2444093795,
+        "mse": 0.14198766320537173,
+        "evm_db": -56.130288919440574
+      },
+      "best_wire": [
+        -55.808241951294804,
+        "94"
+      ],
+      "synthesis": {
+        "saved_cost": 24,
+        "max_gates": 4,
+        "target_evm_db": -57.85,
+        "integer_error_budget": 1644927496,
+        "gate_costs": {
+          "AND": 1,
+          "OR": 1,
+          "XOR": 3,
+          "NOT": 0
+        },
+        "status": "unsat",
+        "reason": "Even unrestricted G truth tables exceed the error budget"
+      }
+    },
+    {
+      "name": "subfunctions_with_context",
+      "node_ids": [
+        11,
+        43,
+        55,
+        110,
+        119,
+        123,
+        94,
+        166,
+        239,
+        432,
+        496,
+        582,
+        238,
+        437,
+        509,
+        581
+      ],
+      "best_unrestricted": {
+        "scaled_squared_error_sum": 2294038883,
+        "mse": 0.13327034378377084,
+        "evm_db": -56.40545985663003
+      },
+      "best_wire": [
+        -55.808241951294804,
+        "94"
+      ],
+      "synthesis": {
+        "saved_cost": 24,
+        "max_gates": 4,
+        "target_evm_db": -57.85,
+        "integer_error_budget": 1644927496,
+        "gate_costs": {
+          "AND": 1,
+          "OR": 1,
+          "XOR": 3,
+          "NOT": 0
+        },
+        "status": "unsat",
+        "reason": "Even unrestricted G truth tables exceed the error budget"
+      }
+    }
+  ]
+}

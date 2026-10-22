@@ -126,5 +126,4 @@ def build_circuit() -> Circuit:
             total, carry = _full_adder(bucket[0], bucket[1], carry, circuit)
             output_ids.append(total)
     circuit.output_ids = output_ids
-    circuit.output_width = OUT_WIDTH
     return circuit

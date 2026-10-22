@@ -71,7 +71,7 @@ def _product_columns(circuit, q_bits, m_bits, zero, one_const):
 
 
 def build_circuit() -> Circuit:
-    circuit = Circuit(output_width=OUT_WIDTH)
+    circuit = Circuit()
     zero, one = circuit.add("ZERO"), circuit.add("ONE")
     a = [circuit.add("IN_A") for _ in range(WIDTH)]
     b = [circuit.add("IN_B") for _ in range(WIDTH)]

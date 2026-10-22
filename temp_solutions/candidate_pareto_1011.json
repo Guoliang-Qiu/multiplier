@@ -1,0 +1,28 @@
+{
+  "candidate": "candidate_pareto_1011.py",
+  "source": "generations/5/search.py; edits=((0, 'pair_or'), (1, 'or'), (2, 'pair'), (3, 'approx'), (6, 'zero'))",
+  "gate_cost": 1011,
+  "evm_db": -57.74524478907551,
+  "mae": 0.26450332284670824,
+  "rmse": 0.3128797906759696,
+  "max_abs_error": 0.921875,
+  "bias": 0.2458557292499505,
+  "mse": 0.09585046878567448,
+  "avg_abs_error": 0.26450332284670824,
+  "total_cases": 1050624,
+  "error_cases": 1038524,
+  "error_rate": 0.9884830348440545,
+  "counts": {
+    "AND": 556,
+    "OR": 455,
+    "NOT": 262
+  },
+  "evaluation": "TAP2_COPIES=8 OPENBLAS_NUM_THREADS=1 python eval.py temp_solutions/candidate_pareto_1011.py",
+  "runtime_seconds": 109.62272054699861,
+  "verification": "DAG nodes, input_ids and output_ids equal generations/5/cells.py with the recorded edits; original eval.py matches the full-data screening metrics",
+  "pareto_scope": "initial_solutions/*.py and generations/5/full_screen.json",
+  "pareto_status": "historical_dominated",
+  "dominated_by": "candidate_pareto_975.py",
+  "meets_target": false,
+  "comparison_report": "generations/9/fair_comparison.json"
+}

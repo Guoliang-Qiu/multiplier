@@ -52,7 +52,7 @@ def _top(columns, x, y, circuit):
 
 
 def build_circuit():
-    circuit = Circuit(output_width=OUT_WIDTH)
+    circuit = Circuit()
     zero, one = circuit.add("ZERO"), circuit.add("ONE")
     a = [circuit.add("IN_A") for _ in range(WIDTH)]
     b = [circuit.add("IN_B") for _ in range(WIDTH)]

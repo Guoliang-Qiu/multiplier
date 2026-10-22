@@ -169,7 +169,7 @@ def _product_columns(
 
 
 def build_circuit():
-    c = Circuit(output_width=OUT_TOTAL)
+    c = Circuit()
     zero, one = c.add("ZERO"), c.add("ONE")
     a = [c.add("IN_A") for _ in range(WIDTH)]
     b = [c.add("IN_B") for _ in range(WIDTH)]

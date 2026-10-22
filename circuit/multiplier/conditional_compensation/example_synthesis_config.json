@@ -1,0 +1,8 @@
+{
+  "implementation": "candidate_g0001_0005_col2_joint_asym.py",
+  "error_table": "example_error_table_result.npy",
+  "node_ids": [2, 3],
+  "compensation_columns": [4, 5, 6],
+  "target_evm_db": -54.0,
+  "timeout_ms": 60000
+}

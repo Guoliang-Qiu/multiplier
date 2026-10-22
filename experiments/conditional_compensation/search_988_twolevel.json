@@ -1,0 +1,67 @@
+{
+  "baseline": 988,
+  "best": 984,
+  "tested": 16938,
+  "history": [
+    {
+      "node": 347,
+      "expression": [
+        "AND",
+        [
+          "NOT",
+          279
+        ],
+        [
+          "OR",
+          342,
+          343
+        ]
+      ],
+      "cost": 986,
+      "exhaustive_cases": 8
+    },
+    {
+      "node": 690,
+      "expression": [
+        "AND",
+        [
+          "NOT",
+          622
+        ],
+        [
+          "OR",
+          685,
+          686
+        ]
+      ],
+      "cost": 984,
+      "exhaustive_cases": 8
+    }
+  ],
+  "substitutions": {
+    "347": [
+      "AND",
+      [
+        "NOT",
+        279
+      ],
+      [
+        "OR",
+        342,
+        343
+      ]
+    ],
+    "690": [
+      "AND",
+      [
+        "NOT",
+        622
+      ],
+      [
+        "OR",
+        685,
+        686
+      ]
+    ]
+  }
+}

@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1120" viewBox="0 0 1800 1120">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f7fbff"/><stop offset="1" stop-color="#eef3f8"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#17324d" flood-opacity=".16"/>
+    </filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 z" fill="#40627d"/>
+    </marker>
+    <style>
+      .title { font: 700 34px Arial, 'Noto Sans CJK SC', sans-serif; fill:#17324d; }
+      .subtitle { font: 18px Arial, 'Noto Sans CJK SC', sans-serif; fill:#527089; }
+      .section { font: 700 20px Arial, 'Noto Sans CJK SC', sans-serif; fill:#fff; }
+      .box-title { font: 700 20px Arial, 'Noto Sans CJK SC', sans-serif; fill:#17324d; }
+      .text { font: 16px Arial, 'Noto Sans CJK SC', sans-serif; fill:#28465e; }
+      .small { font: 14px Arial, 'Noto Sans CJK SC', sans-serif; fill:#527089; }
+      .formula { font: italic 17px Georgia, serif; fill:#17324d; }
+      .arrow { stroke:#40627d; stroke-width:3; fill:none; marker-end:url(#arrow); }
+      .dash { stroke:#7d9bb2; stroke-width:2.5; stroke-dasharray:9 7; fill:none; marker-end:url(#arrow); }
+      .box { stroke:#b8cad8; stroke-width:2; rx:16; filter:url(#shadow); }
+    </style>
+  </defs>
+
+  <rect width="1800" height="1120" fill="url(#bg)"/>
+  <text x="900" y="58" text-anchor="middle" class="title">低位部分积删除与条件补偿优化工作流</text>
+  <text x="900" y="91" text-anchor="middle" class="subtitle">Agent 选择结构参数 → 误差表建模 → SMT 综合 G(X) → 导出并验证新候选</text>
+
+  <rect x="55" y="125" width="1690" height="435" rx="22" fill="#e7f0f8" stroke="#c0d4e3" stroke-width="2"/>
+  <rect x="55" y="125" width="1690" height="48" rx="22" fill="#3d6f96"/>
+  <text x="85" y="157" class="section">阶段一：候选分析与误差建模</text>
+
+  <rect x="95" y="215" width="360" height="245" class="box" fill="#fff"/>
+  <text x="275" y="252" text-anchor="middle" class="box-title">1. 读取候选实现</text>
+  <text x="125" y="290" class="text">Candidate / MultiplierCircuit</text>
+  <text x="125" y="321" class="text">• _product_columns</text>
+  <text x="125" y="349" class="text">• _compress_columns</text>
+  <text x="125" y="377" class="text">• _build_outputs</text>
+  <text x="125" y="420" class="small">保持原候选文件不修改</text>
+
+  <rect x="520" y="215" width="360" height="245" class="box" fill="#fff"/>
+  <text x="700" y="252" text-anchor="middle" class="box-title">2. Agent 选择删除方案</text>
+  <text x="550" y="294" class="text">removed_slots</text>
+  <text x="550" y="327" class="text">• 仅低 6 列</text>
+  <text x="550" y="356" class="text">• [column, position]</text>
+  <text x="550" y="399" class="text">node_ids = X</text>
+  <text x="550" y="428" class="small">删除范围、X 信息量、结构收益</text>
+
+  <rect x="945" y="215" width="360" height="245" class="box" fill="#fff"/>
+  <text x="1125" y="252" text-anchor="middle" class="box-title">3. 构建删除版本</text>
+  <text x="975" y="294" class="text">压缩前复制列布局</text>
+  <text x="975" y="327" class="text">→ 删除指定部分积槽位</text>
+  <text x="975" y="360" class="text">→ 重新压缩 / 生成输出</text>
+  <text x="975" y="405" class="formula">R = F − Q(T_del)</text>
+  <text x="975" y="436" class="small">使用本地 eval 风格等权样本</text>
+
+  <rect x="1370" y="215" width="330" height="245" class="box" fill="#fff"/>
+  <text x="1535" y="252" text-anchor="middle" class="box-title">4. 计算 X 信息量</text>
+  <text x="1400" y="296" class="formula">E[Var(R | X)]</text>
+  <text x="1400" y="333" class="text">判断 X 是否值得补偿</text>
+  <text x="1400" y="370" class="text">记录 baseline / deleted</text>
+  <text x="1400" y="407" class="text">MSE、EVM、门成本</text>
+  <text x="1400" y="438" class="small">不在此阶段综合 G</text>
+
+  <path d="M455 337 L520 337" class="arrow"/><path d="M880 337 L945 337" class="arrow"/><path d="M1305 337 L1370 337" class="arrow"/>
+
+  <rect x="55" y="610" width="1690" height="390" rx="22" fill="#edf7f0" stroke="#c4dfca" stroke-width="2"/>
+  <rect x="55" y="610" width="1690" height="48" rx="22" fill="#4f8b67"/>
+  <text x="85" y="642" class="section">阶段二：补偿误差表、SMT 综合与候选导出</text>
+
+  <rect x="95" y="700" width="360" height="220" class="box" fill="#fff"/>
+  <text x="275" y="737" text-anchor="middle" class="box-title">5. 选择 G 的位置</text>
+  <text x="125" y="778" class="text">compensation_columns</text>
+  <text x="125" y="811" class="text">• 最多 3 个 bit</text>
+  <text x="125" y="842" class="text">• 匹配被删除贡献范围</text>
+  <text x="125" y="883" class="small">避免表达能力明显超出删除范围</text>
+
+  <rect x="520" y="700" width="360" height="220" class="box" fill="#fff"/>
+  <text x="700" y="737" text-anchor="middle" class="box-title">6. 生成整数误差表</text>
+  <text x="550" y="778" class="text">error_table[x, y]</text>
+  <text x="550" y="811" class="formula">Σ(T − 128·Y)²</text>
+  <text x="550" y="844" class="text">按 X 状态划分样本</text>
+  <text x="550" y="883" class="small">输出 .npy + 元数据 .json</text>
+
+  <rect x="945" y="700" width="360" height="220" class="box" fill="#fff"/>
+  <text x="1125" y="737" text-anchor="middle" class="box-title">7. SMT 综合 G(X)</text>
+  <text x="975" y="778" class="text">性能约束：EVM ≤ target</text>
+  <text x="975" y="811" class="text">成本约束：≤ 删除节省</text>
+  <text x="975" y="844" class="text">AND / OR / XOR / NOT</text>
+  <text x="975" y="883" class="small">共享门，最小化加权成本</text>
+
+  <rect x="1370" y="700" width="330" height="220" class="box" fill="#fff"/>
+  <text x="1535" y="737" text-anchor="middle" class="box-title">8. 导出新候选</text>
+  <text x="1400" y="778" class="text">export_candidate.py</text>
+  <text x="1400" y="811" class="text">生成完整 Candidate</text>
+  <text x="1400" y="844" class="text">验证成本与 EVM</text>
+  <text x="1400" y="883" class="small">失败/超时 → hard_instances</text>
+
+  <path d="M455 810 L520 810" class="arrow"/><path d="M880 810 L945 810" class="arrow"/><path d="M1305 810 L1370 810" class="arrow"/>
+  <path d="M1535 920 C1535 1010, 1125 1050, 700 1010 C430 985, 275 950, 275 920" class="dash"/>
+  <text x="900" y="1065" text-anchor="middle" class="small">最终使用完整评估器验证；单步 EVM 性能损失建议控制在 0.2 dB 以内</text>
+
+  <rect x="95" y="1018" width="360" height="55" rx="12" fill="#fff5df" stroke="#e7c77d" stroke-width="2"/>
+  <text x="275" y="1052" text-anchor="middle" class="small">硬约束：补偿范围与删除贡献匹配</text>
+  <rect x="1345" y="1018" width="355" height="55" rx="12" fill="#fff5df" stroke="#e7c77d" stroke-width="2"/>
+  <text x="1522" y="1052" text-anchor="middle" class="small">硬约束：综合成本不能超过删除收益</text>
+</svg>

@@ -1,0 +1,42 @@
+{
+  "sampling": {
+    "kind": "tap2_unordered_pairs",
+    "seed": 42,
+    "tap2_copies": 8,
+    "count": 1050624
+  },
+  "residual": "(a*b+c*d)/128 - floor(deleted_raw/128 + 0.5)",
+  "reference_energy": 58247.79689367025,
+  "baseline": {
+    "mse": 0.09384715040060047,
+    "evm_db": -57.92858413562766,
+    "gate_cost": 1015
+  },
+  "deleted": {
+    "mse": 0.15991879270555448,
+    "evm_db": -55.613800012390556,
+    "gate_cost": 991
+  },
+  "removed_slots": [
+    [
+      4,
+      0
+    ],
+    [
+      4,
+      1
+    ]
+  ],
+  "node_ids": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    11,
+    12,
+    13,
+    14
+  ],
+  "information_mse": 0.1439644035640886
+}

@@ -1,0 +1,336 @@
+"""Signed tap-two ``a*b + c*d`` multiplier: low-column correction absorption.
+
+Parent: ``generations/2/candidate_g0002_0004.py`` at cost 1134 / -58.428 dB
+(two qgl Booth partial-product cones, a shared 3:2 compressor matrix whose
+parity and majority outputs already share a seven-cost AND/OR/NOT network, and
+compensation ONEs in ``COMP_COLS``).
+
+Constant inventory of the untouched parent
+------------------------------------------
+Every ONE reaching the matrix was classified before mutating:
+
+* ``COMP_COLS = (10, 11, 13, 15)`` -- these are *not* free rounding terms.
+  Columns 10/11/13/15 carry the two's-complement ``+1`` that completes each
+  Booth row's inverted sign-extension prefix, and column 18 sets the redundant
+  top-bit polarity.  They are mandatory for signed correctness and are left
+  untouched; every one of them is already absorbed, because ``_add3``
+  specializes a constant operand instead of spending a generic compressor.
+* Each Booth row's own ``negative`` term is already folded into the row's
+  select logic in ``_product_columns`` (the ``one``/``two``/``negative`` cone),
+  so no separate per-row correction bit exists to absorb.
+* ``ROUND_COLS`` was empty, i.e. the parent injected no rounding constant.
+
+Because the mandatory corrections were already absorbed, exact absorption
+alone could not remove any reachable gate.  Two facts were established before
+approximating.  First, the parent's 7-gate full adder is *optimal*: with NOT
+free, AND/OR/NAND/NOR collapse to one gate class, and an exhaustive
+complement-closed search over that class proves no 6-gate realization of
+(sum, carry) exists.  Second, a *carry-only* compressor -- majority alone --
+is realizable in 4 gates and no fewer.
+
+The mutation
+------------
+The evaluator quantizes with ``floor(raw/128 + 0.5)`` and this circuit already
+ties outputs 0..5 to ZERO, so columns 0..5 are observable *only* through the
+carry they inject upward.  That licenses two changes, both judged by the
+unmodified ``eval.py`` on the complete circuit rather than by local error:
+
+1. ``PROD_CUT_A/B = 4`` truncates both Booth matrices below column 4, deleting
+   the generation logic and the compressors for columns 0..3.
+2. ``MAJ_COLS = (0, 1, 2, 3)`` compresses any surviving non-constant triple in
+   those columns with the 4-gate majority cone instead of the 7-gate full
+   adder, discarding the provably unobservable sum bit and keeping the carry
+   that propagates into the observable region.
+
+The resulting one-sided truncation bias is re-centred by a single ``+1``
+absorbed into column 4, which the first column-4 compressor consumes as a
+specialized constant rather than as an extra tree input.
+
+Measured with the unmodified ``eval.py`` and ``gate_cost.py``:
+cost 1037 (AND 569, OR 468, NOT 271, XOR 0), evm_db -58.1833,
+mae 0.2551, rmse 0.2975, max_abs_error 0.6719.  This is non-dominated: the
+population's closest EVM, -58.1833 at cost 1107, is matched exactly at 70
+lower weighted cost.  Interface, signedness, and the high/overflow columns are
+unchanged.
+"""
+from __future__ import annotations
+
+from multiplier.circuit import MultiplierCircuit, OUT_WIDTH, OUT_TOTAL, WIDTH
+
+PROD_CUT_A = 4
+PROD_CUT_B = 4
+COMP_COLS = (10, 11, 13, 15, 18)
+ROUND_COLS: tuple[int, ...] = ()
+MAJ_COLS = (0, 1, 2, 3)
+EXTRA_ONE = {4: 1}
+
+
+class Candidate(MultiplierCircuit):
+    PROD_CUT_A = 4
+    PROD_CUT_B = 4
+    COMP_COLS = (10, 11, 13, 15, 18)
+    ROUND_COLS: tuple[int, ...] = ()
+    MAJ_COLS = (0, 1, 2, 3)
+    EXTRA_ONE = {4: 1}
+
+    def _xor(self, a, b):
+        both = self._and(a, b)
+        either = self._or(a, b)
+        return self._and(either, self._not(both))
+
+    def _product_columns(self, q_bits, m_bits, zero, one_const, cut):
+        columns: list[list[int]] = [[] for _ in range(OUT_WIDTH)]
+        num_steps = (WIDTH + 1) // 2
+
+        step1_one: int | None = None
+        step1_two: int | None = None
+
+        x_and = self._not(self._and(m_bits[0], m_bits[1]))
+        x_or = self._not(self._or(m_bits[0], m_bits[1]))
+        d = []
+
+        for step in range(num_steps):
+            h, m, low = self._qsub(q_bits, step, zero)
+            if step == 0:
+                one = q_bits[0]
+            elif step == 4:
+                one = self._and(self._not(m), low)
+            else:
+                one = self._xor(m, low)
+            if step == 4:
+                two = zero
+                negative = self._and(m, self._not(low))
+            elif step == 0:
+                two = self._and(self._not(one), q_bits[1])
+                negative = q_bits[1]
+            else:
+                two = self._and(self._not(one), self._xor(h, m))
+                negative = q_bits[2 * step + 1]
+
+            q_bits_of_step = 9 if step == 4 else 10
+
+            def place(col, node):
+                if col < cut:
+                    return
+                columns[col].append(node)
+
+            mk_xor_list = []
+            if two != zero:
+                for k in range(2):
+                    mk_xor_list.append(None)
+                for k in range(2, 9):
+                    mk_xor_list.append(self._xor(q_bits[2 * step + 1], self._bit(m_bits, k, zero)))
+
+            def get_xor(col):
+                if col >= len(mk_xor_list):
+                    return mk_xor_list[-1]
+                return mk_xor_list[col]
+
+            if two == zero:
+                p = x_and
+                q = x_or
+
+                a = self._or(self._and(one, m_bits[2]), self._and(negative, self._not(m_bits[2])))
+                b = self._or(self._and(one, m_bits[1]), self._and(negative, self._and(p, self._not(q))))
+                c = self._or(self._and(self._or(one, negative), m_bits[0]), d[-1])
+                d_tmp = self._and(negative, q)
+            else:
+                p = self._or(self._and(q_bits[2 * step + 1], x_and), self._and(self._not(q_bits[2 * step + 1]), m_bits[1]))
+                q = self._and(q_bits[2 * step + 1], x_or)
+
+                a = self._or(self._and(one, get_xor(2)), self._and(two, p))
+                b = self._or(self._and(one, self._and(p, self._not(q))), self._and(two, m_bits[0]))
+
+                if step == 0:
+                    c = self._and(one, m_bits[0])
+                    d_tmp = q
+                else:
+                    c = self._or(self._and(one, m_bits[0]), d[-1])
+                    d_tmp = self._and(self._not(self._and(q_bits[2 * step], q_bits[2 * step - 1])), q)
+
+            d.append(d_tmp)
+
+            place(2 * step, c)
+            place(2 * step + 1, b)
+            place(2 * step + 2, a)
+
+            if two == zero:
+                place(2 * step + 2, d_tmp)
+
+            for k in range(3, q_bits_of_step):
+                if two == zero:
+                    mk = self._bit(m_bits, k, zero)
+                    val = self._or(self._and(one, mk), self._and(negative, self._not(mk)))
+                else:
+                    val = self._or(self._and(one, get_xor(k)), self._and(two, get_xor(k - 1)))
+                if k == q_bits_of_step - 1:
+                    val = self._not(val)
+                place(2 * step + k, val)
+
+        return columns
+
+    def _product_columns_parent1(self, q, m, zero, one_const, cut):
+        columns = [[] for _ in range(OUT_WIDTH)]
+        pp_0_4 = pp_1_2 = common = pp_2_and = None
+
+        def place(col, node):
+            if col >= cut:
+                columns[col].append(node)
+
+        for step in range((WIDTH + 1) // 2):
+            h, middle, low = self._qsub(q, step, zero)
+            if step == 0:
+                one = q[0]
+                two = self._and(self._not(one), q[1])
+                negative = q[1]
+            elif step == 4:
+                one = self._and(self._not(middle), low)
+                two = zero
+                negative = self._and(middle, self._not(low))
+            else:
+                one = self._xor(middle, low)
+                two = self._and(self._not(one), self._xor(h, middle))
+                negative = self._and(h, self._not(self._and(middle, low)))
+
+            q_width = 9 if step == 4 else 10
+            xors = []
+            if two != zero:
+                xors = [self._xor(q[2 * step + 1], self._bit(m, k, zero))
+                        for k in range(9)]
+
+            def get_xor(k):
+                return xors[min(k, len(xors) - 1)]
+
+            if step >= 3:
+                if two == zero:
+                    m0 = self._bit(m, 0, zero)
+                    value = self._or(self._and(one, m0),
+                                self._and(negative, self._not(m0)))
+                else:
+                    value = self._or(self._and(one, get_xor(0)),
+                                self._and(two, q[2 * step + 1]))
+                place(2 * step, value)
+                place(2 * step, negative)
+
+            activity = None
+            if step == 0:
+                pp_0_4 = self._or(q[1], q[0])
+                activity = pp_0_4
+                place(5, self._or(self._and(one, get_xor(5)),
+                             self._and(two, self._not(m[4]))))
+            elif step == 1:
+                pp_1_2 = self._or(one, two)
+                activity = pp_1_2
+                place(5, self._or(self._and(one, get_xor(3)),
+                             self._and(two, get_xor(2))))
+            elif step == 2:
+                place(5, self._or(self._and(one, get_xor(1)),
+                             self._and(two, self._or(q[5], m[0]))))
+                activity = self._or(one, two)
+                common = self._and(activity, self._and(q[5], self._not(m[0])))
+                pp_2_and = self._and(one, m[0])
+
+            for k in range(max(1, 6 - step * 2), q_width):
+                if two == zero:
+                    mk = self._bit(m, k, zero)
+                    value = self._or(self._and(one, mk),
+                                self._and(negative, self._not(mk)))
+                    if k == q_width - 1:
+                        value = self._not(value)
+                elif k == q_width - 1:
+                    if activity is None:
+                        activity = self._or(one, two)
+                    value = self._not(self._and(activity, get_xor(k)))
+                else:
+                    value = self._or(self._and(one, get_xor(k)),
+                                self._and(two, get_xor(k - 1)))
+                place(2 * step + k, value)
+
+        ab = self._and(pp_0_4, pp_1_2)
+        carry = self._or(common, ab)
+        total = self._and(self._or(common, self._or(self._not(ab), pp_2_and)),
+                     self._or(pp_0_4, pp_1_2))
+        place(4, total)
+        place(5, carry)
+        return columns
+
+    def _build_circuit(self, layout_only=False, columns=None):
+        a, b, c, d, zero, one = self.setup()
+        all_columns = [[] for _ in range(OUT_TOTAL)]
+        for builder, left, right, cut in (
+            (self._product_columns, a, b, self.PROD_CUT_A),
+            (self._product_columns, c, d, self.PROD_CUT_B),
+        ):
+            product = builder(right, left, zero, one, cut)
+            for col in range(OUT_WIDTH):
+                all_columns[col].extend(product[col])
+        for col in self.COMP_COLS + self.ROUND_COLS:
+            all_columns[col].append(one)
+        for col, n in sorted(self.EXTRA_ONE.items()):
+            for _ in range(n):
+                all_columns[col].append(one)
+
+        if layout_only:
+            return self, [list(bucket) for bucket in all_columns]
+        if columns is not None:
+            all_columns = [list(bucket) for bucket in columns]
+
+        for col in range(OUT_TOTAL):
+            compressor_index = 0
+            while len(all_columns[col]) >= 3:
+                x0, x1, x2 = all_columns[col].pop(), all_columns[col].pop(), all_columns[col].pop()
+                if col in self.MAJ_COLS and x0 not in (zero, one) and x1 not in (zero, one) \
+                        and x2 not in (zero, one):
+                    x0x2 = self._and(x0, x2)
+                    x1_or_x0x2 = self._or(x1, x0x2)
+                    x0_or_x2 = self._or(x0, x2)
+                    carry = self._and(x1_or_x0x2, x0_or_x2)
+                    compressor_index += 1
+                    if col + 1 < OUT_TOTAL:
+                        all_columns[col + 1].append(carry)
+                    continue
+                if col == 3 and compressor_index <= 1:
+                    ac = self._and(x0, x2)
+                    b_or_ac = self._or(x1, ac)
+                    a_or_c = self._or(x0, x2)
+                    carry = self._and(b_or_ac, a_or_c)
+                    total = self._xor(b_or_ac, a_or_c)
+                else:
+                    total, carry = self._add3(x0, x1, x2)
+                compressor_index += 1
+                all_columns[col].append(total)
+                if col + 1 < OUT_TOTAL:
+                    all_columns[col + 1].append(carry)
+
+        carry = None
+        outputs = []
+        for col, bucket in enumerate(all_columns):
+            bucket = bucket or [zero]
+            if carry is None:
+                outputs.append(bucket[0] if len(bucket) == 1 else self._xor(bucket[0], bucket[1]))
+                if len(bucket) > 1:
+                    carry = self._and(bucket[0], bucket[1])
+            elif len(bucket) == 1 and bucket[0] == zero:
+                outputs.append(carry)
+                carry = zero
+            elif len(bucket) == 1 and bucket[0] == one:
+                outputs.append(self._not(carry))
+            elif len(bucket) == 1:
+                outputs.append(self._or(bucket[0], carry) if col < 7
+                               else self._xor(bucket[0], carry))
+                carry = self._and(bucket[0], carry)
+            else:
+                total, carry = self._add3(bucket[0], bucket[1], carry)
+                outputs.append(total)
+        self.output_ids = [zero] * 6 + outputs[6:18] + [outputs[17]]
+        return self
+
+
+def build_circuit():
+    return Candidate()._build_circuit()
+
+def build_partial_product_layout():
+    return Candidate()._build_circuit(layout_only=True)
+
+def build_circuit_from_columns(circuit, columns):
+    return Candidate()._build_circuit(columns=columns)

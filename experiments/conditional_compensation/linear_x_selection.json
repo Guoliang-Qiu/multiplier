@@ -1,0 +1,162 @@
+{
+  "direct_parents": {
+    "sampling": {
+      "kind": "provided",
+      "count": 1050624
+    },
+    "deletion_model": "linear",
+    "residual": "(a*b+c*d - baseline_raw + removed_weighted_sum)/128; no floor, no wrap",
+    "reference_energy": 58247.79689367025,
+    "baseline": {
+      "mse": 0.10960981412473013,
+      "evm_db": -57.25430062411314,
+      "gate_cost": 1015
+    },
+    "deleted": {
+      "mse": 0.18378096778258013,
+      "evm_db": -55.009789695171094,
+      "gate_cost": null
+    },
+    "removed_slots": [
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "node_ids": [
+      89,
+      90,
+      153,
+      154
+    ],
+    "information_mse": 0.03007614084815239,
+    "information_evm_db": -62.87057393706897,
+    "baseline_variance": 0.030342229453924216,
+    "baseline_conditional_variance": 0.03007614084815239,
+    "baseline_conditional_variance_evm_db": -62.87057393706897,
+    "conditional_variance_gap": 0.0,
+    "removed_conditional_variance": 0.0,
+    "x_unreachable_after_physical_deletion": [
+      89,
+      90,
+      153,
+      154
+    ],
+    "physical_deletion_gate_cost": 991,
+    "note": "Linear deletion is an analytical model, not an implemented cheaper circuit. Error-table/synthesis/export retain their physical-deletion model.",
+    "exhaustive_dependency_cases": 512,
+    "D_determined_for_all_inputs": true,
+    "reconstruction_cost_upper_bound": 2
+  },
+  "retained_ancestor_cut": {
+    "sampling": {
+      "kind": "provided",
+      "count": 1050624
+    },
+    "deletion_model": "linear",
+    "residual": "(a*b+c*d - baseline_raw + removed_weighted_sum)/128; no floor, no wrap",
+    "reference_energy": 58247.79689367025,
+    "baseline": {
+      "mse": 0.10960981412473013,
+      "evm_db": -57.25430062411314,
+      "gate_cost": 1015
+    },
+    "deleted": {
+      "mse": 0.18378096778258013,
+      "evm_db": -55.009789695171094,
+      "gate_cost": null
+    },
+    "removed_slots": [
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "node_ids": [
+      3,
+      5,
+      11,
+      14,
+      39,
+      43,
+      55,
+      110,
+      119,
+      123
+    ],
+    "information_mse": 0.027430049844108965,
+    "information_evm_db": -63.27052906912159,
+    "baseline_variance": 0.030342229453924216,
+    "baseline_conditional_variance": 0.027430049844108965,
+    "baseline_conditional_variance_evm_db": -63.27052906912159,
+    "conditional_variance_gap": 0.0,
+    "removed_conditional_variance": 0.0,
+    "x_unreachable_after_physical_deletion": [],
+    "physical_deletion_gate_cost": 991,
+    "note": "Linear deletion is an analytical model, not an implemented cheaper circuit. Error-table/synthesis/export retain their physical-deletion model.",
+    "exhaustive_dependency_cases": 512,
+    "D_determined_for_all_inputs": true,
+    "reconstruction_cost_upper_bound": 12
+  },
+  "primary_dependencies": {
+    "sampling": {
+      "kind": "provided",
+      "count": 1050624
+    },
+    "deletion_model": "linear",
+    "residual": "(a*b+c*d - baseline_raw + removed_weighted_sum)/128; no floor, no wrap",
+    "reference_energy": 58247.79689367025,
+    "baseline": {
+      "mse": 0.10960981412473013,
+      "evm_db": -57.25430062411314,
+      "gate_cost": 1015
+    },
+    "deleted": {
+      "mse": 0.18378096778258013,
+      "evm_db": -55.009789695171094,
+      "gate_cost": null
+    },
+    "removed_slots": [
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "node_ids": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      11,
+      12,
+      13,
+      14
+    ],
+    "information_mse": 0.026933180796646205,
+    "information_evm_db": -63.34991857264063,
+    "baseline_variance": 0.030342229453924216,
+    "baseline_conditional_variance": 0.026933180796646205,
+    "baseline_conditional_variance_evm_db": -63.34991857264063,
+    "conditional_variance_gap": 0.0,
+    "removed_conditional_variance": 0.0,
+    "x_unreachable_after_physical_deletion": [],
+    "physical_deletion_gate_cost": 991,
+    "note": "Linear deletion is an analytical model, not an implemented cheaper circuit. Error-table/synthesis/export retain their physical-deletion model.",
+    "exhaustive_dependency_cases": 512,
+    "D_determined_for_all_inputs": true,
+    "reconstruction_cost_upper_bound": 26
+  }
+}

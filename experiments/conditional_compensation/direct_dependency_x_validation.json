@@ -1,0 +1,91 @@
+{
+  "sampling": {
+    "kind": "tap2_unordered_pairs",
+    "seed": 42,
+    "tap2_copies": 8
+  },
+  "count": 1050624,
+  "slots": [
+    [
+      4,
+      0
+    ],
+    [
+      4,
+      1
+    ]
+  ],
+  "removed_nodes": [
+    91,
+    155
+  ],
+  "immediate_parent_X": [
+    89,
+    90,
+    153,
+    154
+  ],
+  "unreachable_after_deletion": [
+    89,
+    90,
+    153,
+    154
+  ],
+  "baseline_evm": -57.92858413562766,
+  "deleted_evm": -55.613800012390556,
+  "information_evm": -55.86166640955915,
+  "conditional_variances": {
+    "removed_weighted_sum": 0.0,
+    "baseline_minus_deleted_raw": 1062.2033013846117,
+    "baseline_minus_deleted_quantized": 0.1894539139348019,
+    "baseline_error": 0.09258140580025712,
+    "tool_residual": 0.15104726388220432,
+    "original_raw_error": 0.03007614084815239,
+    "deleted_raw_error": 0.061668148347184475,
+    "synthetic_linear_deleted_error": 0.03007614084815239,
+    "actual_raw_error_after_exact_D_compensation": 0.061668148347184475
+  },
+  "exact_reinsertion_graph_equal": true,
+  "post_output_addition_raw_mismatches": 693405,
+  "post_output_addition_evm": -55.613800012390556,
+  "same_X_counterexample": [
+    {
+      "X": 0,
+      "input": [
+        -153,
+        -255,
+        142,
+        -254
+      ],
+      "removed_sum": 0,
+      "baseline_raw": 2944,
+      "deleted_raw": 3008
+    },
+    {
+      "X": 0,
+      "input": [
+        -80,
+        -256,
+        -254,
+        -256
+      ],
+      "removed_sum": 0,
+      "baseline_raw": 85504,
+      "deleted_raw": 85504
+    }
+  ],
+  "unquantized_validation": {
+    "units": "raw/128; no floor in any residual in this section",
+    "baseline_mse": 0.10960981412473013,
+    "deleted_mse": 0.18313404383250378,
+    "baseline_conditional_variance": 0.03007614084815239,
+    "deleted_conditional_variance": 0.061668148347184475,
+    "baseline_conditional_variance_evm_db": -62.87057393706897,
+    "deleted_conditional_variance_evm_db": -59.75218595228398,
+    "synthetic_linear_deletion_conditional_variance": 0.03007614084815239,
+    "synthetic_compensation_restores_original_error": true,
+    "raw_delta_equals_D_mismatches": 693405,
+    "actual_compensation_error_mse": 0.11865471974450942,
+    "baseline_conditional_mean_square": 0.07953367327657773
+  }
+}

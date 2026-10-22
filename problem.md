@@ -16,6 +16,19 @@ Constraints:
   and related metrics are reported in real-value units.
 - Candidates expose only a zero-argument `build_circuit()` that returns `multiplier.circuit.Circuit`.
 - A candidate generates a static, input-independent DAG. It must not simulate inputs, compute scores, or override gate costs.
+- Candidates based on `MultiplierCircuit` must implement the complete construction
+  stages `_product_columns(a, b, c, d, zero, one)`, `_compress_columns()`, and
+  `_build_outputs()`. The base `_build_circuit()` calls them in that order:
+  setup the four LSB-first input buses, generate one joint pre-compression
+  column layout for `a*b + c*d`, compress the columns, and create
+  `output_ids`. `_product_columns()` receives all four buses together so a
+  candidate may share logic across both products and must return the complete
+  list of weighted columns. `_compress_columns()` and `_build_outputs()` are
+  abstract extension points rather than fixed algorithms; candidates may use
+  the reference implementations `_compress_columns_reference()` and
+  `_build_outputs_reference()` or implement custom approximate, fused, wider,
+  truncated, or low-bit carry logic. The construction must still return a
+  complete valid circuit and set the required output bus.
 - Approximation must be implemented as a runnable circuit, not as a post-processing
   rule or a predicted score. Every approximation scheme must be evaluated by the
   existing `eval.py` procedure, including its fixed input generation, Q4.7

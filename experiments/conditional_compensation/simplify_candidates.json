@@ -1,0 +1,114 @@
+[
+  {
+    "file": "candidate_dist_1015_probe1014.py",
+    "cost": 1014,
+    "graph_identical": true,
+    "before_lines": 266,
+    "after_lines": 225
+  },
+  {
+    "file": "candidate_dist_1020_to1010.py",
+    "cost": 1010,
+    "graph_identical": true,
+    "before_lines": 254,
+    "after_lines": 222
+  },
+  {
+    "file": "candidate_dist_1020_to1015.py",
+    "cost": 1015,
+    "graph_identical": true,
+    "before_lines": 257,
+    "after_lines": 222
+  },
+  {
+    "file": "candidate_dist_recoded1020.py",
+    "cost": 1020,
+    "graph_identical": true,
+    "before_lines": 242,
+    "after_lines": 216
+  },
+  {
+    "file": "candidate_dist_recoded1025.py",
+    "cost": 1025,
+    "graph_identical": true,
+    "before_lines": 232,
+    "after_lines": 212
+  },
+  {
+    "file": "candidate_dist_top_reuse988.py",
+    "cost": 988,
+    "graph_identical": true,
+    "before_lines": 280,
+    "after_lines": 239
+  },
+  {
+    "file": "candidate_exact_rounding_optimized.py",
+    "cost": 1289,
+    "graph_identical": true,
+    "before_lines": 256,
+    "after_lines": 102
+  },
+  {
+    "file": "candidate_g0000_0001.py",
+    "cost": 1000,
+    "graph_identical": true,
+    "before_lines": 173,
+    "after_lines": 161
+  },
+  {
+    "file": "candidate_g0000_0002.py",
+    "cost": 1005,
+    "graph_identical": true,
+    "before_lines": 201,
+    "after_lines": 189
+  },
+  {
+    "file": "candidate_g0001_0000.py",
+    "cost": 1037,
+    "graph_identical": true,
+    "before_lines": 187,
+    "after_lines": 176
+  },
+  {
+    "file": "candidate_g0001_0001.py",
+    "cost": 1064,
+    "graph_identical": true,
+    "before_lines": 160,
+    "after_lines": 149
+  },
+  {
+    "file": "candidate_g0001_0004.py",
+    "cost": 1111,
+    "graph_identical": true,
+    "before_lines": 171,
+    "after_lines": 160
+  },
+  {
+    "file": "candidate_g0001_0005.py",
+    "cost": 1114,
+    "graph_identical": true,
+    "before_lines": 173,
+    "after_lines": 162
+  },
+  {
+    "file": "candidate_g0001_0005_col2_joint_asym.py",
+    "cost": 1084,
+    "graph_identical": true,
+    "before_lines": 182,
+    "after_lines": 165
+  },
+  {
+    "file": "candidate_g0001_0005_joint1060.py",
+    "cost": 1060,
+    "graph_identical": true,
+    "before_lines": 182,
+    "after_lines": 165
+  },
+  {
+    "file": "candidate_g0001_0005_joint1072.py",
+    "cost": 1072,
+    "graph_identical": true,
+    "before_lines": 187,
+    "after_lines": 170
+  }
+]

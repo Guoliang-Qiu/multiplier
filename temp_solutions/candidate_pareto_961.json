@@ -1,0 +1,61 @@
+{
+  "candidate": "candidate_pareto_961.py",
+  "gate_cost": 961,
+  "counts": {
+    "NOT": 974,
+    "AND": 961
+  },
+  "avg_abs_error": 0.2674625909816452,
+  "bias": 0.24210652877480432,
+  "error_cases": 1038526,
+  "error_rate": 0.9884849384746589,
+  "evm_db": -57.61590546455796,
+  "mae": 0.2674625909816452,
+  "max_abs_error": 1.0,
+  "mse": 0.09691321518686083,
+  "rmse": 0.3175736631844264,
+  "runtime_seconds": 142.42010726800072,
+  "total_cases": 1050624,
+  "source": "generations/9/base999.py",
+  "arithmetic_source": "initial_solutions/candidate_g0000_0001.py",
+  "candidate_sha256": "dd9c6a2c154da0a0e1e84cc3d370bc5d652a93343a31693425569de38785e37f",
+  "eval_py_sha256": "7e218f2962eb8b5eb440ff354d21a93f68169ae2061539e43f7fefc51676eeac",
+  "gate_cost_py_sha256": "33908e8be5b015980b027cf623ebc76c8af5827355e9abb618612ccd57d3dcbf",
+  "evaluation": {
+    "TAP2_COPIES": 8,
+    "seed": 42,
+    "command": "TAP2_COPIES=8 OPENBLAS_NUM_THREADS=1 python eval.py generations/9/base999.py",
+    "publication_check": "Published DAG nodes, input_ids and output_ids are identical to the evaluated generation snapshot."
+  },
+  "equivalence": {
+    "adapter_direct_blif_cec": "======== ABC command line \"cec -T 120 /home/guoli/multiplier/generations/9/base999_direct.blif /home/guoli/multiplier/generations/9/base999_input.aig\"\nNetworks are equivalent.  Time =     0.38 sec\n",
+    "abc_cec": "======== ABC command line \"cec -T 120 /home/guoli/multiplier/generations/9/base999_input.aig /home/guoli/multiplier/generations/9/base999_0_resub.aig\"\nNetworks are equivalent.  Time =     1.56 sec\n",
+    "scope": "All 36-bit input assignments and all 19 raw output bits"
+  },
+  "meets_target": false,
+  "comparison_target": {
+    "tag": "base999",
+    "cost": 961,
+    "evm_db": -57.61590546455796
+  },
+  "comparison_report": "generations/9/fair_comparison.json",
+  "comparison_protocol": {
+    "abc_path": "/tmp/opencode/abc/abc",
+    "abc_sha256": "c755a877c52962c2b4d0c52edad5761b27986ad5143fb294a7c501feb92c238a",
+    "scripts": {
+      "resyn2": "balance; rewrite; refactor; balance; rewrite; rewrite -z; balance; refactor -z; rewrite -z; balance",
+      "resub": "resub -K 6 -N 2; resub -K 8 -N 2; resub -K 10 -N 2; resub -K 12 -N 2",
+      "dc2": "dc2",
+      "rewrite": "rewrite; rewrite -z; rewrite"
+    },
+    "max_rounds": 2,
+    "acceptance": "strict weighted cost decrease",
+    "conversion": "same complemented-edge AIG canonicalization for all candidates",
+    "stopping": "stop after a round without cost improvement",
+    "eval_sha256": "7e218f2962eb8b5eb440ff354d21a93f68169ae2061539e43f7fefc51676eeac",
+    "TAP2_COPIES": 8,
+    "rng_seed": 42
+  },
+  "artifact_role": "normalized_baseline_reference",
+  "pareto_status": "non_dominated_under_equal_synthesis_flow"
+}

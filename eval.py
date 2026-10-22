@@ -30,7 +30,7 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from multiplier.circuit import INPUT_WIDTH, simulate_many, validate_circuit
+from multiplier.circuit import INPUT_WIDTH
 
 SCALE = 1 << 7  # 128: Q4.14 -> Q4.7 scale used by the qgl script
 RNG_SEED = 42
@@ -115,19 +115,19 @@ def evaluate(module) -> dict[str, float | int]:
     if not hasattr(module, "build_circuit"):
         raise AttributeError("candidate must expose build_circuit()")
     circuit = module.build_circuit()
-    validate_circuit(circuit)
+    circuit.validate()
 
     if len(circuit.input_ids) == 4 * INPUT_WIDTH:
         a, b, c, d = generate_data()
         inputs = list(zip(a.tolist(), b.tolist(), c.tolist(), d.tolist()))
-        raws = simulate_many(circuit, inputs)
+        raws = circuit.simulate_many(inputs)
         return _tap2_metrics(raws, a, b, c, d)
 
     bound = 1 << (INPUT_WIDTH - 1)
     inputs = [(a, b) for a in range(-bound, bound) for b in range(-bound, bound)]
     a = np.array([p[0] for p in inputs], dtype=np.int64)
     b = np.array([p[1] for p in inputs], dtype=np.int64)
-    raws = simulate_many(circuit, inputs)
+    raws = circuit.simulate_many(inputs)
     return _qgl_metrics(raws, a, b)
 
 

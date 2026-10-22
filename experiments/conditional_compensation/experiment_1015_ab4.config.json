@@ -1,0 +1,28 @@
+{
+  "implementation": "../../initial_solutions/candidate_dist_1020_to1015.py",
+  "removed_slots": [
+    [
+      4,
+      0
+    ],
+    [
+      4,
+      1
+    ]
+  ],
+  "node_ids": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    11,
+    12,
+    13,
+    14
+  ],
+  "compensation_columns": [
+    6
+  ],
+  "target_evm_db": -57.85
+}

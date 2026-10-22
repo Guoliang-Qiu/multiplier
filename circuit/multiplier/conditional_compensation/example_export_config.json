@@ -1,0 +1,5 @@
+{
+  "implementation": "candidate_g0001_0005_col2_joint_asym.py",
+  "error_table": "example_error_table_result.npy",
+  "synthesis_result": "example_synthesis_result.json"
+}
