@@ -5,6 +5,7 @@ import argparse
 from datetime import datetime
 from decimal import Decimal, ROUND_FLOOR, localcontext
 import json
+import os
 from pathlib import Path
 import signal
 import sys
@@ -15,7 +16,9 @@ import z3
 from .compensation_error_table import _load_candidate, evaluate_truth_table
 from .node_set_information import build_experiment
 
-HARD_INSTANCES_DIR = Path(__file__).resolve().parent / "hard_instances"
+HARD_INSTANCES_DIR = Path(
+    os.environ.get("MULTIPLIER_EXPERIMENTS", Path.cwd() / "experiments")
+) / "conditional_compensation" / "hard_instances"
 OPS = ("AND", "OR", "XOR", "NOT", "WIRE")
 COSTS = (1, 1, 3, 0, 0)
 

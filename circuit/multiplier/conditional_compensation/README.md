@@ -112,16 +112,21 @@ it does not search for them or synthesize G.
 
 ```json
 {
-  "implementation": "/home/guoli/open_question_solver/tools/circuit_kit/circuit/multiplier/conditional_compensation/candidate_g0001_0005_col2_joint_asym.py",
+  "implementation": "candidate_g0001_0005_col2_joint_asym.py",
   "removed_slots": [[4, 0]],
   "node_ids": [2, 3]
 }
 ```
 
-Run from `/home/guoli/open_question_solver`:
+Run from the parent directory of the active workspace. Set `WORKSPACE` to the
+workspace directory; it may be moved without changing these commands:
 
 ```bash
-python -m tools.circuit_kit.circuit.multiplier.conditional_compensation.node_set_information config.json --output report.json
+WORKSPACE=/path/to/multiplier
+PYTHONPATH="$(dirname "$WORKSPACE")" MULTIPLIER_ROOT="$WORKSPACE" \
+python -m multiplier.circuit.multiplier.conditional_compensation.node_set_information \
+  "$WORKSPACE/circuit/multiplier/conditional_compensation/example_config.json" \
+  --output "$WORKSPACE/experiments/conditional_compensation/node_set_report.json"
 ```
 
 - `implementation`: Python module exposing the concrete `Candidate` class.
@@ -142,10 +147,10 @@ It does not call a custom `_build_circuit` override.
 ## Python API and layout inspection
 
 ```python
-from tools.circuit_kit.circuit.multiplier.conditional_compensation import (
+from multiplier.circuit.multiplier.conditional_compensation import (
     build_experiment, evaluate_node_set,
 )
-from tools.circuit_kit.circuit.multiplier.conditional_compensation.candidate_g0001_0005_col2_joint_asym import Candidate
+from multiplier.circuit.multiplier.conditional_compensation.candidate_g0001_0005_col2_joint_asym import Candidate
 
 baseline, deleted, columns, prefix_size = build_experiment(Candidate, [])
 print(columns[:6])
@@ -199,10 +204,10 @@ adds their exact weighted raw value to `deleted_raw`, applies the final
 quantization, and reports the conditional error table.
 
 ```bash
-PYTHONPATH=/home/guoli/open_question_solver/tools/circuit_kit \
-python -m circuit.multiplier.conditional_compensation.compensation_error_table \
-  /home/guoli/open_question_solver/tools/circuit_kit/circuit/multiplier/conditional_compensation/example_error_table_config.json \
-  --output /home/guoli/open_question_solver/tools/circuit_kit/circuit/multiplier/conditional_compensation/example_error_table_result.npy
+PYTHONPATH="$(dirname "$WORKSPACE")" MULTIPLIER_ROOT="$WORKSPACE" \
+python -m multiplier.circuit.multiplier.conditional_compensation.compensation_error_table \
+  "$WORKSPACE/circuit/multiplier/conditional_compensation/example_error_table_config.json" \
+  --output "$WORKSPACE/experiments/conditional_compensation/example_error_table.npy"
 ```
 
 For columns `[4,5,6]`, the eight raw compensation values are:
@@ -279,10 +284,10 @@ are integers. The generated DAG is independently simulated on all X states,
 and its error is checked against the table before returning SAT.
 
 ```bash
-PYTHONPATH=/home/guoli/open_question_solver/tools/circuit_kit \
-python -m circuit.multiplier.conditional_compensation.synthesize \
-  /home/guoli/open_question_solver/tools/circuit_kit/circuit/multiplier/conditional_compensation/example_synthesis_config.json \
-  --output /home/guoli/open_question_solver/tools/circuit_kit/circuit/multiplier/conditional_compensation/example_synthesis_result.json
+PYTHONPATH="$(dirname "$WORKSPACE")" MULTIPLIER_ROOT="$WORKSPACE" \
+python -m multiplier.circuit.multiplier.conditional_compensation.synthesize \
+  "$WORKSPACE/circuit/multiplier/conditional_compensation/example_synthesis_config.json" \
+  --output "$WORKSPACE/experiments/conditional_compensation/example_synthesis_result.json"
 ```
 
 Configuration paths are relative to the configuration file. The NPY's matching
@@ -364,14 +369,16 @@ table and synthesis result, verifies the G truth table against the error budget,
 and creates a new standalone candidate module. See `example_export_config.json`.
 
 ```bash
-PYTHONPATH=/home/guoli/open_question_solver/tools/circuit_kit \
-python -m circuit.multiplier.conditional_compensation.export_candidate \
-  /home/guoli/open_question_solver/tools/circuit_kit/circuit/multiplier/conditional_compensation/example_export_config.json \
-  --output /home/guoli/open_question_solver/tools/circuit_kit/circuit/multiplier/conditional_compensation/candidate_compensated.py
+PYTHONPATH="$(dirname "$WORKSPACE")" MULTIPLIER_ROOT="$WORKSPACE" \
+python -m multiplier.circuit.multiplier.conditional_compensation.export_candidate \
+  "$WORKSPACE/circuit/multiplier/conditional_compensation/example_export_config.json" \
+  --output "$WORKSPACE/generations/candidate_compensated.py"
 ```
 
-Output must be a new `.py` in this package directory, so relative imports keep
-working after moving the circuit package. Existing files are never overwritten.
+Output must be a new `.py` inside the active workspace. Generated candidates
+use the workspace package import `multiplier.circuit...`, so moving the whole
+workspace only requires updating `PYTHONPATH` and `MULTIPLIER_ROOT`. Existing
+files are never overwritten.
 The generator leaves the source candidate untouched. The emitted module contains
 the full reachable frozen DAG, a concrete `Candidate(MultiplierCircuit)` and
 `build_circuit()`; it does not load the synthesis JSON or source candidate at

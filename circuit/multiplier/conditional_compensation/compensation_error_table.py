@@ -14,7 +14,7 @@ from pathlib import Path
 
 import numpy as np
 
-from ..tap2_9bit_multiplier import OUT_TOTAL
+from multiplier.circuit.multiplier.tap2_9bit_multiplier import OUT_TOTAL
 from .node_set_information import (
     _db,
     _sample_values,
@@ -149,7 +149,8 @@ def main():
     if args.output.suffix != ".npy":
         parser.error("--output must have a .npy extension")
     config = json.loads(args.config.read_text())
-    candidate = _load_candidate(config.pop("implementation"))
+    implementation = (args.config.resolve().parent / config.pop("implementation")).resolve()
+    candidate = _load_candidate(implementation)
     result, matrix = generate_error_table(candidate, **config)
     result["error_table_file"] = args.output.name
     result["error_table_shape"] = list(matrix.shape)

@@ -3,12 +3,13 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from pathlib import Path
 import pprint
 
 import numpy as np
 
-from ..tap2_9bit_multiplier import OUT_TOTAL
+from multiplier.circuit.multiplier.tap2_9bit_multiplier import OUT_TOTAL
 from .compensation_error_table import _load_candidate, evaluate_truth_table
 from .node_set_information import build_experiment
 from .synthesize import instantiate_compensation, truth_table, error_budget
@@ -91,7 +92,7 @@ The complete graph includes the deleted circuit, G and exact 19-bit addition.
 Columns here are final result bits, not the original partial-product layout;
 do not use this frozen export for another low-partial-product deletion search.
 """
-from ..tap2_9bit_multiplier import MultiplierCircuit
+from multiplier.circuit.multiplier.tap2_9bit_multiplier import MultiplierCircuit
 
 _GRAPH = %s
 _INPUT_IDS = %r
@@ -127,11 +128,12 @@ def build_circuit():
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("config", type=Path)
-    parser.add_argument("--output", required=True, type=Path, help="new candidate .py inside this package directory")
+    parser.add_argument("--output", required=True, type=Path, help="new candidate .py inside the active workspace")
     args = parser.parse_args()
     output = args.output.resolve()
-    if output.parent != Path(__file__).resolve().parent or output.suffix != ".py":
-        parser.error("output must be a .py file in conditional_compensation for its relative import")
+    workspace = Path(os.environ.get("MULTIPLIER_ROOT", Path.cwd())).resolve()
+    if output.suffix != ".py" or workspace not in output.parents:
+        parser.error("output must be a .py file inside the active workspace")
     if output.exists() or output.with_suffix(".json").exists():
         parser.error("output candidate or companion report already exists; choose a new name")
     config = json.loads(args.config.read_text())

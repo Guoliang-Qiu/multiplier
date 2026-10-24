@@ -1,7 +1,7 @@
 """Offline residual-information screening; no compensation synthesis.
 
-Run from the repository root with ``python -m
-tools.circuit_kit.circuit.multiplier.conditional_compensation.node_set_information CONFIG.json``.
+Run from the workspace parent with ``python -m
+multiplier.circuit.multiplier.conditional_compensation.node_set_information CONFIG.json``.
 """
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ from pathlib import Path
 
 import numpy as np
 
-from ..tap2_9bit_multiplier import OUT_TOTAL, WIDTH
+from multiplier.circuit.multiplier.tap2_9bit_multiplier import OUT_TOTAL, WIDTH
 from ...simulation import _simulate_packed_values
 
 
@@ -214,7 +214,7 @@ def main():
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     config = json.loads(args.config.read_text())
-    path = Path(config.pop("implementation")).resolve()
+    path = (args.config.resolve().parent / config.pop("implementation")).resolve()
     # Preserve package context for bundled candidates using relative imports.
     module_name = "compensation_candidate"
     if path.parent == Path(__file__).resolve().parent:
