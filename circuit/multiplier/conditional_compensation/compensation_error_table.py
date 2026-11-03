@@ -2,7 +2,8 @@
 
 The compensation contains at most three Boolean partial products. If their
 columns are k0, k1, k2, action code b2b1b0 adds
-``b0*2**k0 + b1*2**k1 + b2*2**k2`` to the deleted raw result before rounding.
+bits into the modified partial-product array before the original compressor
+and CPA. Their weights are ``2**k0, 2**k1, 2**k2``.
 """
 from __future__ import annotations
 
@@ -21,6 +22,7 @@ from .node_set_information import (
     build_experiment,
     generate_evaluation_samples,
 )
+from .array_compensation import MODEL, prepare, finish
 
 
 def _add_signed_raw(raw, value):
@@ -39,7 +41,7 @@ def generate_error_table(
     *,
     samples=None,
 ):
-    """Return E[x,y] = sum((T - 128*Q(D+C(y)))**2 | X=x).
+    """Return conditional integer losses after array insertion and all stages.
 
     No truth table is selected here. Output codes index compensation bits in
     the supplied column order. Repeated columns represent separate bits.
@@ -65,10 +67,10 @@ def generate_error_table(
     samples = samples.astype(np.int64)
 
     _, deleted, _, prefix_size = build_experiment(implementation, removed_slots)
-    eligible = set(node for node in deleted.reachable_node_ids()
-                   if node < prefix_size and deleted.nodes[node].kind not in {"ZERO", "ONE"})
+    eligible = {node for node in range(prefix_size)
+                if deleted.nodes[node].kind not in {"ZERO", "ONE"}}
     if len(set(nodes)) != len(nodes) or any(node not in eligible for node in nodes):
-        raise ValueError("X nodes must be distinct, reachable, nonconstant pre-compression nodes")
+        raise ValueError("X nodes must be distinct nonconstant pre-compression nodes")
 
     deleted_raw, bits = _sample_values(deleted, samples, nodes)
     exact_raw = samples[:, 0] * samples[:, 1] + samples[:, 2] * samples[:, 3]
@@ -89,13 +91,18 @@ def generate_error_table(
     ]
     error_table = np.zeros((state_count, len(compensation_values)), dtype=np.int64)
     for code, value in enumerate(compensation_values):
-        compensated_raw = _add_signed_raw(deleted_raw, value)
+        action = prepare(implementation, removed_slots)
+        action_nodes = [action._one if (code >> j) & 1 else action._zero
+                        for j in range(len(columns))]
+        finish(action, columns, action_nodes)
+        compensated_raw, _ = _sample_values(action, samples, [])
         output = (compensated_raw + 64) // 128
         squared_error = np.square(exact_raw - 128 * output)
         # Weighted bincount converts to float; add.at preserves integer sums.
         np.add.at(error_table[:, code], codes, squared_error)
 
     metadata = {
+        "compensation_model": MODEL,
         "sampling": {**sampling, "count": len(samples)},
         "removed_slots": [list(slot) for slot in removed_slots],
         "node_ids": nodes,

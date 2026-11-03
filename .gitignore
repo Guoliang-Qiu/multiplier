@@ -14,3 +14,5 @@ __pycache__/
 **/generations*/
 **/history*/
 /initial_solutions_old
+/experiments
+/comparison_results

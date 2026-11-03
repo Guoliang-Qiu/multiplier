@@ -1,0 +1,73 @@
+{
+  "baseline_cost": 1111,
+  "deleted_cost": 1049,
+  "compensation_model": "precompression_append_v1",
+  "nonconstant_terms_upper_bound": 95,
+  "final_cost": 1103,
+  "net_cost_saving": 8,
+  "strict_cost_improvement": true,
+  "target_evm_db": -57.6,
+  "table_metrics": {
+    "scaled_squared_error_sum": 1476849507,
+    "mse": 0.08579638426066839,
+    "evm_db": -58.31810518040114
+  },
+  "performance_basis": "pre-compression insertion followed by original compressor and CPA; verify full candidate",
+  "source": "/home/guoli/multiplier/initial_solutions/candidate_-58.416063_1111.py",
+  "proposal": {
+    "removed_slots": [
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        4,
+        2
+      ]
+    ],
+    "node_ids": [
+      55,
+      56,
+      57,
+      65,
+      66,
+      110,
+      114,
+      160,
+      301,
+      400
+    ],
+    "compensation_columns": [
+      2,
+      3,
+      4
+    ],
+    "linear_information_mse": 0.017856400690488494,
+    "screen_evm": -58.69736117087672,
+    "terms": 95
+  },
+  "evaluation": {
+    "avg_abs_error": 0.2524059436939381,
+    "bias": 0.265179007606432,
+    "error_cases": 1038524,
+    "error_rate": 0.9884830348440545,
+    "evm_db": -58.31810518040114,
+    "mae": 0.2524059436939381,
+    "max_abs_error": 0.7109375,
+    "mse": 0.09339520172533701,
+    "rmse": 0.2929101982872368,
+    "runtime_seconds": 89.97218617899853,
+    "total_cases": 1050624
+  },
+  "final_terms": 95,
+  "meets_primary_goal": false,
+  "experiment": "experiments/conditional_compensation/deep_refine_results/candidate_-58.416063_1111/round_0/6a7b713a9e30"
+}

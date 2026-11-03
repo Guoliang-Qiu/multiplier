@@ -13,10 +13,13 @@ from multiplier.circuit.multiplier.tap2_9bit_multiplier import OUT_TOTAL
 from .compensation_error_table import _load_candidate, evaluate_truth_table
 from .node_set_information import build_experiment
 from .synthesize import instantiate_compensation, truth_table, error_budget
+from .array_compensation import MODEL, prepare, finish
 
 
 def build_compensated_candidate(implementation, metadata, synthesis, table):
-    """Construct wrap19(deleted_raw + C(G(X))) before external quantization."""
+    """Insert G into the partial-product array before compression and CPA."""
+    if metadata.get('compensation_model') != MODEL:
+        raise ValueError('Regenerate error table using the pre-compression model')
     if synthesis.get("status") != "sat":
         raise ValueError("a SAT synthesis result is required")
     for key in ("node_ids", "compensation_columns"):
@@ -38,43 +41,28 @@ def build_compensated_candidate(implementation, metadata, synthesis, table):
 
     baseline, candidate, _, prefix_size = build_experiment(implementation, metadata["removed_slots"])
     nodes = metadata["node_ids"]
-    eligible = candidate.reachable_node_ids()
-    if any(type(n) is not int or not 0 <= n < prefix_size or n not in eligible for n in nodes):
-        raise ValueError("X IDs are not valid retained pre-compression nodes")
+    if any(type(n) is not int or not 0 <= n < prefix_size or
+           candidate.nodes[n].kind in {"ZERO", "ONE"} for n in nodes):
+        raise ValueError("X IDs are not valid nonconstant pre-compression nodes")
     base_cost = baseline.gatecost().total
     deleted_cost = candidate.gatecost().total
+    candidate = prepare(implementation, metadata['removed_slots'])
+    remaining_terms = sum(n not in (candidate._zero, candidate._one)
+                          for bucket in candidate._columns for n in bucket)
     g_nodes = instantiate_compensation(candidate, nodes, netlist)
-
-    # Start from the actual deleted outputs, including its low-bit pruning and
-    # sign extension. Never feed G into the original approximate compressors.
-    buckets = [[node] for node in candidate.output_ids]
-    for col, node in zip(columns, g_nodes):
-        buckets[col].append(node)
-    outputs = []
-    carry = candidate._zero
-    for col, bucket in enumerate(buckets):
-        while len(bucket) > 2:
-            total, extra = candidate._add3(bucket.pop(), bucket.pop(), bucket.pop())
-            bucket.append(total)
-            if col + 1 < OUT_TOTAL:
-                buckets[col + 1].append(extra)
-        if len(bucket) == 1:
-            total, carry = candidate._ha(bucket[0], carry)
-        else:
-            total, carry = candidate._add3(bucket[0], bucket[1], carry)
-        outputs.append(total)
-    candidate.output_ids = outputs
-    candidate.validate()
+    finish(candidate, columns, g_nodes)
     final_cost = candidate.gatecost().total
     return candidate, {
         "baseline_cost": base_cost,
         "deleted_cost": deleted_cost,
+        "compensation_model": MODEL,
+        "nonconstant_terms_upper_bound": remaining_terms + len(g_nodes),
         "final_cost": final_cost,
         "net_cost_saving": base_cost - final_cost,
         "strict_cost_improvement": final_cost < base_cost,
         "target_evm_db": synthesis["target_evm_db"],
         "table_metrics": metrics,
-        "performance_basis": "error table plus exact wrap19 addition; not a fresh full-workload measurement",
+        "performance_basis": "pre-compression insertion followed by original compressor and CPA; verify full candidate",
     }
 
 
@@ -88,7 +76,7 @@ def candidate_source(circuit):
     output_ids = [remap[i] for i in circuit.output_ids]
     return '''"""Frozen compensated candidate exported from a synthesized G network.
 
-The complete graph includes the deleted circuit, G and exact 19-bit addition.
+The graph includes the modified partial products, G, original compressor and CPA.
 Columns here are final result bits, not the original partial-product layout;
 do not use this frozen export for another low-partial-product deletion search.
 """
