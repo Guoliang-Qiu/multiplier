@@ -3,10 +3,10 @@ from __future__ import annotations
 from tools.circuit_kit.circuit.multiplier.tap2_9bit_multiplier import Circuit, MultiplierCircuit, WIDTH, OUT_WIDTH, OUT_TOTAL
 
 class Candidate(MultiplierCircuit):
-    PROD_CUT_A = 4
-    PROD_CUT_B = 3
-    COMP_COLS = (10, 11, 13, 15)
-    ROUND_COLS = (3,)
+    PROD_CUT_A = 2
+    PROD_CUT_B = 2
+    COMP_COLS = (10, 11, 13, 15, 18)
+    ROUND_COLS = ()
 
 
     @staticmethod
@@ -89,7 +89,13 @@ class Candidate(MultiplierCircuit):
                     mk = self._bit(m_bits, k, zero)
                     val = self._or(self._and(one, mk), self._and(negative, self._not(mk)))
                 else:
-                    val = self._or(self._and(one, get_xor(k)), self._and(two, get_xor(k - 1)))
+                    if step in (1, 2) and 3 <= k <= 8 and k < q_bits_of_step - 1:
+                        # Zero digit has an all-zero row; preserve original Booth semantics.
+                        cell_neg = self._and(negative, self._or(one, two))
+                        # Shared kit port order: (a, b, c, d, e).
+                        val = self._gate("MUX_XOR", one, self._bit(m_bits, k, zero), two, self._bit(m_bits, k - 1, zero), cell_neg)
+                    else:
+                        val = self._or(self._and(one, get_xor(k)), self._and(two, get_xor(k - 1)))
                 if k == q_bits_of_step - 1:
                     val = self._not(val)
                 place(2 * step + k, val)
@@ -123,6 +129,17 @@ class Candidate(MultiplierCircuit):
         outputs = []
         for col, bucket in enumerate(all_columns):
             bucket = bucket or [zero]
+            if col < 6:
+                outputs.append(zero)
+                if len(bucket) > 1:
+                    lo, hi = (bucket[0], bucket[1])
+                    if carry is None:
+                        carry = self._and(lo, hi)
+                    else:
+                        carry = self._and(lo, hi)
+                elif carry is not None:
+                    carry = self._and(bucket[0], carry)
+                continue
             if carry is None:
                 outputs.append(bucket[0] if len(bucket) == 1 else self._xor(bucket[0], bucket[1]))
                 if len(bucket) > 1:
@@ -138,7 +155,7 @@ class Candidate(MultiplierCircuit):
             else:
                 total, carry = self._add3(bucket[0], bucket[1], carry)
                 outputs.append(total)
-        self.output_ids = [zero] * 6 + outputs[6:18] + [outputs[17]]
+        self.output_ids = outputs[:18] + [outputs[17]]
 
 def build_circuit():
     return Candidate()._build_circuit()

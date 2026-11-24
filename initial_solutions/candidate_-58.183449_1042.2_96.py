@@ -3,11 +3,20 @@ from __future__ import annotations
 from tools.circuit_kit.circuit.multiplier.tap2_9bit_multiplier import Circuit, MultiplierCircuit, WIDTH, OUT_WIDTH, OUT_TOTAL
 
 class Candidate(MultiplierCircuit):
-    PROD_CUT_A = 2
-    PROD_CUT_B = 2
+    _USE_ABSORPTION = True
+    # Bias-directed asymmetric truncation: retain one extra low-order column in
+    # the c*d cone while cutting a*b at column 3.  The two independent cones
+    # are not assumed correlated; this is an evaluated workload tradeoff that
+    # reduces the positive rounding bias after the shared carry path.
+    PROD_CUT_A = 3
+    PROD_CUT_B = 4
     COMP_COLS = (10, 11, 13, 15, 18)
     ROUND_COLS: tuple[int, ...] = ()
+    MAJ_COLS = (0, 1, 2, 3)
+    EXTRA_ONE = {4: 1}
 
+    def _gate(self, kind, *inputs, absorption=False):
+        return super()._gate(kind, *inputs, absorption=absorption or self._USE_ABSORPTION)
 
     @staticmethod
     def _bit(bits, index, zero):
@@ -93,18 +102,18 @@ class Candidate(MultiplierCircuit):
                     mk = self._bit(m, k, zero)
                     val = self._or(self._and(generated_one, mk), self._and(negative, self._not(mk)))
                 else:
-                    val = self._or(self._and(generated_one, get_xor(k)), self._and(two, get_xor(k - 1)))
+                    if step in (1, 2) and 3 <= k <= 8 and k < q_bits_of_step - 1:
+                        # Zero digit has an all-zero row; preserve original Booth semantics.
+                        cell_neg = self._and(negative, self._or(generated_one, two))
+                        # Shared kit port order: (a, b, c, d, e).
+                        val = self._gate("MUX_XOR", generated_one, self._bit(m, k, zero), two, self._bit(m, k - 1, zero), cell_neg)
+                    else:
+                        val = self._or(self._and(generated_one, get_xor(k)), self._and(two, get_xor(k - 1)))
                 if k == q_bits_of_step - 1:
                     val = self._not(val)
                 place(2 * step + k, val)
-        if q[0] == self.input_ids[9]:
-            cols[2][:] = [zero, one]
-        else:
-            cols[2][:] = [zero, one]
-        assert len(cols[3]) == 2
-        node = self.nodes[cols[3][1]]
-        assert node.kind == 'OR'
-        cols[3][1] = node.inputs[0]
+        assert len(cols[4]) == 3 and self.nodes[cols[4][2]].kind == 'OR'
+        cols[4][2] = self.nodes[cols[4][2]].inputs[1]
         return cols
 
     def _product_columns(self, a, b, c, d, zero, one):
@@ -115,6 +124,9 @@ class Candidate(MultiplierCircuit):
                 all_columns[col].extend(product[col])
         for col in self.COMP_COLS + self.ROUND_COLS:
             all_columns[col].append(one)
+        for col, n in sorted(self.EXTRA_ONE.items()):
+            for _ in range(n):
+                all_columns[col].append(one)
         return all_columns
 
     def _compress_columns(self):
@@ -124,6 +136,15 @@ class Candidate(MultiplierCircuit):
             compressor_index = 0
             while len(all_columns[col]) >= 3:
                 x0, x1, x2 = (all_columns[col].pop(), all_columns[col].pop(), all_columns[col].pop())
+                if col in self.MAJ_COLS and x0 not in (zero, one) and (x1 not in (zero, one)) and (x2 not in (zero, one)):
+                    x0x2 = self._and(x0, x2)
+                    x1_or_x0x2 = self._or(x1, x0x2)
+                    x0_or_x2 = self._or(x0, x2)
+                    carry = self._and(x1_or_x0x2, x0_or_x2)
+                    compressor_index += 1
+                    if col + 1 < OUT_TOTAL:
+                        all_columns[col + 1].append(carry)
+                    continue
                 if col == 3 and compressor_index <= 1:
                     ac = self._and(x0, x2)
                     b_or_ac = self._or(x1, ac)
@@ -154,12 +175,46 @@ class Candidate(MultiplierCircuit):
             elif len(bucket) == 1 and bucket[0] == one:
                 outputs.append(self._not(carry))
             elif len(bucket) == 1:
-                outputs.append(self._or(bucket[0], carry) if col <= 6 else self._xor(bucket[0], carry))
+                outputs.append(self._or(bucket[0], carry) if col < 7 else self._xor(bucket[0], carry))
                 carry = self._and(bucket[0], carry)
             else:
                 total, carry = self._add3(bucket[0], bucket[1], carry)
                 outputs.append(total)
         self.output_ids = [zero] * 6 + outputs[6:18] + [outputs[17]]
+
+    def xor_operands(self, n):
+        node = self.nodes[n]
+        if node.kind != 'AND':
+            return None
+        for a, b in (node.inputs, node.inputs[::-1]):
+            na, nb = (self.nodes[a], self.nodes[b])
+            if na.kind == 'OR' and nb.kind == 'NOT':
+                inner = self.nodes[nb.inputs[0]]
+                if inner.kind == 'AND' and set(inner.inputs) == set(na.inputs):
+                    return na.inputs
+        return None
+
+    def _and(self, a, b):
+        for n, x in ((a, b), (b, a)):
+            node = self.nodes[n]
+            if node.kind != 'NOT':
+                continue
+            ml = self.xor_operands(node.inputs[0])
+            hm = self.xor_operands(x)
+            if not ml or not hm:
+                continue
+            overlap = set(ml) & set(hm)
+            if len(overlap) != 1:
+                continue
+            mid = next(iter(overlap))
+            low = next((i for i in ml if i != mid))
+            high = next((i for i in hm if i != mid))
+            if not all((self.nodes[i].kind in ('IN_B', 'IN_D') for i in (low, mid, high))):
+                continue
+            union = self._or(mid, low)
+            intersection = super()._and(mid, low)
+            return super()._and(self._not(super()._and(high, union)), self._or(high, intersection))
+        return super()._and(a, b)
 
 def build_circuit():
     return Candidate()._build_circuit()

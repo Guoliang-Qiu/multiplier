@@ -6,7 +6,7 @@ class Candidate(MultiplierCircuit):
     PROD_CUT_A = 2
     PROD_CUT_B = 2
     COMP_COLS = (10, 11, 13, 15, 18)
-    ROUND_COLS: tuple[int, ...] = ()
+    ROUND_COLS = ()
 
 
     @staticmethod
@@ -19,12 +19,8 @@ class Candidate(MultiplierCircuit):
     def _qsub(q, step, zero):
         return (q[min(2 * step + 1, len(q) - 1)], q[2 * step], q[2 * step - 1] if step else zero)
 
-    def _xor(self, a, b):
-        both = self._and(a, b)
-        either = self._or(a, b)
-        return self._and(either, self._not(both))
-
     def _one_product_columns(self, q_bits, m_bits, zero, one_const, cut):
+        """Single qgl dual-approx product's 18 column lists (low ``cut`` pruned)."""
         columns: list[list[int]] = [[] for _ in range(OUT_WIDTH)]
         num_steps = (WIDTH + 1) // 2
         x_and = self._not(self._and(m_bits[0], m_bits[1]))
@@ -93,7 +89,13 @@ class Candidate(MultiplierCircuit):
                     mk = self._bit(m_bits, k, zero)
                     val = self._or(self._and(one, mk), self._and(negative, self._not(mk)))
                 else:
-                    val = self._or(self._and(one, get_xor(k)), self._and(two, get_xor(k - 1)))
+                    if step in (1, 2) and 3 <= k <= 8 and k < q_bits_of_step - 1:
+                        # Zero digit has an all-zero row; preserve original Booth semantics.
+                        cell_neg = self._and(negative, self._or(one, two))
+                        # Shared kit port order: (a, b, c, d, e).
+                        val = self._gate("MUX_XOR", one, self._bit(m_bits, k, zero), two, self._bit(m_bits, k - 1, zero), cell_neg)
+                    else:
+                        val = self._or(self._and(one, get_xor(k)), self._and(two, get_xor(k - 1)))
                 if k == q_bits_of_step - 1:
                     val = self._not(val)
                 place(2 * step + k, val)
@@ -101,8 +103,8 @@ class Candidate(MultiplierCircuit):
 
     def _product_columns_before_compensation(self, a, b, c, d, zero, one):
         all_columns = [[] for _ in range(OUT_TOTAL)]
-        for builder, left, right, cut in ((self._one_product_columns, a, b, self.PROD_CUT_A), (self._one_product_columns, c, d, self.PROD_CUT_B)):
-            product = builder(right, left, zero, one, cut)
+        for left, right, cut in ((a, b, self.PROD_CUT_A), (c, d, self.PROD_CUT_B)):
+            product = self._one_product_columns(right, left, zero, one, cut)
             for col in range(OUT_WIDTH):
                 all_columns[col].extend(product[col])
         for col in self.COMP_COLS + self.ROUND_COLS:
@@ -113,18 +115,9 @@ class Candidate(MultiplierCircuit):
         all_columns = self._columns
         zero, one = (self._zero, self._one)
         for col in range(OUT_TOTAL):
-            compressor_index = 0
             while len(all_columns[col]) >= 3:
                 x0, x1, x2 = (all_columns[col].pop(), all_columns[col].pop(), all_columns[col].pop())
-                if col == 3 and compressor_index <= 1:
-                    ac = self._and(x0, x2)
-                    b_or_ac = self._or(x1, ac)
-                    a_or_c = self._or(x0, x2)
-                    carry = self._and(b_or_ac, a_or_c)
-                    total = self._xor(b_or_ac, a_or_c)
-                else:
-                    total, carry = self._add3(x0, x1, x2)
-                compressor_index += 1
+                total, carry = self._add3(x0, x1, x2)
                 all_columns[col].append(total)
                 if col + 1 < OUT_TOTAL:
                     all_columns[col + 1].append(carry)
@@ -136,6 +129,17 @@ class Candidate(MultiplierCircuit):
         outputs = []
         for col, bucket in enumerate(all_columns):
             bucket = bucket or [zero]
+            if col < 6:
+                outputs.append(zero)
+                if len(bucket) > 1:
+                    lo, hi = (bucket[0], bucket[1])
+                    if carry is None:
+                        carry = self._and(lo, hi)
+                    else:
+                        carry = self._and(lo, hi)
+                elif carry is not None:
+                    carry = self._and(bucket[0], carry)
+                continue
             if carry is None:
                 outputs.append(bucket[0] if len(bucket) == 1 else self._xor(bucket[0], bucket[1]))
                 if len(bucket) > 1:
@@ -151,7 +155,7 @@ class Candidate(MultiplierCircuit):
             else:
                 total, carry = self._add3(bucket[0], bucket[1], carry)
                 outputs.append(total)
-        self.output_ids = [zero] * 6 + outputs[6:18] + [outputs[17]]
+        self.output_ids = outputs[:18] + [outputs[17]]
 
     def _product_columns(self, a, b, c, d, zero, one):
         """Generate partial products, remove selected slots and append G(X)."""
@@ -161,7 +165,7 @@ class Candidate(MultiplierCircuit):
         del columns[2][1]
         del columns[2][0]
         # X refers to nodes in the original pre-compression prefix.
-        g_0 = 77
+        g_0 = 56
         g_1 = zero
         # Match the fixed insertion buffers used by the error table.
         columns[2].append(self.add('OR', g_0, zero))

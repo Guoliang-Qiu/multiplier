@@ -93,13 +93,24 @@ class Candidate(MultiplierCircuit):
                     mk = self._bit(m, k, zero)
                     val = self._or(self._and(generated_one, mk), self._and(negative, self._not(mk)))
                 else:
-                    val = self._or(self._and(generated_one, get_xor(k)), self._and(two, get_xor(k - 1)))
+                    if step in (1, 2) and 3 <= k <= 8 and k < q_bits_of_step - 1:
+                        # Zero digit has an all-zero row; preserve original Booth semantics.
+                        cell_neg = self._and(negative, self._or(generated_one, two))
+                        # Shared kit port order: (a, b, c, d, e).
+                        val = self._gate("MUX_XOR", generated_one, self._bit(m, k, zero), two, self._bit(m, k - 1, zero), cell_neg)
+                    else:
+                        val = self._or(self._and(generated_one, get_xor(k)), self._and(two, get_xor(k - 1)))
                 if k == q_bits_of_step - 1:
                     val = self._not(val)
                 place(2 * step + k, val)
-        cols[2][0] = zero
-        if q[0] == self.input_ids[27]:
-            cols[2][1] = one
+        if q[0] == self.input_ids[9]:
+            cols[2][:] = [zero, one]
+        else:
+            cols[2][:] = [zero, one]
+        assert len(cols[3]) == 2
+        node = self.nodes[cols[3][1]]
+        assert node.kind == 'OR'
+        cols[3][1] = node.inputs[0]
         return cols
 
     def _product_columns(self, a, b, c, d, zero, one):
