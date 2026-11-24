@@ -4,12 +4,19 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
+import os
 from pathlib import Path
 import sys
 
 ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
+
+SOLVER_ROOT = Path(os.environ.get(
+    "OPEN_QUESTION_SOLVER_ROOT", ROOT / "open_question_solver",
+)).resolve()
+if str(SOLVER_ROOT) not in sys.path:
+    sys.path.insert(0, str(SOLVER_ROOT))
 
 def load_module(path: Path):
     spec = importlib.util.spec_from_file_location("candidate_multiplier", path)
@@ -27,7 +34,8 @@ def evaluate(module) -> dict[str, int | dict[str, int]]:
     circuit = module.build_circuit()
     circuit.validate()
     result = circuit.gatecost()
-    return {"gate_cost": result.total, "counts": result.counts}
+    return {"gate_cost": result.total, "counts": result.counts,
+            "partial_product_count": circuit.partial_product_count}
 
 
 def main() -> None:

@@ -30,11 +30,32 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from multiplier.circuit import INPUT_WIDTH
+SOLVER_ROOT = Path(os.environ.get(
+    "OPEN_QUESTION_SOLVER_ROOT", ROOT / "open_question_solver",
+)).resolve()
+if str(SOLVER_ROOT) not in sys.path:
+    sys.path.insert(0, str(SOLVER_ROOT))
+
+from tools.circuit_kit.circuit import INPUT_WIDTH
 
 SCALE = 1 << 7  # 128: Q4.14 -> Q4.7 scale used by the qgl script
 RNG_SEED = 42
 TAP2_COPIES = int(os.environ.get("TAP2_COPIES", "8"))
+
+
+def load_stimulus(path, *, num_inputs, input_width=INPUT_WIDTH):
+    """Load and validate an evaluator workload from an NPY file."""
+    samples = np.load(path, allow_pickle=False)
+    bound = 1 << (input_width - 1)
+    if (not isinstance(samples, np.ndarray) or samples.ndim != 2
+            or samples.shape[1] != num_inputs or not len(samples)
+            or not np.issubdtype(samples.dtype, np.integer)
+            or np.any(samples < -bound) or np.any(samples >= bound)):
+        raise ValueError(
+            f"stimulus must be a nonempty (N,{num_inputs}) signed "
+            f"{input_width}-bit integer array"
+        )
+    return samples.astype(np.int64, copy=False)
 
 
 def load_module(path: Path):
@@ -111,20 +132,26 @@ def generate_data() -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     return a, b, c, d
 
 
-def evaluate(module) -> dict[str, float | int]:
+def evaluate(module, stimulus_file=None) -> dict[str, float | int]:
     if not hasattr(module, "build_circuit"):
         raise AttributeError("candidate must expose build_circuit()")
     circuit = module.build_circuit()
     circuit.validate()
 
     if len(circuit.input_ids) == 4 * INPUT_WIDTH:
-        a, b, c, d = generate_data()
+        samples = load_stimulus(
+            stimulus_file or Path(__file__).resolve().parent / "stimulus.npy",
+            num_inputs=4, input_width=INPUT_WIDTH,
+        )
+        a, b, c, d = samples.T
         inputs = list(zip(a.tolist(), b.tolist(), c.tolist(), d.tolist()))
         raws = circuit.simulate_many(inputs)
         return _tap2_metrics(raws, a, b, c, d)
 
     bound = 1 << (INPUT_WIDTH - 1)
-    inputs = [(a, b) for a in range(-bound, bound) for b in range(-bound, bound)]
+    inputs = (load_stimulus(stimulus_file, num_inputs=2, input_width=INPUT_WIDTH).tolist()
+              if stimulus_file else
+              [(a, b) for a in range(-bound, bound) for b in range(-bound, bound)])
     a = np.array([p[0] for p in inputs], dtype=np.int64)
     b = np.array([p[1] for p in inputs], dtype=np.int64)
     raws = circuit.simulate_many(inputs)
@@ -134,9 +161,11 @@ def evaluate(module) -> dict[str, float | int]:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("implementation", type=Path)
+    parser.add_argument("--stimulus-file", type=Path,
+                        help="NPY operand matrix; tap2 defaults to stimulus.npy beside eval.py")
     args = parser.parse_args()
     start = time.perf_counter()
-    result = evaluate(load_module(args.implementation.resolve()))
+    result = evaluate(load_module(args.implementation.resolve()), args.stimulus_file)
     result["runtime_seconds"] = time.perf_counter() - start
     print(json.dumps(result, sort_keys=True))
 

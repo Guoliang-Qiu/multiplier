@@ -1,6 +1,0 @@
-{
-  "implementation": "candidate_g0001_0005_col2_joint_asym.py",
-  "removed_slots": [[4, 0]],
-  "node_ids": [2, 3],
-  "compensation_columns": [4, 5, 6]
-}
