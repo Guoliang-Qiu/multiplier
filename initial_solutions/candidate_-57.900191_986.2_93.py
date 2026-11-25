@@ -101,8 +101,8 @@ class Candidate(MultiplierCircuit):
                     val = self._or(self._and(one, mk), self._and(negative, self._not(mk)))
                 else:
                     if step in (1, 2) and 3 <= k <= 8 and k < q_bits_of_step - 1:
-                        # Zero digit has an all-zero row; preserve original Booth semantics.
-                        cell_neg = self._and(negative, self._or(one, two))
+                        # Here negative=h; h & (one | two) = h & ~(m & low).
+                        cell_neg = self._and(negative, self._not(self._and(m, low)))
                         # Shared kit port order: (a, b, c, d, e).
                         val = self._gate("MUX_XOR", one, self._bit(m_bits, k, zero), two, self._bit(m_bits, k - 1, zero), cell_neg)
                     else:
@@ -112,7 +112,7 @@ class Candidate(MultiplierCircuit):
                 place(2 * step + k, val)
         return columns
 
-    def _product_columns(self, a, b, c, d, zero, one):
+    def _product_columns_before_compensation(self, a, b, c, d, zero, one):
         all_columns = [[] for _ in range(OUT_TOTAL)]
         for builder, left, right, cut in ((self._one_product_columns, a, b, self.PROD_CUT_A), (self._one_product_columns, c, d, self.PROD_CUT_B)):
             product = builder(right, left, zero, one, cut)
@@ -194,6 +194,19 @@ class Candidate(MultiplierCircuit):
                 total, carry = self._add3(bucket[0], bucket[1], carry)
                 outputs.append(total)
         self.output_ids = [zero] * 6 + outputs[6:18] + [outputs[17]]
+
+    def _product_columns(self, a, b, c, d, zero, one):
+        """Generate partial products, remove selected slots and append G(X)."""
+        columns = self._product_columns_before_compensation(a, b, c, d, zero, one)
+        # Capture the original row slots before removing them; node IDs are not stable.
+        g_0, g_2 = columns[4][0], columns[4][3]
+        del columns[4][3]
+        del columns[4][2]
+        del columns[4][0]
+        # OR(x, ZERO) is precisely x; no insertion buffer is needed.
+        columns[4].append(g_2)
+        columns[5].append(g_0)
+        return columns
 
 def build_circuit():
     return Candidate()._build_circuit()

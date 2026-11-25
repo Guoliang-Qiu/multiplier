@@ -1,11 +1,11 @@
-"""Readable 86-slot refinement; weighted gate cost 980.
+"""Readable 92-slot equivalent optimization; weighted gate cost 954.2.
 
 Stages: Booth partial products -> column-4 replacement -> compressor -> CPA
 -> exact Boolean cleanup. No frozen gate list or internal node-ID references.
 
-The historical 86-term count conservatively includes the G6=0 boundary
+The historical term count conservatively includes the G6=0 boundary
 slot: one of these slots is semantically constant, although deliberately opaque
-during compression. This is not 86 independent Boolean functions.
+during compression. These are not independent Boolean functions.
 """
 from __future__ import annotations
 from tools.circuit_kit.circuit.multiplier.tap2_9bit_multiplier import Circuit, MultiplierCircuit, WIDTH, OUT_WIDTH, OUT_TOTAL
@@ -108,7 +108,10 @@ class Candidate(MultiplierCircuit):
                     mk = self._bit(m_bits, k, zero)
                     val = self._or(self._and(one, mk), self._and(negative, self._not(mk)))
                 else:
-                    if step in (1, 2) and 3 <= k <= 8 and k < q_bits_of_step - 1:
+                    # Reuse the step-zero inversion term in k=4..8 MUX_XOR
+                    # cells; retain the original step-one/two mapping.
+                    if ((step in (1, 2) and 3 <= k <= 8) or
+                            (step == 0 and 4 <= k <= 8)) and k < q_bits_of_step - 1:
                         # Zero digit has an all-zero row; preserve original Booth semantics.
                         cell_neg = self._and(negative, self._or(one, two))
                         # Shared kit port order: (a, b, c, d, e).
@@ -164,6 +167,15 @@ class Candidate(MultiplierCircuit):
         all_columns[6].append(self.add('OR', zero, zero))
         return all_columns
 
+    def _fa_factored(self, a, b, cin):
+        ab = self._xor(a, b)
+        return self._xor(ab, cin), self._or(self._and(a, b), self._and(ab, cin))
+
+    def _add3_factored(self, x, y, z):
+        if x not in (self._zero, self._one) and y not in (self._zero, self._one) and z not in (self._zero, self._one):
+            return self._fa_factored(x, y, z)
+        return self._add3(x, y, z)
+
     def _compress_columns(self):
         all_columns = self._columns
         zero, one = (self._zero, self._one)
@@ -187,7 +199,7 @@ class Candidate(MultiplierCircuit):
                     carry = self._and(b_or_ac, a_or_c)
                     total = self._xor(b_or_ac, a_or_c)
                 else:
-                    total, carry = self._add3(x0, x1, x2)
+                    total, carry = self._add3_factored(x0, x1, x2)
                 compressor_index += 1
                 all_columns[col].append(total)
                 if col + 1 < OUT_TOTAL:

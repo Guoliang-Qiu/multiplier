@@ -1,13 +1,23 @@
-"""Standalone three-stage candidate; generic arithmetic is inherited from tap2."""
+"""984-cost exact top-row reuse, including the k=2 boundary term.
+
+The k=0/1 terms have specialized correction semantics and are not rewritten.
+Only tap2 is required; no candidate or experiment imports.
+"""
 from __future__ import annotations
 from tools.circuit_kit.circuit.multiplier.tap2_9bit_multiplier import Circuit, MultiplierCircuit, WIDTH, OUT_WIDTH, OUT_TOTAL
 
 class Candidate(MultiplierCircuit):
-    PROD_CUT_A = 2
-    PROD_CUT_B = 2
+    _USE_ABSORPTION = True
+    PROD_CUT_A = 4
+    PROD_CUT_B = 4
     COMP_COLS = (10, 11, 13, 15, 18)
     ROUND_COLS: tuple[int, ...] = ()
+    MAJ_COLS = (0, 1, 2, 3)
+    EXTRA_ONE = {4: 1}
+    SIDE_MASK = 0
 
+    def _gate(self, kind, *inputs, absorption=False):
+        return super()._gate(kind, *inputs, absorption=absorption or self._USE_ABSORPTION)
 
     @staticmethod
     def _bit(bits, index, zero):
@@ -20,9 +30,12 @@ class Candidate(MultiplierCircuit):
         return (q[min(2 * step + 1, len(q) - 1)], q[2 * step], q[2 * step - 1] if step else zero)
 
     def _xor(self, a, b):
+        # Preserve the exact XOR identity while exposing the shared absorption
+        # context to tap2's gate cache.  The same boundary XOR is consumed by
+        # Booth selectors and compressors, so this avoids a duplicated cone.
         both = self._and(a, b)
         either = self._or(a, b)
-        return self._and(either, self._not(both))
+        return self._and_absorb(either, self._not(both))
 
     def _one_product_columns(self, q, m, zero, one, cut):
         cols: list[list[int]] = [[] for _ in range(OUT_WIDTH)]
@@ -49,10 +62,10 @@ class Candidate(MultiplierCircuit):
                 negative = q[2 * step + 1]
             q_bits_of_step = 9 if step == 4 else 10
 
-            def place(col, node):
+            def place(col, generated_node):
                 if col < cut:
                     return
-                cols[col].append(node)
+                cols[col].append(generated_node)
             mk_xor_list = []
             if two != zero:
                 for k in range(2):
@@ -93,29 +106,67 @@ class Candidate(MultiplierCircuit):
                     mk = self._bit(m, k, zero)
                     val = self._or(self._and(generated_one, mk), self._and(negative, self._not(mk)))
                 else:
-                    val = self._or(self._and(generated_one, get_xor(k)), self._and(two, get_xor(k - 1)))
+                    if step in (1, 2) and 3 <= k <= 8 and k < q_bits_of_step - 1:
+                        # Zero digit has an all-zero row; preserve original Booth semantics.
+                        cell_neg = self._and(negative, self._or(generated_one, two))
+                        # Shared kit port order: (a, b, c, d, e).
+                        val = self._gate("MUX_XOR", generated_one, self._bit(m, k, zero), two, self._bit(m, k - 1, zero), cell_neg)
+                    else:
+                        val = self._or(self._and(generated_one, get_xor(k)), self._and(two, get_xor(k - 1)))
                 if k == q_bits_of_step - 1:
                     val = self._not(val)
                 place(2 * step + k, val)
-        if q[0] == self.input_ids[9]:
-            cols[2][:] = [zero, one]
-        else:
-            cols[2][:] = [zero, one]
-        assert len(cols[3]) == 2
-        node = self.nodes[cols[3][1]]
-        assert node.kind == 'OR'
-        cols[3][1] = node.inputs[0]
+        assert len(cols[4]) == 3 and self.nodes[cols[4][2]].kind == 'OR'
+        cols[4][2] = self.nodes[cols[4][2]].inputs[1]
+        if q[0] == self.input_ids[27]:
+            generated_node = self.nodes[cols[4][1]]
+            assert generated_node.kind == 'OR'
+            cols[4][1] = generated_node.inputs[0]
+        side = 1 if q[0] == self.input_ids[9] else 2
+        if self.SIDE_MASK & side:
+            node = self.nodes[cols[4][0]]
+            assert node.kind == 'OR'
+            cols[4][0] = node.inputs[0]
         return cols
 
     def _product_columns_before_compensation(self, a, b, c, d, zero, one):
-        all_columns = [[] for _ in range(OUT_TOTAL)]
+        cols = [[] for _ in range(OUT_TOTAL)]
         for builder, left, right, cut in ((self._one_product_columns, a, b, self.PROD_CUT_A), (self._one_product_columns, c, d, self.PROD_CUT_B)):
             product = builder(right, left, zero, one, cut)
             for col in range(OUT_WIDTH):
-                all_columns[col].extend(product[col])
+                cols[col].extend(product[col])
         for col in self.COMP_COLS + self.ROUND_COLS:
-            all_columns[col].append(one)
-        return all_columns
+            cols[col].append(one)
+        for col, n in sorted(self.EXTRA_ONE.items()):
+            for _ in range(n):
+                cols[col].append(one)
+        one_sel = b[0]
+        two = self._and(b[1], self._not(b[0]))
+        old = self._or(self._and(one_sel, self._xor(b[1], a[4])), self._and(two, self._xor(b[1], a[3])))
+        assert cols[4][0] == old
+        cols[4][0] = self._or(self._and(one_sel, self._xor(b[1], a[4])), self._and(two, self._not(a[3])))
+        for m, q in ((a, b), (c, d)):
+            pos = self._and(self._not(q[8]), q[7])
+            neg = self._and(q[8], self._not(q[7]))
+            active = self._or(pos, neg)
+            for k in range(2, 9):
+                old = self._or(self._and(pos, m[k]), self._and(neg, self._not(m[k])))
+                new = self._and(active, self._not(self._xor(q[7], m[k])))
+                if k == 8:
+                    old = self._not(old)
+                    new = self._not(new)
+                assert cols[8 + k].count(old) == 1
+                cols[8 + k][cols[8 + k].index(old)] = new
+        # SMT-selected G for AB column 4: (one & data) | two.
+        # Original term is (one & data) | (two & low_boundary).
+        root_node = self.nodes[cols[4][1]]
+        assert root_node.kind == 'OR'
+        selected, boundary = root_node.inputs
+        boundary_node = self.nodes[boundary]
+        assert boundary_node.kind == 'AND'
+        two = boundary_node.inputs[0]
+        cols[4][1] = self._or(selected, two)
+        return cols
 
     def _compress_columns(self):
         all_columns = self._columns
@@ -124,6 +175,15 @@ class Candidate(MultiplierCircuit):
             compressor_index = 0
             while len(all_columns[col]) >= 3:
                 x0, x1, x2 = (all_columns[col].pop(), all_columns[col].pop(), all_columns[col].pop())
+                if col in self.MAJ_COLS and x0 not in (zero, one) and (x1 not in (zero, one)) and (x2 not in (zero, one)):
+                    x0x2 = self._and(x0, x2)
+                    x1_or_x0x2 = self._or(x1, x0x2)
+                    x0_or_x2 = self._or(x0, x2)
+                    carry = self._and(x1_or_x0x2, x0_or_x2)
+                    compressor_index += 1
+                    if col + 1 < OUT_TOTAL:
+                        all_columns[col + 1].append(carry)
+                    continue
                 if col == 3 and compressor_index <= 1:
                     ac = self._and(x0, x2)
                     b_or_ac = self._or(x1, ac)
@@ -154,25 +214,62 @@ class Candidate(MultiplierCircuit):
             elif len(bucket) == 1 and bucket[0] == one:
                 outputs.append(self._not(carry))
             elif len(bucket) == 1:
-                outputs.append(self._or(bucket[0], carry) if col <= 6 else self._xor(bucket[0], carry))
+                outputs.append(self._or(bucket[0], carry) if col < 7 else self._xor(bucket[0], carry))
                 carry = self._and(bucket[0], carry)
             else:
                 total, carry = self._add3(bucket[0], bucket[1], carry)
                 outputs.append(total)
         self.output_ids = [zero] * 6 + outputs[6:18] + [outputs[17]]
 
+    def xor_operands(self, n):
+        node = self.nodes[n]
+        if node.kind != 'AND':
+            return None
+        for a, b in (node.inputs, node.inputs[::-1]):
+            na, nb = (self.nodes[a], self.nodes[b])
+            if na.kind == 'OR' and nb.kind == 'NOT':
+                inner = self.nodes[nb.inputs[0]]
+                if inner.kind == 'AND' and set(inner.inputs) == set(na.inputs):
+                    return na.inputs
+        return None
+
+    def _and(self, a, b):
+        for n, x in ((a, b), (b, a)):
+            node = self.nodes[n]
+            if node.kind != 'NOT':
+                continue
+            ml = self.xor_operands(node.inputs[0])
+            hm = self.xor_operands(x)
+            if not ml or not hm:
+                continue
+            overlap = set(ml) & set(hm)
+            if len(overlap) != 1:
+                continue
+            mid = next(iter(overlap))
+            low = next((i for i in ml if i != mid))
+            high = next((i for i in hm if i != mid))
+            if not all((self.nodes[i].kind in ('IN_B', 'IN_D') for i in (low, mid, high))):
+                continue
+            union = self._or(mid, low)
+            intersection = super()._and(mid, low)
+            return super()._and(self._not(super()._and(high, union)), self._or(high, intersection))
+        return super()._and(a, b)
+
     def _product_columns(self, a, b, c, d, zero, one):
         """Generate partial products, remove selected slots and append G(X)."""
         columns = self._product_columns_before_compensation(a, b, c, d, zero, one)
-        del columns[3][3]
-        del columns[3][2]
-        del columns[3][1]
+        del columns[4][4]
+        del columns[4][3]
         # X refers to nodes in the original pre-compression prefix.
-        g_0 = 420
-        g_1 = 421
+        g_0 = 414
+        g_1 = 415
+        g_2 = 435
+        g_3 = 448
+        g_4 = zero
+        g_5 = one
+        g_6 = self._gate('OR', g_0, g_1)
         # Match the fixed insertion buffers used by the error table.
-        columns[3].append(self.add('OR', g_0, zero))
-        columns[4].append(self.add('OR', g_1, zero))
+        columns[5].append(self.add('OR', g_6, zero))
         return columns
 
 def build_circuit():

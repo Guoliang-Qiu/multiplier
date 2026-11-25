@@ -1,7 +1,7 @@
-"""984-cost exact top-row reuse, including the k=2 boundary term.
+"""Shared Booth-selector factoring plus biased column-four slot suppression.
 
-The k=0/1 terms have specialized correction semantics and are not rewritten.
-Only tap2 is required; no candidate or experiment imports.
+The explicit ZERO occupies the original weighted slot to retain the compressor
+schedule; the nonconstant column-four signal is dropped approximately.
 """
 from __future__ import annotations
 from tools.circuit_kit.circuit.multiplier.tap2_9bit_multiplier import Circuit, MultiplierCircuit, WIDTH, OUT_WIDTH, OUT_TOTAL
@@ -14,7 +14,7 @@ class Candidate(MultiplierCircuit):
     ROUND_COLS: tuple[int, ...] = ()
     MAJ_COLS = (0, 1, 2, 3)
     EXTRA_ONE = {4: 1}
-    SIDE_MASK = 2
+    SIDE_MASK = 0
 
     def _gate(self, kind, *inputs, absorption=False):
         return super()._gate(kind, *inputs, absorption=absorption or self._USE_ABSORPTION)
@@ -30,9 +30,10 @@ class Candidate(MultiplierCircuit):
         return (q[min(2 * step + 1, len(q) - 1)], q[2 * step], q[2 * step - 1] if step else zero)
 
     def _xor(self, a, b):
+        # Expose shared absorption context to tap2's gate cache.
         both = self._and(a, b)
         either = self._or(a, b)
-        return self._and(either, self._not(both))
+        return self._and_absorb(either, self._not(both))
 
     def _one_product_columns(self, q, m, zero, one, cut):
         cols: list[list[int]] = [[] for _ in range(OUT_WIDTH)]
@@ -104,9 +105,8 @@ class Candidate(MultiplierCircuit):
                     val = self._or(self._and(generated_one, mk), self._and(negative, self._not(mk)))
                 else:
                     if step in (1, 2) and 3 <= k <= 8 and k < q_bits_of_step - 1:
-                        # Zero digit has an all-zero row; preserve original Booth semantics.
-                        cell_neg = self._and(negative, self._or(generated_one, two))
-                        # Shared kit port order: (a, b, c, d, e).
+                        # For negative Booth digits, active iff lower digit pair is not 11.
+                        cell_neg = self._and(negative, self._not(self._and(generated_m, low)))
                         val = self._gate("MUX_XOR", generated_one, self._bit(m, k, zero), two, self._bit(m, k - 1, zero), cell_neg)
                     else:
                         val = self._or(self._and(generated_one, get_xor(k)), self._and(two, get_xor(k - 1)))
@@ -154,8 +154,7 @@ class Candidate(MultiplierCircuit):
                     new = self._not(new)
                 assert cols[8 + k].count(old) == 1
                 cols[8 + k][cols[8 + k].index(old)] = new
-        # SMT-selected G for AB column 4: (one & data) | two.
-        # Original term is (one & data) | (two & low_boundary).
+        # Handoff-specific G selector for the AB column-4 contribution.
         root_node = self.nodes[cols[4][1]]
         assert root_node.kind == 'OR'
         selected, boundary = root_node.inputs
@@ -163,18 +162,8 @@ class Candidate(MultiplierCircuit):
         assert boundary_node.kind == 'AND'
         two = boundary_node.inputs[0]
         cols[4][1] = self._or(selected, two)
-        # Approximate CD column-4 triple: retain the middle action and use
-        # OR for the sum slot.  This deliberately biases the rare (0,1,1)
-        # action toward one while removing the XOR's weighted cost; the
-        # complete carry/output path is still evaluated, rather than treating
-        # the local truth-table mismatch as a global guarantee.
-        p0, p1, p2 = cols[4][3:6]
-        either = self._or(p0, p2)
-        carry = self._and(p1, either)
-        total = self._or(p1, either)
-        del cols[4][3:6]
-        cols[4].insert(3, total)
-        cols[5].append(carry)
+        # Statistical substitution of column 4, slot 4.
+        cols[4][4] = zero
         return cols
 
     def _compress_columns(self):

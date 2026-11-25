@@ -161,21 +161,37 @@ class Candidate(MultiplierCircuit):
                 outputs.append(total)
         self.output_ids = [zero] * 6 + outputs[6:18] + [outputs[17]]
 
-    def _product_columns(self, a, b, c, d, zero, one):
+    def _product_columns_before_compensation_previous(self, a, b, c, d, zero, one):
         """Generate partial products, remove selected slots and append G(X)."""
         columns = self._product_columns_before_compensation(a, b, c, d, zero, one)
-        del columns[4][3]
         del columns[3][3]
+        del columns[3][2]
         del columns[3][1]
-        del columns[3][0]
         # X refers to nodes in the original pre-compression prefix.
-        g_0 = 86
-        g_1 = 423
-        g_2 = 424
+        g_0 = 420
+        g_1 = 421
         # Match the fixed insertion buffers used by the error table.
         columns[3].append(self.add('OR', g_0, zero))
         columns[4].append(self.add('OR', g_1, zero))
-        columns[5].append(self.add('OR', g_2, zero))
+        return columns
+
+    def _product_columns(self, a, b, c, d, zero, one):
+        """Generate partial products, remove selected slots and append G(X)."""
+        columns = self._product_columns_before_compensation_previous(a, b, c, d, zero, one)
+        del columns[4][3]
+        del columns[4][0]
+        # X refers to nodes in the original pre-compression prefix.
+        g_0 = 91
+        g_1 = 425
+        g_2 = zero
+        g_3 = one
+        g_4 = self._gate('NOT', g_1)
+        g_5 = self._gate('NOT', g_4)
+        g_6 = self._gate('NOT', g_0)
+        g_7 = self._gate('NOT', g_6)
+        # Match the fixed insertion buffers used by the error table.
+        columns[4].append(self.add('OR', g_7, zero))
+        columns[4].append(self.add('OR', g_5, zero))
         return columns
 
 def build_circuit():
