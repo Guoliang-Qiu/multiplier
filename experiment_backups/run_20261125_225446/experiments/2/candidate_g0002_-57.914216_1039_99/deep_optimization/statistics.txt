@@ -1,0 +1,142 @@
+column 2 weight 4 slots 4
+  0 ZERO p1 0.0 cone ()
+  1 ONE p1 1.0 cone ()
+  0 ZERO p1 0.0 cone ()
+  1 ONE p1 1.0 cone ()
+column 3 weight 8 slots 2
+  88 OR p1 0.37415 cone (86, 87)
+  420 AND p1 0.25057 cone (29, 385)
+column 4 weight 16 slots 6
+  234 OR p1 0.3431 cone (160, 233)
+  486 OR p1 0.40704 cone (484, 485)
+  421 AND p1 0.12535 cone (377, 381)
+  91 OR p1 0.37353 cone (89, 90)
+  425 OR p1 0.37585 cone (423, 424)
+  706 NOT p1 0.90567 cone (494,)
+column 5 weight 32 slots 6
+  94 OR p1 0.37494 cone (92, 93)
+  163 OR p1 0.37613 cone (161, 162)
+  232 OR p1 0.37541 cone (230, 231)
+  428 OR p1 0.37576 cone (426, 427)
+  497 OR p1 0.37423 cone (495, 496)
+  566 OR p1 0.37512 cone (564, 565)
+column 6 weight 64 slots 8
+  97 OR p1 0.37415 cone (95, 96)
+  166 OR p1 0.37461 cone (164, 165)
+  227 OR p1 0.40543 cone (225, 226)
+  309 OR p1 0.33886 cone (235, 308)
+  431 OR p1 0.37567 cone (429, 430)
+  500 OR p1 0.37475 cone (498, 499)
+  561 OR p1 0.40655 cone (559, 560)
+  643 OR p1 0.34846 cone (569, 642)
+column 7 weight 128 slots 8
+  100 OR p1 0.3741 cone (98, 99)
+  169 OR p1 0.37517 cone (167, 168)
+  238 OR p1 0.37533 cone (236, 237)
+  307 OR p1 0.37554 cone (305, 306)
+  434 OR p1 0.37558 cone (432, 433)
+  503 OR p1 0.37494 cone (501, 502)
+  572 OR p1 0.3746 cone (570, 571)
+  641 OR p1 0.375 cone (639, 640)
+column 8 weight 256 slots 10
+  103 OR p1 0.37459 cone (101, 102)
+  172 OR p1 0.37434 cone (170, 171)
+  241 OR p1 0.37513 cone (239, 240)
+  302 OR p1 0.40336 cone (300, 301)
+  345 OR p1 0.32622 cone (310, 344)
+  437 OR p1 0.37577 cone (435, 436)
+  506 OR p1 0.37498 cone (504, 505)
+  575 OR p1 0.37568 cone (573, 574)
+  636 OR p1 0.40852 cone (634, 635)
+  679 OR p1 0.36167 cone (644, 678)
+column 9 weight 512 slots 10
+  106 NOT p1 0.62525 cone (105,)
+  175 OR p1 0.37484 cone (173, 174)
+  244 OR p1 0.37547 cone (242, 243)
+  313 OR p1 0.375 cone (311, 312)
+  342 OR p1 0.24954 cone (339, 341)
+  440 NOT p1 0.62415 cone (439,)
+  509 OR p1 0.37565 cone (507, 508)
+  578 OR p1 0.37537 cone (576, 577)
+  647 OR p1 0.37493 cone (645, 646)
+  676 OR p1 0.24991 cone (673, 675)
+column 10 weight 1024 slots 11
+  178 OR p1 0.37492 cone (176, 177)
+  247 OR p1 0.37538 cone (245, 246)
+  316 OR p1 0.37474 cone (314, 315)
+  338 OR p1 0.25032 cone (335, 337)
+  346 AND p1 0.10941 cone (41, 334)
+  512 OR p1 0.37545 cone (510, 511)
+  581 OR p1 0.37526 cone (579, 580)
+  650 OR p1 0.37552 cone (648, 649)
+  672 OR p1 0.24986 cone (669, 671)
+  680 AND p1 0.01566 cone (375, 668)
+  1 ONE p1 1.0 cone ()
+correlations column 2
+0 1 joint 0.0 xor 1.0
+0 1 joint 0.0 xor 1.0
+0 1 joint 0.0 xor 1.0
+0 1 joint 0.0 xor 1.0
+correlations column 3
+88 420 joint 0.0939 xor 0.4369
+correlations column 4
+234 486 joint 0.1396 xor 0.471
+234 421 joint 0.0427 xor 0.383
+234 425 joint 0.1292 xor 0.4606
+234 706 joint 0.3107 xor 0.6274
+486 706 joint 0.3441 xor 0.6245
+421 486 joint 0.0473 xor 0.4378
+421 425 joint 0.0629 xor 0.3755
+421 706 joint 0.1175 xor 0.7961
+91 234 joint 0.1243 xor 0.468
+91 486 joint 0.152 xor 0.4765
+91 421 joint 0.047 xor 0.4049
+91 425 joint 0.1406 xor 0.4682
+91 706 joint 0.3384 xor 0.6023
+425 486 joint 0.1486 xor 0.4858
+425 706 joint 0.3445 xor 0.5925
+correlations column 5
+94 163 joint 0.1413 xor 0.4684
+94 232 joint 0.1412 xor 0.468
+94 428 joint 0.1413 xor 0.4681
+94 497 joint 0.1402 xor 0.4687
+94 566 joint 0.1405 xor 0.4691
+163 232 joint 0.1412 xor 0.4691
+163 428 joint 0.1415 xor 0.4689
+163 497 joint 0.1408 xor 0.4688
+163 566 joint 0.1415 xor 0.4683
+232 428 joint 0.1411 xor 0.469
+232 497 joint 0.1406 xor 0.4684
+232 566 joint 0.1411 xor 0.4682
+428 497 joint 0.1401 xor 0.4698
+428 566 joint 0.1411 xor 0.4687
+497 566 joint 0.1405 xor 0.4683
+correlations column 6
+97 166 joint 0.1405 xor 0.4677
+97 227 joint 0.1511 xor 0.4775
+97 309 joint 0.1267 xor 0.4596
+97 431 joint 0.1404 xor 0.469
+97 500 joint 0.1399 xor 0.469
+97 561 joint 0.1518 xor 0.477
+97 643 joint 0.1304 xor 0.4619
+166 227 joint 0.1518 xor 0.4765
+166 309 joint 0.1271 xor 0.4593
+166 431 joint 0.1406 xor 0.4692
+166 500 joint 0.1404 xor 0.4685
+166 561 joint 0.1521 xor 0.4771
+166 643 joint 0.1302 xor 0.4628
+227 309 joint 0.1533 xor 0.4377
+227 431 joint 0.1524 xor 0.4762
+227 500 joint 0.1519 xor 0.4763
+227 561 joint 0.1651 xor 0.4819
+227 643 joint 0.1423 xor 0.4692
+309 431 joint 0.1275 xor 0.4596
+309 500 joint 0.1268 xor 0.46
+309 561 joint 0.137 xor 0.4715
+309 643 joint 0.1181 xor 0.4511
+431 500 joint 0.1398 xor 0.4708
+431 561 joint 0.1524 xor 0.4775
+431 643 joint 0.1312 xor 0.4618
+500 561 joint 0.1524 xor 0.4764
+500 643 joint 0.1308 xor 0.4617
+561 643 joint 0.1589 xor 0.4373

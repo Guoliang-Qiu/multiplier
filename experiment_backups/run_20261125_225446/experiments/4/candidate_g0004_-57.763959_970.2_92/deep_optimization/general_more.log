@@ -1,0 +1,18 @@
+no_custom_and 0 {"counts": {"AND": 458, "MUX_XOR": 24, "NOT": 244, "OR": 404}, "gate_cost": 977.2, "partial_product_count": 92} 
+standard_col3 0 {"counts": {"AND": 452, "MUX_XOR": 24, "NOT": 238, "OR": 404}, "gate_cost": 971.2, "partial_product_count": 92} 
+native_output_xor 0 {"counts": {"AND": 447, "MUX_XOR": 24, "NOT": 233, "OR": 399, "XOR": 5}, "gate_cost": 976.2, "partial_product_count": 92} 
+fa_gate_xor 0 {"counts": {"AND": 381, "MUX_XOR": 24, "NOT": 96, "OR": 189, "XOR": 142}, "gate_cost": 1111.2, "partial_product_count": 92} 
+mux_all_middle 1  umns_before_compensation(a, b, c, d, zero, one)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/guoliang/multiplier/experiments/4/candidate_g0004_0008/deep_optimization/mux_all_middle.py", line 133, in _product_columns_before_compensation
+    product = builder(right, left, zero, one, cut)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/guoliang/multiplier/experiments/4/candidate_g0004_0008/deep_optimization/mux_all_middle.py", line 126, in _one_product_columns
+    assert node.kind == 'OR'
+           ^^^^^^^^^^^^^^^^^
+AssertionError
+
+mux_one_middle 0 {"counts": {"AND": 492, "MUX_XOR": 12, "NOT": 248, "OR": 424}, "gate_cost": 973.6, "partial_product_count": 92} 
+mux_three_middle 0 {"counts": {"AND": 432, "MUX_XOR": 36, "NOT": 238, "OR": 394}, "gate_cost": 998.8, "partial_product_count": 92} 
+last_row_gate_xor 0 {"counts": {"AND": 452, "MUX_XOR": 24, "NOT": 238, "OR": 404, "XOR": 14}, "gate_cost": 1013.2, "partial_product_count": 92} 
+xor_minterms 0 {"counts": {"AND": 468, "MUX_XOR": 24, "NOT": 233, "OR": 404}, "gate_cost": 987.2, "partial_product_count": 92} 

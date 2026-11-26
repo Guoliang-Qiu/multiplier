@@ -1,0 +1,41 @@
+{
+  "sampling": {
+    "kind": "file",
+    "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+    "count": 1050624
+  },
+  "removed_slots": [
+    [
+      4,
+      1
+    ]
+  ],
+  "node_ids": [
+    110,
+    116
+  ],
+  "compensation_columns": [
+    4
+  ],
+  "num_inputs": 2,
+  "num_outputs": 1,
+  "compensation_values": [
+    0,
+    16
+  ],
+  "raw_output_width": 19,
+  "error_scale": 16384,
+  "reference_squared_sum": 1002644002629475,
+  "state_counts": [
+    262656,
+    525312,
+    262656,
+    0
+  ],
+  "error_table_file": "table.npy",
+  "error_table_shape": [
+    4,
+    2
+  ],
+  "error_table_dtype": "int64"
+}

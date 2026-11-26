@@ -1,0 +1,210 @@
+{
+  "parent": {
+    "gate_cost": 1067,
+    "evm_db": -58.291617784559755,
+    "partial_product_count": 100
+  },
+  "pareto_population_objectives": [
+    [
+      954.2,
+      -57.72353155447783,
+      92.0
+    ],
+    [
+      970.2,
+      -57.77706902080404,
+      93.0
+    ],
+    [
+      969.2,
+      -57.83461265306508,
+      94.0
+    ],
+    [
+      973.2,
+      -57.852453944355204,
+      93.0
+    ],
+    [
+      986.2,
+      -57.90019115841574,
+      93.0
+    ],
+    [
+      980.2,
+      -58.026732013627964,
+      94.0
+    ],
+    [
+      1067.0,
+      -58.291617784559755,
+      100.0
+    ],
+    [
+      1067.2,
+      -58.34955620145295,
+      101.0
+    ],
+    [
+      1010.6,
+      -58.18330682718984,
+      93.0
+    ],
+    [
+      978.2,
+      -57.7781172796199,
+      92.0
+    ]
+  ],
+  "trials": {
+    "shared": {
+      "removed_slots": [
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          3
+        ]
+      ],
+      "node_ids": [
+        150,
+        494
+      ],
+      "compensation_columns": [
+        4,
+        5
+      ],
+      "remaining_variance": 0.004768941721078653,
+      "synthesis_status": "sat",
+      "g_weighted_cost": 0,
+      "g_gate_nodes": 0,
+      "gate_cost": 1059,
+      "partial_product_count": 100,
+      "evm_db": -57.83838387973166
+    },
+    "onebit": {
+      "removed_slots": [
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          3
+        ]
+      ],
+      "node_ids": [
+        150,
+        494
+      ],
+      "compensation_columns": [
+        4
+      ],
+      "remaining_variance": 0.004768941721078653,
+      "synthesis_status": "sat",
+      "g_weighted_cost": 0,
+      "g_gate_nodes": 1,
+      "gate_cost": 1050,
+      "partial_product_count": 99,
+      "evm_db": -57.808295322305156
+    },
+    "compact": {
+      "removed_slots": [
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          3
+        ]
+      ],
+      "node_ids": [
+        2,
+        3,
+        11,
+        12
+      ],
+      "compensation_columns": [
+        4,
+        5
+      ],
+      "remaining_variance": 0.007078588472328768,
+      "synthesis_status": "sat",
+      "g_weighted_cost": 0,
+      "g_gate_nodes": 0,
+      "gate_cost": 1056,
+      "partial_product_count": 100,
+      "evm_db": -57.91421627387217
+    },
+    "small": {
+      "removed_slots": [
+        [
+          4,
+          0
+        ]
+      ],
+      "node_ids": [
+        2,
+        3,
+        11,
+        12
+      ],
+      "remaining_variance": 0.0035465297073257124,
+      "synthesis_status": "not_run",
+      "g_weighted_cost": null,
+      "gate_cost": null,
+      "evm_db": null
+    },
+    "strong": {
+      "removed_slots": [
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          3
+        ]
+      ],
+      "node_ids": [
+        152,
+        568
+      ],
+      "remaining_variance": 0.0,
+      "synthesis_status": "not_run",
+      "g_weighted_cost": null,
+      "gate_cost": null,
+      "evm_db": null
+    },
+    "triple": {
+      "removed_slots": [
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          3
+        ],
+        [
+          5,
+          0
+        ]
+      ],
+      "node_ids": [
+        150,
+        494
+      ],
+      "remaining_variance": 0.019207214256880593,
+      "synthesis_status": "not_run; unrestricted error table exceeds target",
+      "g_weighted_cost": null,
+      "gate_cost": null,
+      "evm_db": null
+    }
+  },
+  "selected": "onebit",
+  "reason": "Verified strict EVM and a real pre-compression slot reduction, with 17 lower weighted cost than parent; compact has stronger EVM but no slot reduction; all tested exports are currently dominated by the full archive and are provisional for gate optimization."
+}

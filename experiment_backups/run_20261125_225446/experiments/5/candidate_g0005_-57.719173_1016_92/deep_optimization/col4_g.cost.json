@@ -1,0 +1,1 @@
+{"counts": {"AND": 547, "NOT": 260, "OR": 455, "XOR": 6}, "gate_cost": 1020, "partial_product_count": 92}

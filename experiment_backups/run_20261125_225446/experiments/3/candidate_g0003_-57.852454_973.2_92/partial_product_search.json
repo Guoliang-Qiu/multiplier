@@ -1,0 +1,423 @@
+{
+  "baseline": {
+    "gate_cost": 973.2,
+    "evm_db": -57.852453944355204,
+    "partial_product_count": 93
+  },
+  "pareto_archive_objectives": [
+    [
+      954.2,
+      -57.72353155447783,
+      92.0
+    ],
+    [
+      973.2,
+      -57.852453944355204,
+      93.0
+    ],
+    [
+      986.2,
+      -57.90019115841574,
+      93.0
+    ],
+    [
+      980.2,
+      -58.026732013627964,
+      94.0
+    ],
+    [
+      1067.0,
+      -58.291617784559755,
+      100.0
+    ],
+    [
+      1067.2,
+      -58.34955620145295,
+      101.0
+    ],
+    [
+      1010.6,
+      -58.18330682718984,
+      93.0
+    ],
+    [
+      978.2,
+      -57.7781172796199,
+      92.0
+    ],
+    [
+      968.2,
+      -57.83461265306508,
+      94.0
+    ],
+    [
+      959.2,
+      -57.77611271366918,
+      94.0
+    ],
+    [
+      969.2,
+      -57.83461265306508,
+      93.0
+    ],
+    [
+      965.2,
+      -57.65277192275167,
+      91.0
+    ],
+    [
+      976.2,
+      -57.72423799932994,
+      92.0
+    ]
+  ],
+  "chosen": "compact_right",
+  "chosen_metrics": {
+    "gate_cost": 971.2,
+    "evm_db": -57.68481981274264,
+    "partial_product_count": 93,
+    "verified_on": "/home/guoliang/multiplier/stimulus.npy"
+  },
+  "trials": {
+    "__pycache__": {
+      "remaining_variance": null,
+      "g_cost": "unknown",
+      "complete_metrics": "unknown"
+    },
+    "carry_shared": {
+      "remaining_variance": 0.0,
+      "g_cost": "unknown",
+      "complete_metrics": "unknown",
+      "screen_config.json": {
+        "implementation": "/home/guoliang/multiplier/experiments/3/candidate_g0003_0004/parent.py",
+        "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+        "removed_slots": [
+          [
+            5,
+            6
+          ]
+        ],
+        "node_ids": [
+          478,
+          721
+        ]
+      }
+    },
+    "compact_left": {
+      "remaining_variance": 0.0038460946812279764,
+      "g_cost": "unknown",
+      "complete_metrics": "unknown",
+      "screen_config.json": {
+        "implementation": "/home/guoliang/multiplier/experiments/3/candidate_g0003_0004/parent.py",
+        "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+        "removed_slots": [
+          [
+            4,
+            3
+          ]
+        ],
+        "node_ids": [
+          478
+        ]
+      }
+    },
+    "compact_right": {
+      "remaining_variance": 0.0029352788243065405,
+      "g_cost": 0,
+      "complete_metrics": {
+        "gate_cost": 971.2,
+        "evm_db": -57.68481981274264,
+        "partial_product_count": 93
+      },
+      "screen_config.json": {
+        "implementation": "/home/guoliang/multiplier/experiments/3/candidate_g0003_0004/parent.py",
+        "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+        "removed_slots": [
+          [
+            4,
+            3
+          ]
+        ],
+        "node_ids": [
+          721
+        ]
+      },
+      "synthesis.json": {
+        "status": "sat",
+        "weighted_cost": 0,
+        "saved_cost": 8.0,
+        "metrics": {
+          "scaled_squared_error_sum": 1708695907,
+          "mse": 0.09926531439171432,
+          "evm_db": -57.68481981274264
+        },
+        "final_cost": null,
+        "net_cost_saving": null,
+        "table_metrics": null
+      },
+      "compensated.json": {
+        "status": null,
+        "weighted_cost": null,
+        "saved_cost": null,
+        "metrics": null,
+        "final_cost": 971.2,
+        "net_cost_saving": 2.0,
+        "table_metrics": {
+          "scaled_squared_error_sum": 1708695907,
+          "mse": 0.09926531439171432,
+          "evm_db": -57.68481981274264
+        }
+      }
+    },
+    "constant_and_xor": {
+      "remaining_variance": 0.0029352788243065405,
+      "g_cost": "unknown",
+      "complete_metrics": "unknown",
+      "screen_config.json": {
+        "implementation": "/home/guoliang/multiplier/experiments/3/candidate_g0003_0004/parent.py",
+        "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+        "removed_slots": [
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            4
+          ]
+        ],
+        "node_ids": [
+          721
+        ]
+      },
+      "synthesis.json": {
+        "status": "unsat",
+        "weighted_cost": null,
+        "saved_cost": 11.0,
+        "metrics": null,
+        "final_cost": null,
+        "net_cost_saving": null,
+        "table_metrics": null
+      }
+    },
+    "pair_boundary": {
+      "remaining_variance": 0.0029352747184209402,
+      "g_cost": "unknown",
+      "complete_metrics": "unknown",
+      "screen_config.json": {
+        "implementation": "/home/guoliang/multiplier/experiments/3/candidate_g0003_0004/parent.py",
+        "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+        "removed_slots": [
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            3
+          ]
+        ],
+        "node_ids": [
+          689,
+          721
+        ]
+      },
+      "synthesis.json": {
+        "status": "unsat",
+        "weighted_cost": null,
+        "saved_cost": 18.0,
+        "metrics": null,
+        "final_cost": null,
+        "net_cost_saving": null,
+        "table_metrics": null
+      }
+    },
+    "pair_col4": {
+      "remaining_variance": 0.002935276295397183,
+      "g_cost": "unknown",
+      "complete_metrics": "unknown",
+      "screen_config.json": {
+        "implementation": "/home/guoliang/multiplier/experiments/3/candidate_g0003_0004/parent.py",
+        "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+        "removed_slots": [
+          [
+            4,
+            2
+          ],
+          [
+            4,
+            3
+          ]
+        ],
+        "node_ids": [
+          230,
+          721
+        ]
+      },
+      "synthesis.json": {
+        "status": "unsat",
+        "weighted_cost": null,
+        "saved_cost": 16.0,
+        "metrics": null,
+        "final_cost": null,
+        "net_cost_saving": null,
+        "table_metrics": null
+      }
+    },
+    "pair_col5": {
+      "remaining_variance": 0.0,
+      "g_cost": "unknown",
+      "complete_metrics": "unknown",
+      "screen_config.json": {
+        "implementation": "/home/guoliang/multiplier/experiments/3/candidate_g0003_0004/parent.py",
+        "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+        "removed_slots": [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            2
+          ]
+        ],
+        "node_ids": [
+          94,
+          229
+        ]
+      },
+      "synthesis.json": {
+        "status": "unsat",
+        "weighted_cost": null,
+        "saved_cost": 24.0,
+        "metrics": null,
+        "final_cost": null,
+        "net_cost_saving": null,
+        "table_metrics": null
+      }
+    },
+    "pair_two_outputs": {
+      "remaining_variance": null,
+      "g_cost": 4,
+      "complete_metrics": {
+        "gate_cost": 979.2,
+        "evm_db": -57.852453944355204,
+        "partial_product_count": 93
+      },
+      "screen_config.json": {
+        "implementation": "/home/guoliang/multiplier/experiments/3/candidate_g0003_0004/parent.py",
+        "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+        "removed_slots": [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            2
+          ]
+        ],
+        "node_ids": [
+          94,
+          229
+        ]
+      },
+      "synthesis.json": {
+        "status": "sat",
+        "weighted_cost": 4,
+        "saved_cost": 24.0,
+        "metrics": {
+          "scaled_squared_error_sum": 1643998307,
+          "mse": 0.09550675935680174,
+          "evm_db": -57.852453944355204
+        },
+        "final_cost": null,
+        "net_cost_saving": null,
+        "table_metrics": null
+      },
+      "compensated.json": {
+        "status": null,
+        "weighted_cost": null,
+        "saved_cost": null,
+        "metrics": null,
+        "final_cost": 979.2,
+        "net_cost_saving": -6.0,
+        "table_metrics": {
+          "scaled_squared_error_sum": 1643998307,
+          "mse": 0.09550675935680174,
+          "evm_db": -57.852453944355204
+        }
+      }
+    },
+    "shared_or": {
+      "remaining_variance": 0.0,
+      "g_cost": 0,
+      "complete_metrics": {
+        "gate_cost": 971.2,
+        "evm_db": -57.68481981274264,
+        "partial_product_count": 93
+      },
+      "screen_config.json": {
+        "implementation": "/home/guoliang/multiplier/experiments/3/candidate_g0003_0004/parent.py",
+        "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+        "removed_slots": [
+          [
+            4,
+            3
+          ]
+        ],
+        "node_ids": [
+          478,
+          721
+        ]
+      },
+      "synthesis.json": {
+        "status": "sat",
+        "weighted_cost": 0,
+        "saved_cost": 8.0,
+        "metrics": {
+          "scaled_squared_error_sum": 1708695907,
+          "mse": 0.09926531439171432,
+          "evm_db": -57.68481981274264
+        },
+        "final_cost": null,
+        "net_cost_saving": null,
+        "table_metrics": null
+      },
+      "compensated.json": {
+        "status": null,
+        "weighted_cost": null,
+        "saved_cost": null,
+        "metrics": null,
+        "final_cost": 971.2,
+        "net_cost_saving": 2.0,
+        "table_metrics": {
+          "scaled_squared_error_sum": 1708695907,
+          "mse": 0.09926531439171432,
+          "evm_db": -57.68481981274264
+        }
+      }
+    },
+    "shared_three": {
+      "remaining_variance": 0.0,
+      "g_cost": "unknown",
+      "complete_metrics": "unknown",
+      "screen_config.json": {
+        "implementation": "/home/guoliang/multiplier/experiments/3/candidate_g0003_0004/parent.py",
+        "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+        "removed_slots": [
+          [
+            4,
+            3
+          ]
+        ],
+        "node_ids": [
+          435,
+          448,
+          721
+        ]
+      }
+    }
+  },
+  "assessment": "Chosen trial saves 2 weighted cost with a compact shared observation and eligible EVM; currently dominated by archived 954.2/-57.7235/92, passed onward for gate optimization. Paired removal with two compensation bits restores baseline EVM at cost 979.2 and 93 slots. Other tested paired deletions with one correction bit failed unrestricted-table budget for their chosen X and output columns."
+}

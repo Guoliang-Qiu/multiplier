@@ -1,0 +1,23 @@
+{
+  "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+  "baseline": {"gate_cost": 986.2, "evm_db": -57.90019115841574, "partial_product_count": 93},
+  "selected_trial": "col4_other",
+  "removed_slots": [[4, 2]],
+  "node_ids": [538],
+  "compensation_columns": [4],
+  "remaining_variance": 0.0,
+  "synthesis_status": "sat",
+  "g_weighted_cost": 0,
+  "selected_output_codes": [0, 0],
+  "complete_metrics": {"gate_cost": 983.2, "evm_db": -57.7781172796199, "partial_product_count": 93},
+  "screened_other_sets": {
+    "col4_strong": {"remaining_variance": 0.0, "g_weighted_cost": 0, "gate_cost": 987.2, "evm_db": -57.7781172796199, "partial_product_count": 93},
+    "col4_compact": {"remaining_variance": 0.0072749355979263635, "synthesis_status": "not_run", "g_weighted_cost": "unknown", "complete_cost": "unknown"},
+    "col4_shared": {"remaining_variance": 0.007241810355994774, "synthesis_status": "not_run", "g_weighted_cost": "unknown", "complete_cost": "unknown"},
+    "col5_strong": {"remaining_variance": 0.0, "g_weighted_cost": 0, "gate_cost": 987.2, "evm_db": -57.90019115841574, "partial_product_count": 93},
+    "col4_single": {"remaining_variance": 0.0, "g_weighted_cost": 0, "gate_cost": 987.2, "evm_db": -57.90019115841574, "partial_product_count": 93},
+    "col4_weak": {"remaining_variance": 0.0, "g_weighted_cost": 0, "gate_cost": 987.2, "evm_db": -57.90019115841574, "partial_product_count": 93},
+    "col4_triple": {"remaining_variance": 0.0, "synthesis_status": "interrupted_not_exported", "g_weighted_cost": "unknown", "complete_cost": "unknown"}
+  },
+  "population_comparison": "Selected trial is dominated by archive record [970.2, -57.77706902080404, 93]; its lower cost than the parent and eligibility make it a provisional gate-optimization handoff."
+}

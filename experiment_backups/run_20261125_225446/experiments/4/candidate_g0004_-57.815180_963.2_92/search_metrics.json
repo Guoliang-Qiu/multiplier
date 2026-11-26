@@ -1,0 +1,18 @@
+{
+  "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+  "parent": {"gate_cost": 973.2, "evm_db": -57.852453944355204, "partial_product_count": 92},
+  "runtime_evm_limit_db": -57.6,
+  "trials": [
+    {"name": "t1_shared", "removed_slots": [[4, 2]], "node_ids": [179], "compensation_columns": [4], "remaining_variance": 0.0019531244840318152, "synthesis_status": "sat", "g_weighted_cost": 0, "gate_cost": 973.2, "evm_db": -57.762449048170424, "partial_product_count": 92},
+    {"name": "t2_exact", "removed_slots": [[4, 2]], "node_ids": [2, 179], "compensation_columns": [4], "remaining_variance": 0.0, "synthesis_status": "sat", "g_weighted_cost": 0, "gate_cost": null, "evm_db": null, "partial_product_count": null},
+    {"name": "t3_boundary", "removed_slots": [[4, 1]], "node_ids": [119, 110], "compensation_columns": [4], "remaining_variance": 0.0019531183953524279, "synthesis_status": "sat", "g_weighted_cost": 0, "gate_cost": null, "evm_db": null, "partial_product_count": null},
+    {"name": "t4_one", "removed_slots": [[4, 1]], "node_ids": [119], "compensation_columns": [4], "remaining_variance": 0.002606556673937742, "synthesis_status": "sat", "g_weighted_cost": 0, "gate_cost": 969.2, "evm_db": -57.65402447296011, "partial_product_count": 92},
+    {"name": "t5_joint", "removed_slots": [[4, 1], [4, 2]], "node_ids": [119, 110, 2], "compensation_columns": [4, 5], "remaining_variance": 0.003906726393493302, "synthesis_status": "not_run", "g_weighted_cost": null, "gate_cost": null, "evm_db": null, "partial_product_count": null, "table_unrestricted_best_evm_db": -57.683337193304936},
+    {"name": "t6_pair_one", "removed_slots": [[4, 1], [4, 2]], "node_ids": [119, 110, 2], "compensation_columns": [4], "remaining_variance": 0.003906726393493302, "synthesis_status": "not_run", "g_weighted_cost": null, "gate_cost": null, "evm_db": null, "partial_product_count": null, "table_unrestricted_best_evm_db": -55.13495528468486},
+    {"name": "t7_cd", "removed_slots": [[4, 3]], "node_ids": [478, 721], "compensation_columns": [4], "remaining_variance": 0.0, "synthesis_status": "sat", "g_weighted_cost": 1, "gate_cost": 972.2, "evm_db": -57.8151798686191, "partial_product_count": 92},
+    {"name": "t8_col5", "removed_slots": [[5, 6]], "node_ids": [478, 721], "compensation_columns": [5], "remaining_variance": 0.0, "synthesis_status": "sat", "g_weighted_cost": 1, "gate_cost": 974.2, "evm_db": -57.852453944355204, "partial_product_count": 92},
+    {"name": "t9_col5compact", "removed_slots": [[5, 6]], "node_ids": [478], "compensation_columns": [5], "remaining_variance": 0.003857139174284996, "synthesis_status": "not_run", "g_weighted_cost": null, "gate_cost": null, "evm_db": null, "partial_product_count": null, "table_unrestricted_best_evm_db": -57.53155662567814}
+  ],
+  "chosen": "t7_cd",
+  "rationale": "All screened exported choices with full metrics are dominated by at least one of the twelve current archive records. The zero-gate t4_one [969.2,-57.65402447296011,92] is dominated by [954.2,-57.72353155447783,92]. The CD-side t7_cd [972.2,-57.8151798686191,92] is dominated by [971.2,-57.83461265306508,92], but is selected as a provisional gate-optimization seed because its 0.215 dB EVM margin gives substantially more room than t4_one's 0.054 dB. This tradeoff is not yet population accepted. Its one removed and one inserted column-4 partial-product slots preserve the 92-slot total."
+}

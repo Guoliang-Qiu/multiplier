@@ -1,0 +1,259 @@
+{
+  "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+  "selected": "single_high",
+  "pareto_population_size": 12,
+  "archive_dominating_selected": [],
+  "note": "Full costs and EVM are measured only for exported trials; null costs are unknown, not zero. Retained observation node 417 reactivates a removed partial-product cone. Single_high offers one fewer live slot than parent with strong EVM margin for subsequent gate optimization.",
+  "trials": {
+    "parent": {
+      "removed_slots": [],
+      "node_ids": [],
+      "compensation_columns": [],
+      "remaining_variance": null,
+      "synthesis_status": "baseline",
+      "g_cost": null,
+      "gate_cost": 1015.6,
+      "evm_db": -57.94456262108487,
+      "partial_product_count": 93
+    },
+    "compact": {
+      "removed_slots": [
+        [
+          4,
+          5
+        ],
+        [
+          4,
+          6
+        ]
+      ],
+      "node_ids": [
+        29,
+        30
+      ],
+      "compensation_columns": [
+        4,
+        5
+      ],
+      "remaining_variance": 0.0029353918267036646,
+      "synthesis_status": "sat",
+      "g_cost": 0,
+      "gate_cost": 1014.8,
+      "evm_db": -57.871460913554564,
+      "partial_product_count": 93
+    },
+    "drop_mux": {
+      "removed_slots": [
+        [
+          4,
+          5
+        ]
+      ],
+      "node_ids": [
+        29,
+        30
+      ],
+      "compensation_columns": [
+        4
+      ],
+      "remaining_variance": 0.002935391826703664,
+      "synthesis_status": "sat",
+      "g_cost": 0,
+      "gate_cost": 1010.8,
+      "evm_db": -57.95231929800158,
+      "partial_product_count": 93
+    },
+    "single_high": {
+      "removed_slots": [
+        [
+          4,
+          5
+        ],
+        [
+          4,
+          6
+        ]
+      ],
+      "node_ids": [
+        29,
+        30
+      ],
+      "compensation_columns": [
+        5
+      ],
+      "remaining_variance": null,
+      "synthesis_status": "sat",
+      "g_cost": 1,
+      "gate_cost": 1004.8,
+      "evm_db": -57.89064080628819,
+      "partial_product_count": 92
+    },
+    "triple_two": {
+      "removed_slots": [
+        [
+          4,
+          4
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          4,
+          6
+        ]
+      ],
+      "node_ids": [
+        22,
+        29,
+        30
+      ],
+      "compensation_columns": [
+        4,
+        5
+      ],
+      "remaining_variance": null,
+      "synthesis_status": "sat",
+      "g_cost": 0,
+      "gate_cost": 999.8,
+      "evm_db": -57.79938828565325,
+      "partial_product_count": 92
+    },
+    "logic": {
+      "removed_slots": [
+        [
+          4,
+          5
+        ],
+        [
+          4,
+          6
+        ]
+      ],
+      "node_ids": [
+        22,
+        23,
+        29,
+        30
+      ],
+      "compensation_columns": [
+        4,
+        5
+      ],
+      "remaining_variance": 0.0,
+      "synthesis_status": "not_run",
+      "g_cost": null,
+      "gate_cost": null,
+      "evm_db": null,
+      "partial_product_count": null
+    },
+    "neighbor": {
+      "removed_slots": [
+        [
+          4,
+          5
+        ],
+        [
+          4,
+          6
+        ]
+      ],
+      "node_ids": [
+        22,
+        29,
+        30
+      ],
+      "compensation_columns": [
+        4,
+        5
+      ],
+      "remaining_variance": 0.001956917540152789,
+      "synthesis_status": "not_run",
+      "g_cost": null,
+      "gate_cost": null,
+      "evm_db": null,
+      "partial_product_count": null
+    },
+    "retained": {
+      "removed_slots": [
+        [
+          4,
+          5
+        ],
+        [
+          4,
+          6
+        ]
+      ],
+      "node_ids": [
+        417,
+        30
+      ],
+      "compensation_columns": [
+        4,
+        5
+      ],
+      "remaining_variance": 0.0,
+      "synthesis_status": "sat",
+      "g_cost": 0,
+      "gate_cost": null,
+      "evm_db": null,
+      "partial_product_count": null
+    },
+    "single": {
+      "removed_slots": [
+        [
+          4,
+          5
+        ],
+        [
+          4,
+          6
+        ]
+      ],
+      "node_ids": [
+        29,
+        30
+      ],
+      "compensation_columns": [
+        4
+      ],
+      "remaining_variance": null,
+      "synthesis_status": "unsat",
+      "g_cost": null,
+      "gate_cost": null,
+      "evm_db": null,
+      "partial_product_count": null
+    },
+    "triple": {
+      "removed_slots": [
+        [
+          4,
+          4
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          4,
+          6
+        ]
+      ],
+      "node_ids": [
+        22,
+        29,
+        30
+      ],
+      "compensation_columns": [
+        5
+      ],
+      "remaining_variance": 0.005476125141626321,
+      "synthesis_status": "unsat",
+      "g_cost": null,
+      "gate_cost": null,
+      "evm_db": null,
+      "partial_product_count": null
+    }
+  }
+}

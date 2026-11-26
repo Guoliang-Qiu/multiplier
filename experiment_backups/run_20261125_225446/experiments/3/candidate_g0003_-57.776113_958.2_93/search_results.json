@@ -1,0 +1,17 @@
+{
+  "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+  "baseline": {"gate_cost": 959.2, "evm_db": -57.77611271366918, "partial_product_count": 94},
+  "population_size": 13,
+  "parent_nondominated": true,
+  "trials": {
+    "t1_exact": {"removed_slots": [[4,4]], "node_ids": [20,507], "compensation_columns": [4], "remaining_variance": 0.0, "synthesis_status": "sat", "g_cost": 1, "gate_cost": 960.2, "evm_db": -57.77611271366918, "partial_product_count": 94},
+    "t2_one": {"removed_slots": [[4,4]], "node_ids": [507], "compensation_columns": [4], "remaining_variance": 0.001953123369285735, "synthesis_status": "unsat_unrestricted_table", "g_cost": null, "gate_cost": null, "evm_db": null},
+    "t3_other": {"removed_slots": [[4,4]], "node_ids": [20], "compensation_columns": [4], "remaining_variance": 0.001955641830983778, "synthesis_status": "not_attempted", "g_cost": null, "gate_cost": null, "evm_db": null},
+    "t4_or": {"removed_slots": [[5,5]], "node_ids": [555,556], "compensation_columns": [5], "remaining_variance": 0.0, "synthesis_status": "sat", "g_cost": 1, "gate_cost": 960.2, "evm_db": -57.77611271366918, "partial_product_count": 94},
+    "t5_or_one": {"removed_slots": [[5,5]], "node_ids": [555], "compensation_columns": [5], "remaining_variance": 0.0065049696137702605, "synthesis_status": "not_attempted", "g_cost": null, "gate_cost": null, "evm_db": null},
+    "t6_zero_or": {"removed_slots": [[4,3],[5,5]], "node_ids": [555,556], "compensation_columns": [5], "remaining_variance": 0.0, "synthesis_status": "unsat_unrestricted_table", "g_cost": null, "gate_cost": null, "evm_db": null},
+    "t7_zero_and_or": {"removed_slots": [[4,3],[4,4],[5,5]], "node_ids": [20,507,555,556], "compensation_columns": [4,5], "remaining_variance": 0.0, "synthesis_status": "unsat_unrestricted_table", "g_cost": null, "gate_cost": null, "evm_db": null},
+    "t8_joint_one": {"removed_slots": [[4,4],[5,5]], "node_ids": [20,507,555,556], "compensation_columns": [4], "remaining_variance": 0.0, "synthesis_status": "unsat_unrestricted_table", "g_cost": null, "gate_cost": null, "evm_db": null}
+  },
+  "decision": "Retain verified nondominated parent; both valid exported corrections have identical EVM and slot count but cost one weighted gate more. Additional joint deletion layouts fail unrestricted action-table EVM bound; this does not imply other observation/column selections are infeasible."
+}

@@ -1,0 +1,14 @@
+{
+  "parent": {"gate_cost": 986.2, "evm_db": -57.90019115841574, "partial_product_count": 93},
+  "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+  "trials": {
+    "shared": {"removed_slots": [[4,0],[4,2]], "node_ids": [466,405], "remaining_variance": 0.007283492708129613, "synthesis_status": "not_run", "G_cost": null, "full_metrics": null},
+    "mixed": {"removed_slots": [[4,0],[4,2]], "node_ids": [152,405], "remaining_variance": 0.0035274961362434074, "synthesis_status": "not_run", "G_cost": null, "full_metrics": null, "table_generated": true},
+    "compact": {"removed_slots": [[4,0],[4,2]], "node_ids": [152,538], "remaining_variance": 0.0, "compensation_columns": [4,5], "synthesis_status": "sat", "G_cost": 0, "gate_cost": 987.2, "evm_db": -57.7781172796199, "partial_product_count": 93},
+    "three_shared": {"removed_slots": [[4,0],[4,2],[4,3]], "node_ids": [466,405], "remaining_variance": 0.007283492708129613, "synthesis_status": "not_run", "G_cost": null, "full_metrics": null},
+    "three_simple": {"removed_slots": [[4,0],[4,2],[4,3]], "node_ids": [152,538], "remaining_variance": 0.0, "compensation_columns": [4,5], "synthesis_status": "sat", "G_cost": 0, "gate_cost": 981.2, "evm_db": -57.7781172796199, "partial_product_count": 92, "raw_equal_on_stimulus_to_export": true}
+  },
+  "pareto_archive_population_size": 14,
+  "selected": "three_simple",
+  "selection_reason": "Verified eligible partial-product deletion with five weighted-cost units and one column slot saved relative to parent; retained as provisional gate-optimization seed despite three archive dominators. No deep-gate mutation performed."
+}

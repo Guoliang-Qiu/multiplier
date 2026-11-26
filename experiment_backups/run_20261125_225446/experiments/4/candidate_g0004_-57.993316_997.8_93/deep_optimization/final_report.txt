@@ -1,0 +1,7 @@
+Final complete-circuit metrics (gate_cost.py and full eval.py with /home/guoliang/multiplier/stimulus.npy):
+original parent: [1010.6, -58.18330682718984 dB, 93 slots]
+immutable handoff: [1002.8, -57.99331559074916 dB, 93 slots]
+general equivalence baseline: [998.8, -57.99331559074916 dB, 93 slots]
+final delivered candidate: [997.8, -57.99331559074916 dB, 93 slots]
+Both EVM and gate cost minimize; final lowers parent cost by 12.8 while parent has lower (better) EVM. Final is thus a Pareto tradeoff relative to parent and satisfies EVM < -57.6 dB.
+The delivered final file was separately evaluated with both authoritative tools, and its raw outputs agree with the immutable handoff on all 1,050,624 external stimulus rows (sample check, not proof). Parameterless build_circuit was exercised by both tools; circuit.validate passed. Parent/handoff snapshots unchanged. General and directional trial details are in separate reports.

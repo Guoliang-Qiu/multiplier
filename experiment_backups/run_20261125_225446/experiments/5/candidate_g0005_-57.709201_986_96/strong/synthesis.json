@@ -1,0 +1,74 @@
+{
+  "saved_cost": 24.0,
+  "max_gates": 1,
+  "target_evm_db": -57.7,
+  "integer_error_budget": 1702733813,
+  "gate_costs": {
+    "AND": 1,
+    "OR": 1,
+    "XOR": 3,
+    "NOT": 0
+  },
+  "status": "sat",
+  "weighted_cost": 1,
+  "gates": 1,
+  "circuit": {
+    "nodes": [
+      {
+        "kind": "INPUT",
+        "inputs": [],
+        "index": 0
+      },
+      {
+        "kind": "INPUT",
+        "inputs": [],
+        "index": 1
+      },
+      {
+        "kind": "ZERO",
+        "inputs": []
+      },
+      {
+        "kind": "ONE",
+        "inputs": []
+      },
+      {
+        "kind": "OR",
+        "inputs": [
+          0,
+          1
+        ]
+      }
+    ],
+    "input_ids": [
+      0,
+      1
+    ],
+    "output_ids": [
+      4,
+      2
+    ]
+  },
+  "output_codes": [
+    0,
+    1,
+    1,
+    1
+  ],
+  "metrics": {
+    "scaled_squared_error_sum": 1690242147,
+    "mse": 0.09819325804710388,
+    "evm_db": -57.73197833554542
+  },
+  "optimal_within_gate_cap": true,
+  "node_ids": [
+    91,
+    425
+  ],
+  "compensation_columns": [
+    4,
+    5
+  ],
+  "baseline_cost": 996,
+  "deleted_cost": 972
+}

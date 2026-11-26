@@ -1,0 +1,23 @@
+{
+  "parent": {"gate_cost": 1037, "evm_db": -58.18330682718984, "partial_product_count": 93},
+  "selected_trial": "double_high",
+  "removed_slots": [[4, 0], [4, 1]],
+  "node_ids": [91, 149],
+  "compensation_columns": [5],
+  "synthesis_target_evm_db": -57.65,
+  "remaining_variance": 0.0,
+  "synthesis_status": "sat",
+  "synthesized_G_weighted_cost": 0,
+  "selected_trial_metrics": {"gate_cost": 1025, "evm_db": -57.768547437293265, "partial_product_count": 92, "mae": 0.2639794674997906, "rmse": 0.3120415165751521, "max_abs_error": 0.78125},
+  "alternate_trials": {
+    "compact": {"remaining_variance": 0.001463182538896991, "synthesis_status": "sat", "G_cost": 0, "gate_cost": 1032, "evm_db": -57.88134559464392, "partial_product_count": 93},
+    "shared": {"remaining_variance": 0.0009746582195424634, "synthesis_status": "not_run", "G_cost": null, "gate_cost": null},
+    "predictive": {"remaining_variance": 0.0, "synthesis_status": "not_run", "G_cost": null, "gate_cost": null},
+    "exact_reactivated": {"remaining_variance": 0.0, "synthesis_status": "not_run", "G_cost": null, "gate_cost": null},
+    "joint_shared": {"remaining_variance": 0.0073171392856140145, "synthesis_status": "unsat_unrestricted_table", "G_cost": null},
+    "double": {"remaining_variance": 0.0, "synthesis_status": "unsat_unrestricted_table", "G_cost": null},
+    "double_two_bits": {"remaining_variance": 0.0, "synthesis_status": "sat", "G_cost": 0, "gate_cost": 1033, "evm_db": -57.768547437293265, "partial_product_count": 93},
+    "joint_two_bits": {"remaining_variance": 0.0, "synthesis_status": "sat", "G_cost": 0, "gate_cost": 1039, "evm_db": -57.903556506504515, "partial_product_count": 93}
+  },
+  "archive_comparison": "One archived candidate (978.2, -57.7781172796199, 92) dominates selected provisional circuit; a subsequent gate-optimization session may improve it."
+}

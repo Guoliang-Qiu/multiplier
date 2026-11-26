@@ -1,0 +1,125 @@
+{
+  "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+  "baseline": {
+    "gate_cost": 969.2,
+    "evm_db": -57.83461265306508,
+    "partial_product_count": 94
+  },
+  "chosen_trial": "trial_pair_zero",
+  "chosen_parameters": {
+    "implementation": "/home/guoliang/multiplier/experiments/3/candidate_g0003_0003/parent.py",
+    "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+    "removed_slots": [
+      [
+        4,
+        4
+      ],
+      [
+        5,
+        0
+      ],
+      [
+        5,
+        3
+      ]
+    ],
+    "node_ids": [
+      94,
+      417
+    ],
+    "compensation_columns": [
+      5,
+      6
+    ]
+  },
+  "chosen_metrics": {
+    "gate_cost": 974.2,
+    "evm_db": -57.83461265306508,
+    "partial_product_count": 93,
+    "mae": 0.26250947799831337,
+    "rmse": 0.309677119860418,
+    "max_abs_error": 0.875
+  },
+  "synthesis_target_evm_db": -57.65,
+  "synthesis_g_weighted_cost": 4,
+  "archive_objectives": [
+    [
+      954.2,
+      -57.72353155447783,
+      92.0
+    ],
+    [
+      973.2,
+      -57.852453944355204,
+      93.0
+    ],
+    [
+      986.2,
+      -57.90019115841574,
+      93.0
+    ],
+    [
+      980.2,
+      -58.026732013627964,
+      94.0
+    ],
+    [
+      1067.0,
+      -58.291617784559755,
+      100.0
+    ],
+    [
+      1067.2,
+      -58.34955620145295,
+      101.0
+    ],
+    [
+      1010.6,
+      -58.18330682718984,
+      93.0
+    ],
+    [
+      978.2,
+      -57.7781172796199,
+      92.0
+    ],
+    [
+      968.2,
+      -57.83461265306508,
+      94.0
+    ],
+    [
+      959.2,
+      -57.77611271366918,
+      94.0
+    ],
+    [
+      969.2,
+      -57.83461265306508,
+      93.0
+    ],
+    [
+      965.2,
+      -57.65277192275167,
+      91.0
+    ],
+    [
+      976.2,
+      -57.72423799932994,
+      92.0
+    ]
+  ],
+  "archive_dominators": [
+    [
+      973.2,
+      -57.852453944355204,
+      93.0
+    ],
+    [
+      969.2,
+      -57.83461265306508,
+      93.0
+    ]
+  ],
+  "notes": "Provisional partial-product handoff: one fewer pre-compression slot, strict EVM satisfied; graph gate optimization may recover insertion cost. Exact observation pair recovers both removed column-5 bits; zero deletion removes a physical slot. Original compressor and output method bodies unchanged. Screening variance is not EVM; standalone synthesis cost excludes insertion and reactivated observation cones. Single-slot observed G is cheaper but retains 94 slots, two live-slot G alone retains 94 slots. Unrestricted single correction bit for paired slots fails target."
+}

@@ -1,0 +1,15 @@
+{
+  "implementation": "/home/guoliang/multiplier/experiments/5/candidate_g0005_0008/parent.py",
+  "error_table": "/home/guoliang/multiplier/experiments/5/candidate_g0005_0008/pair_inputs/table.npy",
+  "node_ids": [
+    4,
+    5,
+    22,
+    23
+  ],
+  "compensation_columns": [
+    4,
+    5
+  ],
+  "target_evm_db": -57.75
+}

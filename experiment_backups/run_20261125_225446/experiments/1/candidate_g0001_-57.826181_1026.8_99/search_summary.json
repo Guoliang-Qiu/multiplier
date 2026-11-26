@@ -1,0 +1,272 @@
+{
+  "parent": {
+    "gate_cost": 1067.2,
+    "evm_db": -58.34955620145295,
+    "partial_product_count": 101
+  },
+  "archive_population": [
+    [
+      954.2,
+      -57.72353155447783,
+      92.0
+    ],
+    [
+      970.2,
+      -57.77706902080404,
+      93.0
+    ],
+    [
+      969.2,
+      -57.83461265306508,
+      94.0
+    ],
+    [
+      973.2,
+      -57.852453944355204,
+      93.0
+    ],
+    [
+      986.2,
+      -57.90019115841574,
+      93.0
+    ],
+    [
+      980.2,
+      -58.026732013627964,
+      94.0
+    ],
+    [
+      1020.4,
+      -58.12928019806061,
+      93.0
+    ],
+    [
+      1067.0,
+      -58.291617784559755,
+      100.0
+    ],
+    [
+      1067.2,
+      -58.34955620145295,
+      101.0
+    ]
+  ],
+  "trials": {
+    "shared2": {
+      "removed_slots": [
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          3
+        ]
+      ],
+      "node_ids": [
+        11,
+        29
+      ],
+      "remaining_variance": 0.006844402848146632,
+      "g_cost": 0,
+      "complete_metrics": {
+        "gate_cost": 1063.2,
+        "evm_db": -57.84710250253166,
+        "partial_product_count": 101
+      },
+      "synthesis_status": "sat",
+      "table_evm_db": -57.84710250253166,
+      "compensation_columns": [
+        4,
+        4
+      ]
+    },
+    "shared4": {
+      "removed_slots": [
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          3
+        ]
+      ],
+      "node_ids": [
+        2,
+        11,
+        20,
+        29
+      ],
+      "remaining_variance": 0.0068443748620368875,
+      "g_cost": "unknown",
+      "complete_metrics": "unknown",
+      "synthesis_status": "not_run"
+    },
+    "predict2": {
+      "removed_slots": [
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          3
+        ]
+      ],
+      "node_ids": [
+        88,
+        404
+      ],
+      "remaining_variance": 0.007032567091195323,
+      "g_cost": 0,
+      "complete_metrics": "unknown",
+      "synthesis_status": "sat",
+      "table_evm_db": -57.84710250253166,
+      "compensation_columns": [
+        4,
+        4
+      ]
+    },
+    "predict3": {
+      "removed_slots": [
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          3
+        ]
+      ],
+      "node_ids": [
+        88,
+        404,
+        2
+      ],
+      "remaining_variance": 0.007032516167740794,
+      "g_cost": "unknown",
+      "complete_metrics": "unknown",
+      "synthesis_status": "not_run"
+    },
+    "predict4": {
+      "removed_slots": [
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          3
+        ]
+      ],
+      "node_ids": [
+        88,
+        404,
+        11,
+        29
+      ],
+      "remaining_variance": 0.0065133624300216944,
+      "g_cost": "unknown",
+      "complete_metrics": "unknown",
+      "synthesis_status": "not_run"
+    },
+    "single4": {
+      "removed_slots": [
+        [
+          4,
+          0
+        ]
+      ],
+      "node_ids": [
+        11,
+        2
+      ],
+      "remaining_variance": 0.003412483601790673,
+      "g_cost": 0,
+      "complete_metrics": {
+        "gate_cost": 1065.2,
+        "evm_db": -58.0497229954902,
+        "partial_product_count": 101
+      },
+      "synthesis_status": "sat",
+      "table_evm_db": -58.0497229954902,
+      "compensation_columns": [
+        4
+      ]
+    },
+    "single4strong": {
+      "removed_slots": [
+        [
+          4,
+          0
+        ]
+      ],
+      "node_ids": [
+        88,
+        11
+      ],
+      "remaining_variance": 0.0032477693810258157,
+      "g_cost": "unknown",
+      "complete_metrics": "unknown",
+      "synthesis_status": "not_run"
+    },
+    "pair5": {
+      "removed_slots": [
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          3
+        ]
+      ],
+      "node_ids": [
+        11,
+        29
+      ],
+      "remaining_variance": 0.006844402848146632,
+      "g_cost": "unknown",
+      "complete_metrics": "unknown",
+      "synthesis_status": "unsat",
+      "table_evm_db": "unknown",
+      "compensation_columns": [
+        5
+      ]
+    },
+    "pair4": {
+      "removed_slots": [
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          3
+        ]
+      ],
+      "node_ids": [
+        11,
+        29
+      ],
+      "remaining_variance": 0.006844402848146632,
+      "g_cost": 0,
+      "complete_metrics": {
+        "gate_cost": 1052.2,
+        "evm_db": -57.826181191391306,
+        "partial_product_count": 100
+      },
+      "synthesis_status": "sat",
+      "table_evm_db": -57.826181191391306,
+      "compensation_columns": [
+        4
+      ]
+    }
+  },
+  "selection": {
+    "trial": "pair4",
+    "rationale": "Deletes two row terms while adding one existing shared a0 observation; reduces cost by 15 and slots by one, full-workload EVM remains strictly below -57.6 dB. Parent retains better accuracy, but post-stage gate optimization can improve this partial-product tradeoff. Existing archive dominates provisional costs; this stage hands off partial-product improvement for deep gate optimization.",
+    "verified": true
+  }
+}

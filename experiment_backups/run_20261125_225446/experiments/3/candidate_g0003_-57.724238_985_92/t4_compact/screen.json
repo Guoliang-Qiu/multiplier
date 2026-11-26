@@ -1,0 +1,18 @@
+{
+  "implementation": "/home/guoliang/multiplier/experiments/3/candidate_g0003_0000/parent.py",
+  "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+  "removed_slots": [
+    [
+      4,
+      2
+    ],
+    [
+      4,
+      4
+    ]
+  ],
+  "node_ids": [
+    486,
+    739
+  ]
+}

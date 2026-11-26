@@ -1,0 +1,12 @@
+{
+  "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+  "parent": {"gate_cost": 967.2, "evm_db": -57.65277192275167, "partial_product_count": 91},
+  "chosen": {"trial": "triple_shared", "removed_slots": [[5, 0], [5, 6], [5, 7]], "node_ids": [94, 416, 722], "compensation_columns": [5, 6], "remaining_variance": 0.0, "synthesis_status": "sat", "g_weighted_cost": 7, "g_gates": 5, "gate_cost": 967.2, "evm_db": -57.61668813404249, "partial_product_count": 90, "mae": 0.2674444172582199},
+  "other_completed_trials": [
+    {"trial": "col4_single_direct", "remaining_variance": 0.0, "x_size": 1, "synthesis_status": "sat", "g_weighted_cost": 0, "gate_cost": 968.2, "evm_db": -57.65277192275167, "partial_product_count": 91},
+    {"trial": "col4_single_compact", "remaining_variance": 0.0, "x_size": 2, "synthesis_status": "sat", "g_weighted_cost": 1, "gate_cost": null, "evm_db": null},
+    {"trial": "col5_pair_direct", "remaining_variance": 0.0, "x_size": 2, "synthesis_status": "sat", "g_weighted_cost": 4, "gate_cost": 972.2, "evm_db": -57.65277192275167, "partial_product_count": 91},
+    {"trial": "triple_shared_four_gate", "remaining_variance": 0.0, "x_size": 3, "synthesis_status": "unsat_within_four_gate_cap", "g_weighted_cost": null, "gate_cost": null, "evm_db": null}
+  ],
+  "pareto_archive_comparison": "Chosen circuit is not dominated by the current archive: its 90 pre-compression slots are fewer than every archived candidate, though archive candidates have lower cost and/or better EVM. Gate optimization is reserved for the next session."
+}

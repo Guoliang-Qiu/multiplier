@@ -1,0 +1,51 @@
+{
+  "parent": {
+    "gate_cost": 1023.8,
+    "evm_db": -58.18330682718984,
+    "partial_product_count": 100
+  },
+  "trials": {
+    "shared2": {
+      "remaining_variance": 0.0028675815018492624,
+      "status": "not_synthesized",
+      "g_cost": null,
+      "complete_circuit_metrics": null
+    },
+    "shared3": {
+      "remaining_variance": 0.002867574141203484,
+      "status": "not_synthesized",
+      "g_cost": null,
+      "complete_circuit_metrics": null
+    },
+    "inputs3": {
+      "remaining_variance": 0.0029274520278662125,
+      "status": "not_synthesized",
+      "g_cost": null,
+      "complete_circuit_metrics": null
+    },
+    "shared_pair": {
+      "remaining_variance": 0.0009144555378402103,
+      "status": "sat",
+      "g_cost": 1,
+      "gate_cost": 1019.8,
+      "evm_db": -58.14524605843942,
+      "partial_product_count": 100
+    },
+    "two_slot": {
+      "remaining_variance": 0.005729858627704881,
+      "status": "sat",
+      "g_cost": 0,
+      "gate_cost": 1010.8,
+      "evm_db": -57.79668147672042,
+      "partial_product_count": 100
+    },
+    "two_slot_one": {
+      "remaining_variance": 0.005729858627704881,
+      "status": "unrestricted_table_unsat_at_target",
+      "g_cost": null,
+      "complete_circuit_metrics": null
+    }
+  },
+  "selected": "two_slot",
+  "selection_reason": "13.0 weighted cost saving, strict eligible EVM, two live source slots deleted; despite two inserted compensation slots yielding unchanged pre-compression count, its cheaper G and lower complete cost offer a distinct gate-optimization handoff. Archive currently dominates unoptimized trial; next stage may optimize its gates. Alternative shared_pair improves EVM but costs 9.0 more."
+}

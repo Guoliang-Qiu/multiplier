@@ -1,0 +1,17 @@
+{
+  "parent": {"gate_cost": 1037, "evm_db": -58.18330682718984, "partial_product_count": 93},
+  "pareto_population_objectives": [[986.2,-57.90019115841574,93],[980.2,-58.026732013627964,94],[1067,-58.291617784559755,100],[1067.2,-58.34955620145295,101],[1010.6,-58.18330682718984,93],[963.2,-57.61668813404249,90],[971.2,-57.83461265306508,92],[973.2,-57.852453944355204,92],[958.2,-57.77611271366918,93],[967.2,-57.83461265306508,93],[963.2,-57.8151798686191,92],[997.8,-57.99331559074916,93],[954.2,-57.72353155447783,91],[1003.8,-57.89064080628819,92]],
+  "trials": {
+    "single_signal": {"X_size":1,"remaining_variance":0,"synthesis_status":"not_run","G_cost":null,"full_metrics":null},
+    "single_factors": {"X_size":2,"remaining_variance":0,"synthesis_status":"not_run","G_cost":null,"full_metrics":null},
+    "pair_shared": {"X_size":3,"remaining_variance":0,"synthesis_status":"not_run","G_cost":null,"full_metrics":null},
+    "pair_observe_input": {"X_size":4,"remaining_variance":0.00647086932137084,"synthesis_status":"not_run","G_cost":null,"full_metrics":null},
+    "pair_compact": {"removed_slots":[[4,0],[4,1]],"node_ids":[91,149],"compensation_columns":[4,5],"X_size":2,"remaining_variance":0,"synthesis_status":"sat","G_cost":0,"gate_cost":1036,"evm_db":-57.768547437293265,"partial_product_count":93},
+    "pair_onebit": {"removed_slots":[[4,0],[4,1]],"node_ids":[91,149],"compensation_columns":[5],"X_size":2,"remaining_variance":0,"synthesis_status":"sat","G_cost":0,"gate_cost":1025,"evm_db":-57.898557989441954,"partial_product_count":92},
+    "pair_onebit_shared": {"removed_slots":[[4,0],[4,1]],"node_ids":[89,90,149],"compensation_columns":[5],"X_size":3,"remaining_variance":0,"synthesis_status":"sat","G_cost":0,"full_metrics":null},
+    "single_five": {"removed_slots":[[5,0]],"node_ids":[94],"compensation_columns":[5],"X_size":1,"remaining_variance":0,"synthesis_status":"sat","G_cost":0,"gate_cost":1038,"evm_db":-58.18330682718984,"partial_product_count":93},
+    "triple_onebit": {"removed_slots":[[4,0],[4,1],[4,2]],"node_ids":[91,149,228],"compensation_columns":[5],"X_size":3,"remaining_variance":0,"synthesis_status":"unsat_unrestricted_truth_table","G_cost":null,"full_metrics":null},
+    "triple_twobit": {"removed_slots":[[4,0],[4,1],[4,2]],"node_ids":[91,149,228],"compensation_columns":[4,5],"X_size":3,"remaining_variance":0,"synthesis_status":"sat","G_cost":0,"gate_cost":1022,"evm_db":-57.719172653924716,"partial_product_count":92}
+  },
+  "selection": "triple_twobit: cheaper than the pair_onebit trial by 3 cost units at the same 92 slots, while retaining an eligible strictly-below--57.6 EVM; the lower-EVM pair is archived for next-stage reconsideration. The chosen trial is currently dominated by existing Pareto records, so the next gate-optimization stage must improve it."
+}

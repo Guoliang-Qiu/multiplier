@@ -1,0 +1,86 @@
+{
+  "parent": {
+    "gate_cost": 970.2,
+    "evm_db": -57.77706902080404,
+    "partial_product_count": 93
+  },
+  "chosen": "j_three",
+  "removed_slots": [
+    [
+      4,
+      2
+    ],
+    [
+      4,
+      3
+    ],
+    [
+      4,
+      4
+    ]
+  ],
+  "node_ids": [
+    230,
+    555
+  ],
+  "compensation_columns": [
+    4,
+    5
+  ],
+  "remaining_variance": 0.0,
+  "synthesis_status": "sat",
+  "synthesized_G_cost": 0,
+  "complete_circuit_gate_cost": 968.2,
+  "complete_circuit_evm_db": -57.65277192275167,
+  "partial_product_count": 92,
+  "pareto_context": "Compared with all 10 current Pareto archive objectives; 954.2/-57.72353/92 dominates this trial before gate optimization, but the trial saves two cost units and one slot relative to its parent and is eligible for the follow-up optimization.",
+  "other_trials": {
+    "i_two_cols": {
+      "status": "sat",
+      "G_cost": 0,
+      "gate_cost": 978.2,
+      "evm_db": -57.65277192275167,
+      "partial_product_count": 93
+    },
+    "a_shared": {
+      "status": "unsat_unrestricted_loss",
+      "G_cost": null
+    },
+    "b_retained": {
+      "status": "unsat_unrestricted_loss",
+      "G_cost": null
+    },
+    "e_compact": {
+      "status": "unsat_unrestricted_loss",
+      "G_cost": null
+    },
+    "h_direct": {
+      "status": "unsat_unrestricted_loss",
+      "G_cost": null
+    },
+    "f_both": {
+      "status": "cancelled_incomplete",
+      "G_cost": null
+    },
+    "j_three_max_0": {
+      "status": "unsat_within_gate_cap",
+      "G_cost": null
+    },
+    "k_three_max_0": {
+      "status": "unsat_within_gate_cap",
+      "G_cost": null
+    },
+    "c_boundary": {
+      "status": "screened_only",
+      "G_cost": null
+    },
+    "d_pair": {
+      "status": "screened_only",
+      "G_cost": null
+    },
+    "g_shared": {
+      "status": "screened_only",
+      "G_cost": null
+    }
+  }
+}

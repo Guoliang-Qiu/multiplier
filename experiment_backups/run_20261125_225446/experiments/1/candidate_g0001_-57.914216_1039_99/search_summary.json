@@ -1,0 +1,17 @@
+{
+  "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+  "baseline": {"gate_cost": 1067, "evm_db": -58.291617784559755, "partial_product_count": 100},
+  "population_objective_vectors": [[954.2,-57.72353155447783,92],[970.2,-57.77706902080404,93],[969.2,-57.83461265306508,94],[973.2,-57.852453944355204,93],[986.2,-57.90019115841574,93],[980.2,-58.026732013627964,94],[1020.4,-58.12928019806061,93],[1067,-58.291617784559755,100],[1067.2,-58.34955620145295,101]],
+  "selected": "t06",
+  "reason": "Verified 19 weighted-cost savings versus the parent, one fewer pre-compression slot and EVM below the runtime threshold; t07 has marginally stronger EVM but costs 6 more with identical slot count. Pre-gate-optimization result is dominated by archive members, yet retained as a partial-product-layout seed.",
+  "trials": {
+    "t01": {"removed_slots": [[4,5],[4,6]], "node_ids": [91,425], "compensation_columns": [4], "remaining_variance": 0, "synthesis_status": "sat", "g_cost": 0, "objectives": [1050,-57.89700332387241,99]},
+    "t02": {"removed_slots": [[4,5],[4,6]], "node_ids": [420,421], "compensation_columns": [4], "remaining_variance": 0.007183030516931046, "synthesis_status": "sat", "g_cost": 0, "complete_circuit_metrics": "unknown"},
+    "t03": {"removed_slots": [[4,5],[4,6]], "node_ids": [91], "compensation_columns": [4], "remaining_variance": 0.0036654008010415257, "synthesis_status": "sat", "g_cost": 0, "complete_circuit_metrics": "unknown"},
+    "t04": {"removed_slots": [[4,5],[4,6]], "node_ids": [425], "compensation_columns": [4], "remaining_variance": 0.0036563134768871873, "synthesis_status": "sat", "g_cost": 0, "complete_circuit_metrics": "unknown"},
+    "t05": {"removed_slots": [[5,0],[5,3]], "node_ids": [94,428], "compensation_columns": [5], "remaining_variance": 0, "synthesis_status": "unsat_unrestricted_table", "g_cost": "unknown", "complete_circuit_metrics": "unknown"},
+    "t06": {"removed_slots": [[4,0],[4,3]], "node_ids": [152,568], "compensation_columns": [4], "remaining_variance": 0, "synthesis_status": "sat", "g_cost": 0, "objectives": [1048,-57.91421627387217,99]},
+    "t07": {"removed_slots": [[4,5],[4,6],[5,0]], "node_ids": [91,425,94], "compensation_columns": [4,5], "remaining_variance": 0, "synthesis_status": "sat", "g_cost": 0, "objectives": [1054,-57.917155237138154,99]},
+    "t08": {"removed_slots": [[4,0],[4,3],[4,5]], "node_ids": [152,568,91], "compensation_columns": [4], "remaining_variance": 0, "synthesis_status": "unsat_unrestricted_table", "g_cost": "unknown", "complete_circuit_metrics": "unknown"}
+  }
+}

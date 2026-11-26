@@ -1,0 +1,19 @@
+{
+  "selection": "verified_parent_no_improvement",
+  "parent": {"gate_cost": 969.2, "evm_db": -57.83461265306508, "partial_product_count": 94},
+  "pareto_archive_comparison": "Parent equals the archived 969.2/-57.83461265306508/94 tradeoff; no measured trial dominates it.",
+  "deletion_pair": [[5, 0], [5, 3]],
+  "screenings": {
+    "shared_buses": {"node_ids": [11, 29], "remaining_variance": 0.027366577526668826, "synthesis": "not attempted", "G_cost": "unknown", "full_cost": "unknown"},
+    "shared_cones": {"node_ids": [92, 415], "remaining_variance": 0.013030420164359497, "synthesis": "unsat unrestricted error bound at -57.65", "G_cost": "unknown", "full_cost": "unknown"},
+    "branch_cones": {"node_ids": [93, 416], "remaining_variance": 0.022384052960342977, "synthesis": "not attempted", "G_cost": "unknown", "full_cost": "unknown"},
+    "four_buses": {"node_ids": [11, 29, 12, 30], "remaining_variance": 0.02344758430643646, "synthesis": "not attempted", "G_cost": "unknown", "full_cost": "unknown"}
+  },
+  "completed_trials": {
+    "single_one": {"removed_slots": [[5, 0]], "node_ids": [92, 93], "compensation_columns": [5], "remaining_variance": 0.0, "synthesis": "sat", "G_cost": 1, "gate_cost": 970.2, "evm_db": -57.83461265306508, "partial_product_count": 94},
+    "single_two": {"removed_slots": [[5, 3]], "node_ids": [415, 416], "compensation_columns": [5], "remaining_variance": 0.0, "synthesis": "sat", "G_cost": 1, "gate_cost": 970.2, "evm_db": -57.83461265306508, "partial_product_count": 94}
+  },
+  "incomplete_trial": {"name": "pair_four", "removed_slots": [[4, 2], [4, 5]], "node_ids": [229, 552], "compensation_columns": [4, 4], "remaining_variance": 0.0, "synthesis": "terminated after foreground tool time cap; no feasibility conclusion", "G_cost": "unknown", "full_cost": "unknown"},
+  "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+  "target_evm_db": -57.65
+}

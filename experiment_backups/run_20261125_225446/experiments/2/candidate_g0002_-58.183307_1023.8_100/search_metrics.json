@@ -1,0 +1,96 @@
+{
+  "baseline": {
+    "gate_cost": 1067.2,
+    "evm_db": -58.34955620145295,
+    "partial_product_count": 101
+  },
+  "selected_trial": "col3_joint",
+  "selection_reason": "lowest verified weighted cost (14 gate-cost saving), EVM margin 0.583 dB, one fewer live column slot; provisional for next gate optimization; current Pareto archive includes stronger existing candidates",
+  "selected_parameters": {
+    "removed_slots": [
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        2
+      ]
+    ],
+    "node_ids": [
+      88,
+      404
+    ],
+    "compensation_columns": [
+      3
+    ],
+    "target_evm_db": -57.65,
+    "max_gates": 2
+  },
+  "trials": {
+    "col3_joint": {
+      "remaining_variance": 0,
+      "synthesis_status": "sat",
+      "G_cost": 0,
+      "gate_cost": 1053.2,
+      "evm_db": -58.18330682718984,
+      "partial_product_count": 100
+    },
+    "col3_joint_precise": {
+      "remaining_variance": 0,
+      "synthesis_status": "sat",
+      "G_cost": 0,
+      "gate_cost": 1059.2,
+      "evm_db": -58.283315802346735,
+      "partial_product_count": 100
+    },
+    "col3_all": {
+      "remaining_variance": 0.0014665830930238283,
+      "synthesis_status": "sat",
+      "G_cost": 0,
+      "gate_cost": 1060.2,
+      "evm_db": -57.83671313965133,
+      "partial_product_count": 99
+    },
+    "col3_compact": {
+      "remaining_variance": 0.0018321144061136355,
+      "synthesis_status": "sat",
+      "G_cost": 0,
+      "gate_cost": null,
+      "evm_db": null,
+      "partial_product_count": null
+    },
+    "col3_mixed": {
+      "remaining_variance": 0.0009164259273183087,
+      "synthesis_status": "not_run",
+      "G_cost": null,
+      "gate_cost": null,
+      "evm_db": null,
+      "partial_product_count": null
+    },
+    "col4_joint": {
+      "remaining_variance": 0,
+      "synthesis_status": "sat",
+      "G_cost": 0,
+      "gate_cost": null,
+      "evm_db": null,
+      "partial_product_count": null
+    },
+    "col3_single": {
+      "remaining_variance": 0,
+      "synthesis_status": "not_run",
+      "G_cost": null,
+      "gate_cost": null,
+      "evm_db": null,
+      "partial_product_count": null
+    },
+    "col34_joint": {
+      "remaining_variance": 0.007032567091195323,
+      "synthesis_status": "not_run; table oracle lower bound EVM -55.055",
+      "G_cost": null,
+      "gate_cost": null,
+      "evm_db": null,
+      "partial_product_count": null
+    }
+  }
+}

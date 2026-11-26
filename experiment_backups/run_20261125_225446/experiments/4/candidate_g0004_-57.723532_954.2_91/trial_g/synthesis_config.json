@@ -1,0 +1,12 @@
+{
+  "implementation": "/home/guoliang/multiplier/experiments/4/candidate_g0004_0003/parent.py",
+  "error_table": "/home/guoliang/multiplier/experiments/4/candidate_g0004_0003/trial_g/table.npy",
+  "node_ids": [
+    400
+  ],
+  "compensation_columns": [
+    5
+  ],
+  "target_evm_db": -57.65,
+  "max_gates": 1
+}

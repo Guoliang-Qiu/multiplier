@@ -1,0 +1,534 @@
+{
+  "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+  "runtime_evm_limit_db": -57.6,
+  "target_evm_db": -57.65,
+  "parent": {
+    "gate_cost": 954.2,
+    "evm_db": -57.72353155447783,
+    "partial_product_count": 92
+  },
+  "archive_objectives": [
+    [
+      954.2,
+      -57.72353155447783,
+      92.0
+    ],
+    [
+      986.2,
+      -57.90019115841574,
+      93.0
+    ],
+    [
+      980.2,
+      -58.026732013627964,
+      94.0
+    ],
+    [
+      1067.0,
+      -58.291617784559755,
+      100.0
+    ],
+    [
+      1067.2,
+      -58.34955620145295,
+      101.0
+    ],
+    [
+      1010.6,
+      -58.18330682718984,
+      93.0
+    ],
+    [
+      965.2,
+      -57.65277192275167,
+      91.0
+    ],
+    [
+      963.2,
+      -57.61668813404249,
+      90.0
+    ],
+    [
+      971.2,
+      -57.83461265306508,
+      92.0
+    ],
+    [
+      973.2,
+      -57.852453944355204,
+      92.0
+    ],
+    [
+      958.2,
+      -57.77611271366918,
+      93.0
+    ],
+    [
+      967.2,
+      -57.83461265306508,
+      93.0
+    ]
+  ],
+  "trials": [
+    {
+      "name": "col4_ab",
+      "removed_slots": [
+        [
+          4,
+          0
+        ]
+      ],
+      "node_ids": [
+        400
+      ],
+      "X_size": 1,
+      "remaining_variance": 0.0,
+      "G_cost": null,
+      "complete_circuit_metrics": null,
+      "synthesis_status": "unsat",
+      "compensation_columns": [
+        4
+      ],
+      "unrestricted_table_evm_db": -57.42085751029482,
+      "deleted_cost": 948.4
+    },
+    {
+      "name": "col4_both",
+      "removed_slots": [
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "node_ids": [
+        400,
+        454
+      ],
+      "X_size": 2,
+      "remaining_variance": 0.0,
+      "G_cost": null,
+      "complete_circuit_metrics": null,
+      "synthesis_status": "unsat",
+      "compensation_columns": [
+        4,
+        5
+      ],
+      "unrestricted_table_evm_db": -57.200431470404666,
+      "deleted_cost": 932.4
+    },
+    {
+      "name": "col4_cd",
+      "removed_slots": [
+        [
+          4,
+          1
+        ]
+      ],
+      "node_ids": [
+        454
+      ],
+      "X_size": 1,
+      "remaining_variance": 0.0,
+      "G_cost": null,
+      "complete_circuit_metrics": null,
+      "synthesis_status": "unsat",
+      "compensation_columns": [
+        4
+      ],
+      "unrestricted_table_evm_db": -57.39050685349606,
+      "deleted_cost": 944.2
+    },
+    {
+      "name": "col4_one",
+      "removed_slots": [
+        [
+          4,
+          2
+        ]
+      ],
+      "node_ids": [
+        2
+      ],
+      "X_size": 1,
+      "remaining_variance": 0.0,
+      "G_cost": 0,
+      "complete_circuit_metrics": {
+        "gate_cost": 954.2,
+        "evm_db": -57.72353155447783,
+        "partial_product_count": 92
+      },
+      "synthesis_status": "sat",
+      "compensation_columns": [
+        4
+      ],
+      "unrestricted_table_evm_db": -57.72353155447783,
+      "deleted_cost": 954.2
+    },
+    {
+      "name": "compact",
+      "removed_slots": [
+        [
+          5,
+          2
+        ],
+        [
+          5,
+          5
+        ],
+        [
+          5,
+          6
+        ]
+      ],
+      "node_ids": [
+        216,
+        525
+      ],
+      "X_size": 2,
+      "remaining_variance": 0.015089016308000055,
+      "G_cost": null,
+      "complete_circuit_metrics": null,
+      "synthesis_status": "unsat",
+      "compensation_columns": [
+        5,
+        6
+      ],
+      "unrestricted_table_evm_db": -56.56764201854092,
+      "deleted_cost": 912.4
+    },
+    {
+      "name": "one4_shift5",
+      "removed_slots": [
+        [
+          4,
+          2
+        ]
+      ],
+      "node_ids": [
+        2
+      ],
+      "X_size": 1,
+      "remaining_variance": 0.0,
+      "G_cost": null,
+      "complete_circuit_metrics": null,
+      "synthesis_status": "not_run",
+      "compensation_columns": [
+        5
+      ],
+      "unrestricted_table_evm_db": -57.11239945070492
+    },
+    {
+      "name": "one4_zero5",
+      "removed_slots": [
+        [
+          4,
+          2
+        ],
+        [
+          5,
+          6
+        ]
+      ],
+      "node_ids": [
+        2
+      ],
+      "X_size": 1,
+      "remaining_variance": 0.014534644798892112,
+      "G_cost": null,
+      "complete_circuit_metrics": null,
+      "synthesis_status": "not_run",
+      "compensation_columns": [
+        4
+      ],
+      "unrestricted_table_evm_db": -56.5466327561644
+    },
+    {
+      "name": "one4_zero5_two",
+      "removed_slots": [
+        [
+          4,
+          2
+        ],
+        [
+          5,
+          6
+        ]
+      ],
+      "node_ids": [
+        2
+      ],
+      "X_size": 1,
+      "remaining_variance": 0.014534644798892112,
+      "G_cost": null,
+      "complete_circuit_metrics": null,
+      "synthesis_status": "not_run",
+      "compensation_columns": [
+        4,
+        5
+      ],
+      "unrestricted_table_evm_db": -57.41993793515821
+    },
+    {
+      "name": "original",
+      "removed_slots": [
+        [
+          5,
+          2
+        ],
+        [
+          5,
+          5
+        ],
+        [
+          5,
+          6
+        ]
+      ],
+      "node_ids": [
+        216,
+        525,
+        690
+      ],
+      "X_size": 3,
+      "remaining_variance": 0.0,
+      "G_cost": null,
+      "complete_circuit_metrics": null,
+      "synthesis_status": "unsat",
+      "compensation_columns": [
+        5,
+        6
+      ],
+      "unrestricted_table_evm_db": -56.573129114331294,
+      "deleted_cost": 912.4
+    },
+    {
+      "name": "pair_direct",
+      "removed_slots": [
+        [
+          5,
+          2
+        ],
+        [
+          5,
+          5
+        ]
+      ],
+      "node_ids": [
+        216,
+        525
+      ],
+      "X_size": 2,
+      "remaining_variance": 0.0,
+      "G_cost": null,
+      "complete_circuit_metrics": null,
+      "synthesis_status": "unsat",
+      "compensation_columns": [
+        5,
+        6
+      ],
+      "unrestricted_table_evm_db": -56.3859579862535,
+      "deleted_cost": 934.2
+    },
+    {
+      "name": "pair_shared",
+      "removed_slots": [
+        [
+          5,
+          2
+        ],
+        [
+          5,
+          5
+        ]
+      ],
+      "node_ids": [
+        214,
+        523
+      ],
+      "X_size": 2,
+      "remaining_variance": 0.013028934809655324,
+      "G_cost": null,
+      "complete_circuit_metrics": null,
+      "synthesis_status": "not_run"
+    },
+    {
+      "name": "shared",
+      "removed_slots": [
+        [
+          5,
+          2
+        ],
+        [
+          5,
+          5
+        ],
+        [
+          5,
+          6
+        ]
+      ],
+      "node_ids": [
+        214,
+        523,
+        690
+      ],
+      "X_size": 3,
+      "remaining_variance": 0.012838446221342666,
+      "G_cost": null,
+      "complete_circuit_metrics": null,
+      "synthesis_status": "not_run"
+    },
+    {
+      "name": "single_216",
+      "removed_slots": [
+        [
+          5,
+          2
+        ]
+      ],
+      "node_ids": [
+        216
+      ],
+      "X_size": 1,
+      "remaining_variance": 0.0,
+      "G_cost": null,
+      "complete_circuit_metrics": null,
+      "synthesis_status": "unsat",
+      "compensation_columns": [
+        5
+      ],
+      "unrestricted_table_evm_db": -56.66303830028309,
+      "deleted_cost": 943.2
+    },
+    {
+      "name": "single_525",
+      "removed_slots": [
+        [
+          5,
+          5
+        ]
+      ],
+      "node_ids": [
+        525
+      ],
+      "X_size": 1,
+      "remaining_variance": 0.0,
+      "G_cost": null,
+      "complete_circuit_metrics": null,
+      "synthesis_status": "unsat",
+      "compensation_columns": [
+        5
+      ],
+      "unrestricted_table_evm_db": -57.16613399217018,
+      "deleted_cost": 943.2
+    },
+    {
+      "name": "single_690",
+      "removed_slots": [
+        [
+          5,
+          6
+        ]
+      ],
+      "node_ids": [
+        690
+      ],
+      "X_size": 1,
+      "remaining_variance": 0.0,
+      "G_cost": null,
+      "complete_circuit_metrics": null,
+      "synthesis_status": "unsat",
+      "compensation_columns": [
+        5
+      ],
+      "unrestricted_table_evm_db": -57.142740051891536,
+      "deleted_cost": 937.4
+    },
+    {
+      "name": "zero5_shift6",
+      "removed_slots": [
+        [
+          5,
+          6
+        ]
+      ],
+      "node_ids": [
+        2
+      ],
+      "X_size": 1,
+      "remaining_variance": 0.014534644798892112,
+      "G_cost": null,
+      "complete_circuit_metrics": null,
+      "synthesis_status": "not_run",
+      "compensation_columns": [
+        6
+      ],
+      "unrestricted_table_evm_db": -56.5466327561644
+    },
+    {
+      "name": "zero_five",
+      "removed_slots": [
+        [
+          5,
+          6
+        ]
+      ],
+      "node_ids": [
+        2
+      ],
+      "X_size": 1,
+      "remaining_variance": 0.014534644798892112,
+      "G_cost": null,
+      "complete_circuit_metrics": null,
+      "synthesis_status": "unsat",
+      "compensation_columns": [
+        5
+      ],
+      "unrestricted_table_evm_db": -57.142740051891536,
+      "deleted_cost": 937.4
+    },
+    {
+      "name": "zero_five_six",
+      "removed_slots": [
+        [
+          5,
+          6
+        ],
+        [
+          6,
+          8
+        ]
+      ],
+      "node_ids": [
+        2
+      ],
+      "X_size": 1,
+      "remaining_variance": null,
+      "G_cost": null,
+      "complete_circuit_metrics": null,
+      "synthesis_status": "not_run"
+    },
+    {
+      "name": "zero_six",
+      "removed_slots": [
+        [
+          6,
+          8
+        ]
+      ],
+      "node_ids": [
+        2
+      ],
+      "X_size": 1,
+      "remaining_variance": null,
+      "G_cost": null,
+      "complete_circuit_metrics": null,
+      "synthesis_status": "not_run"
+    }
+  ],
+  "decision": "Retain verified parent: the only sat synthesis reproduces its existing column-4 ONE, while all nontrivial tested tables have an unrestricted optimum above target. No compensated improvement is substantiated."
+}

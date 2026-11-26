@@ -1,0 +1,277 @@
+{
+  "parent": {
+    "cost": {
+      "counts": {
+        "AND": 413,
+        "MUX_XOR": 46,
+        "NOT": 229,
+        "OR": 390
+      },
+      "gate_cost": 1023.8,
+      "partial_product_count": 100
+    },
+    "eval": {
+      "avg_abs_error": 0.25511069046823603,
+      "bias": 0.2228622510884008,
+      "error_cases": 1038524,
+      "error_rate": 0.9884830348440545,
+      "evm_db": -58.18330682718984,
+      "mae": 0.25511069046823603,
+      "max_abs_error": 0.671875,
+      "mse": 0.07494827756407665,
+      "rmse": 0.2974913965730208,
+      "runtime_seconds": 35.72770344200035,
+      "total_cases": 1050624
+    }
+  },
+  "pareto_population": [
+    [
+      986.2,
+      -57.90019115841574,
+      93.0
+    ],
+    [
+      980.2,
+      -58.026732013627964,
+      94.0
+    ],
+    [
+      1067.0,
+      -58.291617784559755,
+      100.0
+    ],
+    [
+      1067.2,
+      -58.34955620145295,
+      101.0
+    ],
+    [
+      1010.6,
+      -58.18330682718984,
+      93.0
+    ],
+    [
+      963.2,
+      -57.61668813404249,
+      90.0
+    ],
+    [
+      971.2,
+      -57.83461265306508,
+      92.0
+    ],
+    [
+      973.2,
+      -57.852453944355204,
+      92.0
+    ],
+    [
+      958.2,
+      -57.77611271366918,
+      93.0
+    ],
+    [
+      967.2,
+      -57.83461265306508,
+      93.0
+    ],
+    [
+      963.2,
+      -57.8151798686191,
+      92.0
+    ],
+    [
+      997.8,
+      -57.99331559074916,
+      93.0
+    ],
+    [
+      954.2,
+      -57.72353155447783,
+      91.0
+    ],
+    [
+      1003.8,
+      -57.89064080628819,
+      92.0
+    ]
+  ],
+  "trials": {
+    "single_recode": {
+      "screen": {
+        "remaining_variance": 0.0
+      },
+      "synthesis": {
+        "saved_cost": 9.8,
+        "max_gates": 0,
+        "target_evm_db": -57.72,
+        "integer_error_budget": 1694910461,
+        "gate_costs": {
+          "AND": 1,
+          "OR": 1,
+          "XOR": 3,
+          "NOT": 0
+        },
+        "status": "sat",
+        "weighted_cost": 0,
+        "gates": 0,
+        "metrics": {
+          "scaled_squared_error_sum": 1607436643,
+          "mse": 0.09338273889372456,
+          "evm_db": -57.950128961527994
+        },
+        "optimal_within_gate_cap": true,
+        "node_ids": [
+          89
+        ],
+        "compensation_columns": [
+          4
+        ],
+        "baseline_cost": 1023.8,
+        "deleted_cost": 1014.0
+      },
+      "cost": {
+        "counts": {
+          "AND": 413,
+          "MUX_XOR": 45,
+          "NOT": 229,
+          "OR": 391
+        },
+        "gate_cost": 1020.0,
+        "partial_product_count": 100
+      },
+      "eval": {
+        "avg_abs_error": 0.2599922983269942,
+        "bias": 0.2698281494497556,
+        "error_cases": 1038524,
+        "error_rate": 0.9884830348440545,
+        "evm_db": -57.950128961527994,
+        "mae": 0.2599922983269942,
+        "max_abs_error": 0.796875,
+        "mse": 0.10328442886558889,
+        "rmse": 0.3055858944613193,
+        "runtime_seconds": 49.795163643000706,
+        "total_cases": 1050624
+      }
+    },
+    "pair_rows45": {
+      "screen": {
+        "remaining_variance": 0.0
+      },
+      "synthesis": {
+        "saved_cost": 21.6,
+        "max_gates": 3,
+        "target_evm_db": -57.72,
+        "integer_error_budget": 1694910461,
+        "gate_costs": {
+          "AND": 1,
+          "OR": 1,
+          "XOR": 3,
+          "NOT": 0
+        },
+        "status": "sat",
+        "weighted_cost": 0,
+        "gates": 1,
+        "metrics": {
+          "scaled_squared_error_sum": 1646612067,
+          "mse": 0.09565860364172193,
+          "evm_db": -57.845554666381005
+        },
+        "optimal_within_gate_cap": true,
+        "node_ids": [
+          89,
+          387
+        ],
+        "compensation_columns": [
+          4,
+          5
+        ],
+        "baseline_cost": 1023.8,
+        "deleted_cost": 1002.2
+      },
+      "cost": {
+        "counts": {
+          "AND": 415,
+          "MUX_XOR": 45,
+          "NOT": 230,
+          "OR": 393
+        },
+        "gate_cost": 1024.0,
+        "partial_product_count": 100
+      },
+      "eval": {
+        "avg_abs_error": 0.2622681630749916,
+        "bias": 0.2238097832216854,
+        "error_cases": 1038524,
+        "error_rate": 0.9884830348440545,
+        "evm_db": -57.845554666381005,
+        "mae": 0.2622681630749916,
+        "max_abs_error": 0.796875,
+        "mse": 0.0825920236854293,
+        "rmse": 0.3092872510171118,
+        "runtime_seconds": 42.70060901100078,
+        "total_cases": 1050624
+      }
+    },
+    "pair_rows5": {
+      "screen": {
+        "remaining_variance": 0.0
+      },
+      "synthesis": {
+        "saved_cost": 21.6,
+        "max_gates": 3,
+        "target_evm_db": -57.72,
+        "integer_error_budget": 1694910461,
+        "gate_costs": {
+          "AND": 1,
+          "OR": 1,
+          "XOR": 3,
+          "NOT": 0
+        },
+        "status": "sat",
+        "weighted_cost": 0,
+        "gates": 0,
+        "metrics": {
+          "scaled_squared_error_sum": 1648969571,
+          "mse": 0.09579556094043204,
+          "evm_db": -57.83934118866828
+        },
+        "optimal_within_gate_cap": true,
+        "node_ids": [
+          89,
+          387
+        ],
+        "compensation_columns": [
+          5
+        ],
+        "baseline_cost": 1023.8,
+        "deleted_cost": 1002.2
+      },
+      "cost": {
+        "counts": {
+          "AND": 410,
+          "MUX_XOR": 45,
+          "NOT": 227,
+          "OR": 387
+        },
+        "gate_cost": 1013.0,
+        "partial_product_count": 99
+      },
+      "eval": {
+        "avg_abs_error": 0.26240512037370173,
+        "bias": 0.22351995546218248,
+        "error_cases": 1038524,
+        "error_rate": 0.9884830348440545,
+        "evm_db": -57.83934118866828,
+        "mae": 0.26240512037370173,
+        "max_abs_error": 0.796875,
+        "mse": 0.08253729430555601,
+        "rmse": 0.30950857975253615,
+        "runtime_seconds": 41.37274082799922,
+        "total_cases": 1050624
+      }
+    }
+  },
+  "selected": "pair_rows5",
+  "selection_reason": "Two deleted Booth-row slots, one shared existing row-bit correction, 99 slots and 10.8 lower weighted cost than parent; eligible EVM; provisional handoff for gate optimization, although dominated by present population."
+}

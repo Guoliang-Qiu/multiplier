@@ -1,0 +1,291 @@
+{
+  "parent": {
+    "gate_cost": 1010.6,
+    "partial_product_count": 93,
+    "evm_db": -58.18330682718984
+  },
+  "trials": [
+    {
+      "trial": "compact",
+      "removed_slots": [
+        [
+          4,
+          0
+        ]
+      ],
+      "node_ids": [
+        11,
+        6
+      ],
+      "x_size": 2,
+      "remaining_variance": 0.0034124530658038157,
+      "compensation_columns": [
+        4
+      ],
+      "synthesis_status": "sat",
+      "g_cost": 0,
+      "complete_metrics": {
+        "gate_cost": 1006.8,
+        "partial_product_count": 93,
+        "evm_db": -57.950128961527994
+      }
+    },
+    {
+      "trial": "shared",
+      "removed_slots": [
+        [
+          4,
+          0
+        ]
+      ],
+      "node_ids": [
+        11,
+        6,
+        43
+      ],
+      "x_size": 3,
+      "remaining_variance": 0.002923932724259551,
+      "compensation_columns": [
+        4
+      ],
+      "synthesis_status": "not_run",
+      "g_cost": null,
+      "complete_metrics": "not_measured"
+    },
+    {
+      "trial": "accurate",
+      "removed_slots": [
+        [
+          4,
+          0
+        ]
+      ],
+      "node_ids": [
+        11,
+        6,
+        43,
+        12
+      ],
+      "x_size": 4,
+      "remaining_variance": 0.0009746582195424634,
+      "compensation_columns": null,
+      "synthesis_status": "not_run",
+      "g_cost": null,
+      "complete_metrics": "not_measured"
+    },
+    {
+      "trial": "direct",
+      "removed_slots": [
+        [
+          4,
+          0
+        ]
+      ],
+      "node_ids": [
+        65
+      ],
+      "x_size": 1,
+      "remaining_variance": 0.0,
+      "compensation_columns": null,
+      "synthesis_status": "not_run",
+      "g_cost": null,
+      "complete_metrics": "not_measured"
+    },
+    {
+      "trial": "two",
+      "removed_slots": [
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          3
+        ]
+      ],
+      "node_ids": [
+        11,
+        6,
+        29,
+        24
+      ],
+      "x_size": 4,
+      "remaining_variance": 0.006844312240461955,
+      "compensation_columns": [
+        4,
+        5
+      ],
+      "synthesis_status": "not_run",
+      "g_cost": null,
+      "complete_metrics": "not_measured"
+    },
+    {
+      "trial": "dual_one",
+      "removed_slots": [
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          3
+        ]
+      ],
+      "node_ids": [
+        11,
+        6,
+        29,
+        24
+      ],
+      "x_size": 4,
+      "remaining_variance": 0.006844312240461955,
+      "compensation_columns": [
+        4
+      ],
+      "synthesis_status": "not_run",
+      "g_cost": null,
+      "complete_metrics": "not_measured"
+    },
+    {
+      "trial": "pair",
+      "removed_slots": [
+        [
+          4,
+          0
+        ],
+        [
+          5,
+          0
+        ]
+      ],
+      "node_ids": [
+        11,
+        6
+      ],
+      "x_size": 2,
+      "remaining_variance": 0.01710059315656115,
+      "compensation_columns": [
+        5
+      ],
+      "synthesis_status": "not_run",
+      "g_cost": null,
+      "complete_metrics": "not_measured"
+    },
+    {
+      "trial": "constant",
+      "removed_slots": [
+        [
+          4,
+          6
+        ]
+      ],
+      "node_ids": [
+        11
+      ],
+      "x_size": 1,
+      "remaining_variance": 0.0,
+      "compensation_columns": [
+        4
+      ],
+      "synthesis_status": "not_run",
+      "g_cost": null,
+      "complete_metrics": "not_measured"
+    },
+    {
+      "trial": "const_pair",
+      "removed_slots": [
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          6
+        ]
+      ],
+      "node_ids": [
+        11,
+        6
+      ],
+      "x_size": 2,
+      "remaining_variance": 0.0034124530658038157,
+      "compensation_columns": [
+        4
+      ],
+      "synthesis_status": "unsat",
+      "g_cost": null,
+      "complete_metrics": "not_measured"
+    },
+    {
+      "trial": "second",
+      "removed_slots": [
+        [
+          4,
+          1
+        ]
+      ],
+      "node_ids": [
+        73,
+        4
+      ],
+      "x_size": 2,
+      "remaining_variance": 0.0036326969423649143,
+      "compensation_columns": [
+        4
+      ],
+      "synthesis_status": "sat",
+      "g_cost": 0,
+      "complete_metrics": {
+        "gate_cost": 1002.8,
+        "partial_product_count": 93,
+        "evm_db": -57.99331559074916
+      }
+    },
+    {
+      "trial": "third",
+      "removed_slots": [
+        [
+          4,
+          2
+        ]
+      ],
+      "node_ids": [
+        100,
+        134
+      ],
+      "x_size": 2,
+      "remaining_variance": 0.0,
+      "compensation_columns": [
+        4
+      ],
+      "synthesis_status": "not_run",
+      "g_cost": null,
+      "complete_metrics": "not_measured"
+    },
+    {
+      "trial": "sixth",
+      "removed_slots": [
+        [
+          4,
+          5
+        ]
+      ],
+      "node_ids": [
+        289,
+        323
+      ],
+      "x_size": 2,
+      "remaining_variance": 0.0,
+      "compensation_columns": [
+        4
+      ],
+      "synthesis_status": "not_run",
+      "g_cost": null,
+      "complete_metrics": "not_measured"
+    }
+  ],
+  "selected": "trial_second/exported.py",
+  "selected_reason": "Strict EVM eligible and nondominated among all twelve archive records; 7.8 lower weighted cost than parent with same partial-product count, stronger complete-circuit trade-off than trial_compact. Source is provisional for subsequent gate optimization.",
+  "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+  "archive_population_size": 12
+}

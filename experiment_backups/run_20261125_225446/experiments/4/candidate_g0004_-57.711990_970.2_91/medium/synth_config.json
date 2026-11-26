@@ -1,0 +1,13 @@
+{
+  "implementation": "/home/guoliang/multiplier/experiments/4/candidate_g0004_0002/parent.py",
+  "error_table": "/home/guoliang/multiplier/experiments/4/candidate_g0004_0002/medium/table.npy",
+  "node_ids": [
+    110,
+    116,
+    4
+  ],
+  "compensation_columns": [
+    4
+  ],
+  "target_evm_db": -57.65
+}

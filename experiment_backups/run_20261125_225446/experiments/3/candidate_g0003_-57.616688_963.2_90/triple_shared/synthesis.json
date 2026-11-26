@@ -1,0 +1,25 @@
+{
+  "saved_cost": 32.0,
+  "max_gates": 4,
+  "target_evm_db": -57.61,
+  "integer_error_budget": 1738388180,
+  "gate_costs": {
+    "AND": 1,
+    "OR": 1,
+    "XOR": 3,
+    "NOT": 0
+  },
+  "status": "unsat",
+  "reason": "No circuit within deletion saving and gate cap",
+  "node_ids": [
+    94,
+    416,
+    722
+  ],
+  "compensation_columns": [
+    5,
+    6
+  ],
+  "baseline_cost": 967.2,
+  "deleted_cost": 935.2
+}

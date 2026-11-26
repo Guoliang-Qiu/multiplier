@@ -1,0 +1,329 @@
+{
+  "baseline": {
+    "gate_cost": 954.2,
+    "evm_db": -57.72353155447783,
+    "partial_product_count": 92
+  },
+  "runtime_evm_limit_db": -57.6,
+  "pareto_archive_objectives": [
+    [
+      954.2,
+      -57.72353155447783,
+      92.0
+    ],
+    [
+      970.2,
+      -57.77706902080404,
+      93.0
+    ],
+    [
+      969.2,
+      -57.83461265306508,
+      94.0
+    ],
+    [
+      973.2,
+      -57.852453944355204,
+      93.0
+    ],
+    [
+      986.2,
+      -57.90019115841574,
+      93.0
+    ],
+    [
+      980.2,
+      -58.026732013627964,
+      94.0
+    ],
+    [
+      1020.4,
+      -58.12928019806061,
+      93.0
+    ],
+    [
+      1067.0,
+      -58.291617784559755,
+      100.0
+    ],
+    [
+      1067.2,
+      -58.34955620145295,
+      101.0
+    ]
+  ],
+  "trials": {
+    "__pycache__": {
+      "status": "not_completed",
+      "G_cost": "unknown",
+      "complete_circuit_metrics": "unknown"
+    },
+    "col4_direct": {
+      "parameters": {
+        "implementation": "/home/guoliang/multiplier/experiments/1/candidate_g0001_0002/parent.py",
+        "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+        "removed_slots": [
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            1
+          ]
+        ],
+        "node_ids": [
+          400,
+          454
+        ]
+      },
+      "compensation_columns": [
+        4,
+        5
+      ],
+      "remaining_variance": 0.0,
+      "status": "unsat",
+      "reason": "Even unrestricted G truth tables exceed the error budget",
+      "weighted_cost": null,
+      "saved_cost": 21.8,
+      "baseline_cost": 954.2,
+      "deleted_cost": 932.4
+    },
+    "col4_one": {
+      "parameters": {
+        "implementation": "/home/guoliang/multiplier/experiments/1/candidate_g0001_0002/parent.py",
+        "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+        "removed_slots": [
+          [
+            4,
+            0
+          ]
+        ],
+        "node_ids": [
+          400
+        ]
+      },
+      "compensation_columns": [
+        4
+      ],
+      "remaining_variance": 0.0,
+      "status": "unsat",
+      "reason": "Even unrestricted G truth tables exceed the error budget",
+      "weighted_cost": null,
+      "saved_cost": 5.8,
+      "baseline_cost": 954.2,
+      "deleted_cost": 948.4
+    },
+    "col5_one": {
+      "parameters": {
+        "implementation": "/home/guoliang/multiplier/experiments/1/candidate_g0001_0002/parent.py",
+        "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+        "removed_slots": [
+          [
+            5,
+            0
+          ]
+        ],
+        "node_ids": [
+          92
+        ]
+      },
+      "compensation_columns": [
+        5
+      ],
+      "remaining_variance": 0.0,
+      "status": "unsat",
+      "reason": "Even unrestricted G truth tables exceed the error budget",
+      "weighted_cost": null,
+      "saved_cost": 11.8,
+      "baseline_cost": 954.2,
+      "deleted_cost": 942.4
+    },
+    "col5_pair_threebits": {
+      "parameters": {
+        "implementation": "/home/guoliang/multiplier/experiments/1/candidate_g0001_0002/parent.py",
+        "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+        "removed_slots": [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            3
+          ]
+        ],
+        "node_ids": [
+          92,
+          401
+        ]
+      },
+      "compensation_columns": [
+        5,
+        5,
+        6
+      ],
+      "remaining_variance": 0.0,
+      "status": "not_completed",
+      "G_cost": "unknown",
+      "complete_circuit_metrics": "unknown"
+    },
+    "constant_slot": {
+      "parameters": {
+        "implementation": "/home/guoliang/multiplier/experiments/1/candidate_g0001_0002/parent.py",
+        "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+        "removed_slots": [
+          [
+            4,
+            2
+          ]
+        ],
+        "node_ids": [
+          2
+        ]
+      },
+      "compensation_columns": [
+        4
+      ],
+      "remaining_variance": 0.0,
+      "status": "sat",
+      "reason": null,
+      "weighted_cost": 0,
+      "saved_cost": 0.0,
+      "baseline_cost": 954.2,
+      "deleted_cost": 954.2,
+      "complete_circuit_metrics": {
+        "gate_cost": 954.2,
+        "evm_db": -57.72353155447783,
+        "partial_product_count": 92,
+        "mae": 0.2649939836349636,
+        "rmse": 0.3136629149288993,
+        "max_abs_error": 0.921875
+      },
+      "G_cost": 0
+    },
+    "pair_direct": {
+      "parameters": {
+        "implementation": "/home/guoliang/multiplier/experiments/1/candidate_g0001_0002/parent.py",
+        "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+        "removed_slots": [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            3
+          ]
+        ],
+        "node_ids": [
+          92,
+          401
+        ]
+      },
+      "compensation_columns": [
+        5,
+        6
+      ],
+      "remaining_variance": 0.0,
+      "status": "unsat",
+      "reason": "Even unrestricted G truth tables exceed the error budget",
+      "weighted_cost": null,
+      "saved_cost": 21.6,
+      "baseline_cost": 954.2,
+      "deleted_cost": 932.6
+    },
+    "pair_inputs": {
+      "parameters": {
+        "implementation": "/home/guoliang/multiplier/experiments/1/candidate_g0001_0002/parent.py",
+        "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+        "removed_slots": [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            3
+          ]
+        ],
+        "node_ids": [
+          11,
+          7,
+          29,
+          25
+        ]
+      },
+      "compensation_columns": [
+        5,
+        6
+      ],
+      "remaining_variance": 0.02736603395100348,
+      "status": "not_completed",
+      "G_cost": "unknown",
+      "complete_circuit_metrics": "unknown"
+    },
+    "pair_shared": {
+      "parameters": {
+        "implementation": "/home/guoliang/multiplier/experiments/1/candidate_g0001_0002/parent.py",
+        "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+        "removed_slots": [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            3
+          ]
+        ],
+        "node_ids": [
+          11,
+          29
+        ]
+      },
+      "compensation_columns": [
+        5,
+        6
+      ],
+      "remaining_variance": 0.027366577526668826,
+      "status": "not_completed",
+      "G_cost": "unknown",
+      "complete_circuit_metrics": "unknown"
+    },
+    "three_direct": {
+      "parameters": {
+        "implementation": "/home/guoliang/multiplier/experiments/1/candidate_g0001_0002/parent.py",
+        "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+        "removed_slots": [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            4
+          ]
+        ],
+        "node_ids": [
+          92,
+          401,
+          465
+        ]
+      },
+      "compensation_columns": [
+        5,
+        6
+      ],
+      "remaining_variance": 0.0,
+      "status": "not_completed",
+      "G_cost": "unknown",
+      "complete_circuit_metrics": "unknown"
+    }
+  },
+  "selection": "Keep verified parent: only SAT trial replaces identical constant slot at unchanged objectives; informative slot trials fail unrestricted error budget; three-bit action table did not finish and is not judged infeasible."
+}

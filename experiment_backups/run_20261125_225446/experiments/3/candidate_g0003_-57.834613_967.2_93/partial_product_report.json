@@ -1,0 +1,278 @@
+{
+  "parent": {
+    "gate_cost": 968.2,
+    "evm_db": -57.83461265306508,
+    "partial_product_count": 94
+  },
+  "runtime_limit_evm_db": -57.6,
+  "archive_objectives": [
+    [
+      954.2,
+      -57.72353155447783,
+      92.0
+    ],
+    [
+      973.2,
+      -57.852453944355204,
+      93.0
+    ],
+    [
+      986.2,
+      -57.90019115841574,
+      93.0
+    ],
+    [
+      980.2,
+      -58.026732013627964,
+      94.0
+    ],
+    [
+      1067.0,
+      -58.291617784559755,
+      100.0
+    ],
+    [
+      1067.2,
+      -58.34955620145295,
+      101.0
+    ],
+    [
+      1010.6,
+      -58.18330682718984,
+      93.0
+    ],
+    [
+      978.2,
+      -57.7781172796199,
+      92.0
+    ],
+    [
+      968.2,
+      -57.83461265306508,
+      94.0
+    ],
+    [
+      959.2,
+      -57.77611271366918,
+      94.0
+    ],
+    [
+      969.2,
+      -57.83461265306508,
+      93.0
+    ],
+    [
+      965.2,
+      -57.65277192275167,
+      91.0
+    ],
+    [
+      976.2,
+      -57.72423799932994,
+      92.0
+    ]
+  ],
+  "trials": [
+    {
+      "trial": "trial_c20",
+      "removed_slots": [
+        [
+          4,
+          4
+        ],
+        [
+          4,
+          5
+        ]
+      ],
+      "node_ids": [
+        20
+      ],
+      "remaining_variance": 0.001955641830983778,
+      "X_size": 1,
+      "synthesis_status": "not_run",
+      "G_cost": "unknown",
+      "complete_metrics": "unknown"
+    },
+    {
+      "trial": "trial_n501",
+      "removed_slots": [
+        [
+          4,
+          4
+        ],
+        [
+          4,
+          5
+        ]
+      ],
+      "node_ids": [
+        501
+      ],
+      "remaining_variance": 0.001953123369285735,
+      "X_size": 1,
+      "synthesis_status": "not_run",
+      "G_cost": "unknown",
+      "complete_metrics": "unknown"
+    },
+    {
+      "trial": "trial_pair",
+      "removed_slots": [
+        [
+          4,
+          4
+        ],
+        [
+          4,
+          5
+        ]
+      ],
+      "node_ids": [
+        20,
+        501
+      ],
+      "remaining_variance": 0.0,
+      "X_size": 2,
+      "synthesis_status": "not_run",
+      "G_cost": "unknown",
+      "complete_metrics": "unknown"
+    },
+    {
+      "trial": "slot5_x20",
+      "removed_slots": [
+        [
+          5,
+          0
+        ]
+      ],
+      "node_ids": [
+        20
+      ],
+      "remaining_variance": 0.014647559839071901,
+      "X_size": 1,
+      "synthesis_status": "not_run",
+      "G_cost": "unknown",
+      "complete_metrics": "unknown"
+    },
+    {
+      "trial": "slot5_x92",
+      "removed_slots": [
+        [
+          5,
+          0
+        ]
+      ],
+      "node_ids": [
+        92
+      ],
+      "remaining_variance": 0.00648996880197579,
+      "X_size": 1,
+      "synthesis_status": "not_run",
+      "G_cost": "unknown",
+      "complete_metrics": "unknown"
+    },
+    {
+      "trial": "slot4_x20",
+      "removed_slots": [
+        [
+          4,
+          5
+        ]
+      ],
+      "node_ids": [
+        20
+      ],
+      "remaining_variance": 0.001955641830983778,
+      "X_size": 1,
+      "synthesis_status": "sat",
+      "G_cost": 0,
+      "complete_metrics": {
+        "gate_cost": 968.2,
+        "evm_db": -57.75175712214528,
+        "partial_product_count": 94
+      }
+    },
+    {
+      "trial": "slot4_x501",
+      "removed_slots": [
+        [
+          4,
+          5
+        ]
+      ],
+      "node_ids": [
+        501
+      ],
+      "remaining_variance": 0.001953123369285735,
+      "X_size": 1,
+      "synthesis_status": "sat",
+      "G_cost": 0,
+      "complete_metrics": {
+        "gate_cost": 968.2,
+        "evm_db": -57.76031332308194,
+        "partial_product_count": 94
+      }
+    },
+    {
+      "trial": "slot2_shared",
+      "removed_slots": [
+        [
+          4,
+          2
+        ]
+      ],
+      "node_ids": [
+        2,
+        178
+      ],
+      "remaining_variance": 0.0,
+      "X_size": 2,
+      "synthesis_status": "sat",
+      "G_cost": 0,
+      "complete_metrics": {
+        "gate_cost": 968.2,
+        "evm_db": -57.755712336060014,
+        "partial_product_count": 94
+      }
+    },
+    {
+      "trial": "slot2_direct",
+      "removed_slots": [
+        [
+          4,
+          2
+        ]
+      ],
+      "node_ids": [
+        229
+      ],
+      "remaining_variance": 0.0,
+      "X_size": 1,
+      "synthesis_status": "not_run",
+      "G_cost": "unknown",
+      "complete_metrics": "unknown"
+    },
+    {
+      "trial": "slot3_shared",
+      "removed_slots": [
+        [
+          4,
+          3
+        ]
+      ],
+      "node_ids": [
+        29,
+        378,
+        366,
+        374
+      ],
+      "remaining_variance": 0.0,
+      "X_size": 4,
+      "synthesis_status": "not_run",
+      "G_cost": "unknown",
+      "complete_metrics": "unknown"
+    }
+  ],
+  "choice": "verified parent",
+  "reason": "Every exported trial has unchanged cost and precompression slot count, but higher (worse) EVM than its parent; parent dominates them. Other screened trials either lack a viable one-bit oracle at the target or were not synthesized; their gate cost remains unknown. Parent remains eligible and present in current cross-generation archive. No synthesizer processes remain."
+}

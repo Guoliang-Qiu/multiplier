@@ -1,0 +1,23 @@
+{
+  "implementation": "/home/guoliang/multiplier/experiments/3/candidate_g0003_0002/parent.py",
+  "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+  "removed_slots": [
+    [
+      5,
+      0
+    ],
+    [
+      5,
+      6
+    ]
+  ],
+  "node_ids": [
+    92,
+    93,
+    416
+  ],
+  "compensation_columns": [
+    5,
+    6
+  ]
+}

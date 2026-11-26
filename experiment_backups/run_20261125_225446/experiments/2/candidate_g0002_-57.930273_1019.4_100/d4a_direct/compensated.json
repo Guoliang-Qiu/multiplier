@@ -1,0 +1,16 @@
+{
+  "baseline_cost": 1067.2,
+  "deleted_cost": 1051.2,
+  "nonconstant_terms_upper_bound": 92,
+  "final_cost": 1068.2,
+  "net_cost_saving": -1.0,
+  "strict_cost_improvement": false,
+  "target_evm_db": -58.2,
+  "table_metrics": {
+    "scaled_squared_error_sum": 1466192995,
+    "mse": 0.08517730276719404,
+    "evm_db": -58.34955620145295
+  },
+  "performance_basis": "pre-compression insertion followed by original compressor and CPA; verify full candidate",
+  "candidate_file": "/home/guoliang/multiplier/experiments/2/candidate_g0002_0006/d4a_direct/compensated.py"
+}

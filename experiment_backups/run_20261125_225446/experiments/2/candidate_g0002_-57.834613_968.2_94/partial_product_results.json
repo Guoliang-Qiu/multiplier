@@ -1,0 +1,256 @@
+{
+  "parent": {
+    "gate_cost": 969.2,
+    "evm_db": -57.83461265306508,
+    "partial_product_count": 94
+  },
+  "population_objectives": [
+    [
+      954.2,
+      -57.72353155447783,
+      92.0
+    ],
+    [
+      970.2,
+      -57.77706902080404,
+      93.0
+    ],
+    [
+      969.2,
+      -57.83461265306508,
+      94.0
+    ],
+    [
+      973.2,
+      -57.852453944355204,
+      93.0
+    ],
+    [
+      986.2,
+      -57.90019115841574,
+      93.0
+    ],
+    [
+      980.2,
+      -58.026732013627964,
+      94.0
+    ],
+    [
+      1067.0,
+      -58.291617784559755,
+      100.0
+    ],
+    [
+      1067.2,
+      -58.34955620145295,
+      101.0
+    ],
+    [
+      1010.6,
+      -58.18330682718984,
+      93.0
+    ],
+    [
+      978.2,
+      -57.7781172796199,
+      92.0
+    ]
+  ],
+  "trials": {
+    "constant": {
+      "parameters": {
+        "implementation": "/home/guoliang/multiplier/experiments/2/candidate_g0002_0000/parent.py",
+        "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+        "removed_slots": [
+          [
+            4,
+            5
+          ]
+        ],
+        "node_ids": []
+      },
+      "remaining_variance": 0.002931471338334387,
+      "synthesis_status": "unsat",
+      "g_cost": null,
+      "cost": null,
+      "performance": null
+    },
+    "direct": {
+      "parameters": {
+        "implementation": "/home/guoliang/multiplier/experiments/2/candidate_g0002_0000/parent.py",
+        "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+        "removed_slots": [
+          [
+            4,
+            5
+          ]
+        ],
+        "node_ids": [
+          552
+        ]
+      },
+      "remaining_variance": 0.0,
+      "synthesis_status": "sat",
+      "g_cost": 0,
+      "cost": {
+        "counts": {
+          "AND": 453,
+          "MUX_XOR": 24,
+          "NOT": 240,
+          "OR": 402
+        },
+        "gate_cost": 970.2,
+        "partial_product_count": 94
+      },
+      "performance": {
+        "avg_abs_error": 0.26250947799831337,
+        "bias": 0.2853194193998043,
+        "error_cases": 1038524,
+        "error_rate": 0.9884830348440545,
+        "evm_db": -57.83461265306508,
+        "mae": 0.26250947799831337,
+        "max_abs_error": 0.875,
+        "mse": 0.11350496209155746,
+        "rmse": 0.309677119860418,
+        "runtime_seconds": 46.77967623299992,
+        "total_cases": 1050624
+      }
+    },
+    "shared": {
+      "parameters": {
+        "implementation": "/home/guoliang/multiplier/experiments/2/candidate_g0002_0000/parent.py",
+        "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+        "removed_slots": [
+          [
+            4,
+            5
+          ]
+        ],
+        "node_ids": [
+          20,
+          501
+        ]
+      },
+      "remaining_variance": 0.0,
+      "synthesis_status": "sat",
+      "g_cost": 0,
+      "cost": {
+        "counts": {
+          "AND": 452,
+          "MUX_XOR": 24,
+          "NOT": 240,
+          "OR": 402
+        },
+        "gate_cost": 969.2,
+        "partial_product_count": 94
+      },
+      "performance": {
+        "avg_abs_error": 0.2643566391853794,
+        "bias": 0.2539723342389856,
+        "error_cases": 1038524,
+        "error_rate": 0.9884830348440545,
+        "evm_db": -57.75175712214528,
+        "mae": 0.2643566391853794,
+        "max_abs_error": 0.875,
+        "mse": 0.09972633505657635,
+        "rmse": 0.31264529382690165,
+        "runtime_seconds": 47.29694575099984,
+        "total_cases": 1050624
+      }
+    },
+    "compact": {
+      "parameters": {
+        "implementation": "/home/guoliang/multiplier/experiments/2/candidate_g0002_0000/parent.py",
+        "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+        "removed_slots": [
+          [
+            4,
+            5
+          ]
+        ],
+        "node_ids": [
+          20,
+          27,
+          28
+        ]
+      },
+      "remaining_variance": 0.0019556315586058562,
+      "synthesis_status": "sat",
+      "g_cost": 0,
+      "cost": {
+        "counts": {
+          "AND": 452,
+          "MUX_XOR": 24,
+          "NOT": 240,
+          "OR": 402
+        },
+        "gate_cost": 969.2,
+        "partial_product_count": 94
+      },
+      "performance": {
+        "avg_abs_error": 0.2643566391853794,
+        "bias": 0.2539723342389856,
+        "error_cases": 1038524,
+        "error_rate": 0.9884830348440545,
+        "evm_db": -57.75175712214528,
+        "mae": 0.2643566391853794,
+        "max_abs_error": 0.875,
+        "mse": 0.09972633505657635,
+        "rmse": 0.31264529382690165,
+        "runtime_seconds": 46.236045108000326,
+        "total_cases": 1050624
+      }
+    },
+    "remove_zero": {
+      "parameters": {
+        "implementation": "/home/guoliang/multiplier/experiments/2/candidate_g0002_0000/parent.py",
+        "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+        "removed_slots": [
+          [
+            4,
+            4
+          ],
+          [
+            4,
+            5
+          ]
+        ],
+        "node_ids": [
+          20,
+          501
+        ]
+      },
+      "remaining_variance": 0.0,
+      "synthesis_status": "unsat",
+      "g_cost": null,
+      "cost": null,
+      "performance": null
+    },
+    "remove_one": {
+      "parameters": {
+        "implementation": "/home/guoliang/multiplier/experiments/2/candidate_g0002_0000/parent.py",
+        "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+        "removed_slots": [
+          [
+            4,
+            5
+          ],
+          [
+            4,
+            6
+          ]
+        ],
+        "node_ids": [
+          20,
+          501
+        ]
+      },
+      "remaining_variance": 0.0,
+      "synthesis_status": "unsat",
+      "g_cost": null,
+      "cost": null,
+      "performance": null
+    }
+  },
+  "decision": "Retain verified parent: direct restores original slot and costs +1, shared/compact cost and slot count tie parent but worsen EVM; reduced-count trials are unsat at target -57.65 dB. Deep gate optimization receives original parent."
+}

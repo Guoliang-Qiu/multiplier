@@ -1,0 +1,19 @@
+{
+  "parent": {"gate_cost": 983, "evm_db": -57.66509477604998, "partial_product_count": 92},
+  "selected_trial": "t5_single",
+  "parameters": {"removed_slots": [[4, 4]], "node_ids": [24, 29, 30], "compensation_columns": [4], "target_evm_db": -57.7, "max_gates": 2, "stimulus_file": "/home/guoliang/multiplier/stimulus.npy"},
+  "selected_screening_remaining_variance": 0.0,
+  "selected_synthesis": {"status": "sat", "gates": 2, "weighted_G_cost": 4},
+  "selected_complete_metrics": {"gate_cost": 986, "evm_db": -57.72423799932994, "partial_product_count": 92},
+  "screening_shortlist": [
+    {"trial": "t1_shared", "remaining_variance": 0.0, "X_size": 2, "table_best_evm_db": -57.66509477604998, "synthesis_status": "not_run", "G_cost": null, "complete_metrics": null},
+    {"trial": "t2_inputs", "remaining_variance": 0.003297385115721569, "X_size": 7, "synthesis_status": "not_run", "G_cost": null, "complete_metrics": null},
+    {"trial": "t3_other", "remaining_variance": 0.0, "X_size": 4, "synthesis_status": "not_run", "G_cost": null, "complete_metrics": null},
+    {"trial": "t4_compact", "remaining_variance": 0.0, "X_size": 2, "synthesis_status": "not_run", "G_cost": null, "complete_metrics": null},
+    {"trial": "t5_single", "remaining_variance": 0.0, "X_size": 3, "synthesis_status": "sat", "G_cost": 4, "complete_metrics": {"gate_cost": 986, "evm_db": -57.72423799932994, "partial_product_count": 92}},
+    {"trial": "t6_or", "remaining_variance": 0.0, "X_size": 2, "table_best_evm_db": -55.53913793202527, "synthesis_status": "not_run", "G_cost": null, "complete_metrics": null},
+    {"trial": "t7_three", "remaining_variance": 0.0, "X_size": 3, "table_best_evm_db": -57.66509477604998, "synthesis_status": "not_run", "G_cost": null, "complete_metrics": null},
+    {"trial": "t8_direct", "remaining_variance": 0.0, "X_size": 1, "table_best_evm_db": -57.66509477604998, "synthesis_status": "not_run", "G_cost": null, "complete_metrics": null}
+  ],
+  "population_comparison": "Current Pareto includes [954.2, -57.72353155447783, 92], which dominates this pre-gate-optimization circuit [986, -57.72423799932994, 92] only in gate cost but not in EVM (trial EVM is lower by 0.00070644 dB); [973.2, -57.852453944355204, 93] costs less and improves EVM but has one more partial-product slot. The trial improves parent EVM by 0.05914322 dB at +3 weighted cost and identical slot count; gate optimization remains pending."
+}

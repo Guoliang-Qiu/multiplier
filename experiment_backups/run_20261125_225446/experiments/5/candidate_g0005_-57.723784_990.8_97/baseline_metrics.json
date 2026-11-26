@@ -1,0 +1,11 @@
+{
+  "implementation": "/home/guoliang/multiplier/experiments/5/candidate_g0005_0003/parent.py",
+  "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+  "gate_cost": 1023.8,
+  "partial_product_count": 100,
+  "evm_db": -58.18330682718984,
+  "mae": 0.25511069046823603,
+  "rmse": 0.2974913965730208,
+  "max_abs_error": 0.671875,
+  "total_cases": 1050624
+}

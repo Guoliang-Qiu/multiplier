@@ -1,0 +1,22 @@
+# Deep optimization results
+
+All full evaluations used `/home/guoliang/multiplier/stimulus.npy` (1,050,624 rows) and the unchanged workspace `gate_cost.py` and `eval.py`. Objective order: [weighted cost, EVM dB, pre-compression slots].
+
+| Circuit | Cost | EVM dB | Slots | MAE | RMSE | Max error |
+|---|---:|---:|---:|---:|---:|---:|
+| Original immutable parent | 973.2 | -57.852453944355204 | 93 | .2621163187900714 | .3090416789962185 | .9140625 |
+| Immutable handoff | 971.2 | -57.68481981274264 | 93 | .26587487382498404 | .3150639845995006 | 1.0 |
+| General-pass `general_baseline.py` | 970.2 | -57.68481981274264 | 93 | .26587487382498404 | .3150639845995006 | 1.0 |
+| Final delivered `generations/3/candidate_g0003_0004.py` | 973.2 | -57.852453944355204 | 92 | .2621163187900714 | .3090416789962185 | .9140625 |
+
+## First, independent equivalence optimization
+
+Traced output-reachable compensation node 721 back to `OR(AND(d[0],XOR(c[4],d[1])),AND(c[0],XOR(d[3],d[4])))`. Replaced the unstable numerical node reference by the corresponding gate-level expression and eliminated the redundant `OR(g,ZERO)` gate. Result: 971.2 -> 970.2, identical 93 pre-compression slots and 0 raw-output mismatches on the entire configured stimulus (sample-based, not formal proof). Saved `general_baseline.py` before directional trials. The identity of the reconstructed G follows its original node cone; therefore this rewrite also fixes the hardcoded-node fragility when gate instantiation changes.
+
+Explored at least the following general-pass mappings (`trials.py`, `top_trials.py`): top-row selector and direct top-row generation (981.2 to 1020.8), Booth digit XOR primitive (985.2), global primitive XOR (987.2), output XOR primitive (976.2), simplified `p` factoring and cell negation (971.2), compressor input reordering and output-adder reordering (971.2), algebraic alternative full adder (971.2), absorption-off (971.2), top-row active-selector rewrites (977.2), and alternate MUX_XOR mappings (1020.8). Invalid trials whose old structural assertions no longer held were rejected, not used as equivalence evidence. The shared tap2 constant folding, hash-consing, `_add3`, and normal full adders remain inherited. No Cordis tool was available in the configured tool interface, so no exact-synth results are claimed.
+
+## Second, directional trials and selection
+
+The external stimulus has strongly biased `b` (mean -85.6667) and `d` (+84.6667), approximately balanced data bits, and 1.14456% exact raw Q4.7 half-step ties. All directional proposals were measured as complete circuits, rather than selected from local statistics. Removing G saves five cost units and one slot but fails at -55.17865 dB. Replacing G with one yields 963.2, -57.61629, 93 (feasible but worse error and no slot improvement); replacing it with either partial AND alone fails at -57.59261/-57.59031. An OR of input lows yields 971.2, -57.63566, 93. Shared Boolean G alternative yields 973.2, -57.69089, 93. Dropping col-10 constant fails at -29.55023; adding col-6 rounding constant fails at -52.63282. Tested three other low-column 3:2 approximations: `merge02_or_and` 966.2/-57.66603/92; `merge02_or_or` 971.2/-57.77081/92; `merge01` 971.2/-57.68453/92; `merge12` 971.2/-57.68233/92. The handoff general baseline's low-column approximation at 970.2/-57.68482/93 is dominated by archived 954.2/-57.72353/92.
+
+The handoff's CD low-column approximation is inferior to the original parent in EVM; for a new parent-relative Pareto tradeoff, restored the parent CD triple and removed the column-18 compensation constant. That slot cannot influence any output because the output builder explicitly repeats output bit 17 as sign bit 18. **Final 973.2/-57.852453944355204/92 improves the original parent's pre-compression count from 93 to 92 with exactly equal cost and EVM.** The final output has zero raw-output mismatches against the original parent on all configured stimulus rows (sample-based only). The slot is a real removed constant, not hidden compression; graph reachability makes cost unchanged. The final implementation remains independently importable with zero-argument `build_circuit()`, complete valid 19-bit output bus, and EVM strictly below -57.6 dB. Relative to the archive's 973.2/-57.85245/93 record it dominates in slot count; the archive's 968.2/-57.83461/94 alternative trades slightly lower cost for less accurate EVM and more slots.

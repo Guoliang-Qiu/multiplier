@@ -1,0 +1,7 @@
+g_simplified {"counts": {"AND": 452, "MUX_XOR": 24, "NOT": 238, "OR": 404}, "gate_cost": 971.2, "partial_product_count": 92}
+native_xor {"counts": {"AND": 368, "MUX_XOR": 24, "NOT": 198, "OR": 354, "XOR": 50}, "gate_cost": 987.2, "partial_product_count": 92}
+last_row_original {"counts": {"AND": 466, "MUX_XOR": 24, "NOT": 237, "OR": 418}, "gate_cost": 999.2, "partial_product_count": 92}
+parity_fa {"counts": {"AND": 525, "MUX_XOR": 24, "NOT": 238, "OR": 331}, "gate_cost": 971.2, "partial_product_count": 92}
+equivalence native_xor True mismatches 0
+equivalence last_row_original True mismatches 0
+equivalence parity_fa True mismatches 0

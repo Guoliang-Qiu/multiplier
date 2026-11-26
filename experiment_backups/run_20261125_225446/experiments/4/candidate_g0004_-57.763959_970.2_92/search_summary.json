@@ -1,0 +1,17 @@
+{
+  "baseline": {"gate_cost": 973.2, "evm_db": -57.852453944355204, "partial_product_count": 92},
+  "selected_trial": "trial_c4p3_cd",
+  "removed_slots": [[4, 3]],
+  "node_ids": [29, 30],
+  "compensation_columns": [4],
+  "remaining_variance": 0.0037528937559392224,
+  "synthesis_status": "sat",
+  "G_cost": 1,
+  "measured": {"gate_cost": 972.2, "evm_db": -57.76395892749434, "partial_product_count": 92},
+  "other_completed_trials": {
+    "trial_c4p2_factor": {"remaining_variance": 0.0019531244840318152, "X_size": 1, "status": "sat", "G_cost": 0, "gate_cost": 973.2, "evm_db": -57.762449048170424, "partial_product_count": 92},
+    "trial_c4p2_a0": {"remaining_variance": 0.0019520913876171118, "X_size": 1, "status": "sat", "G_cost": 0, "gate_cost": 973.2, "evm_db": -57.75236111197151, "partial_product_count": 92}
+  },
+  "unsynthesized_trials": "See trial_*/screen_result.json and trial_*/table.json; synthesis and complete-circuit costs unknown.",
+  "population_comparison": "Compared with all 12 archive records, this provisional trial is dominated by (971.2, -57.83461265306508, 92). Retained for the distinct CD-input compensation topology and possible later gate optimization rather than claiming immediate Pareto membership."
+}

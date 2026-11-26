@@ -1,0 +1,17 @@
+{
+  "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+  "parent": {"gate_cost": 1067.2, "evm_db": -58.34955620145295, "partial_product_count": 101},
+  "trials": [
+    {"name": "d4a_shared", "removed_slots": [[4,1]], "node_ids": [110,4,5], "compensation_columns": [4], "remaining_variance": 0.003632671239318191, "synthesis_status": "sat", "g_cost": 0, "gate_cost": 1062.2, "evm_db": -57.857187738625626, "partial_product_count": 101},
+    {"name": "d4a_direct", "removed_slots": [[4,1]], "node_ids": [152], "compensation_columns": [4], "remaining_variance": 0.0, "synthesis_status": "sat", "g_cost": 0, "gate_cost": 1068.2, "evm_db": -58.34955620145295, "partial_product_count": 101},
+    {"name": "d4pair_shared", "removed_slots": [[4,1],[4,4]], "node_ids": [110,426], "compensation_columns": [5], "remaining_variance": 0.007261751568191001, "synthesis_status": "unsat_unrestricted_table", "g_cost": null, "gate_cost": null, "evm_db": null, "partial_product_count": null},
+    {"name": "d4pair_direct", "removed_slots": [[4,1],[4,4]], "node_ids": [152,468], "compensation_columns": [4,5], "remaining_variance": 0.0, "synthesis_status": "sat", "g_cost": 0, "gate_cost": 1060.2, "evm_db": -57.97603668467168, "partial_product_count": 101},
+    {"name": "d4pair_one4", "removed_slots": [[4,1],[4,4]], "node_ids": [152,468], "compensation_columns": [4], "remaining_variance": 0.0, "synthesis_status": "sat", "g_cost": 0, "gate_cost": 1046.2, "evm_db": -57.93027338959716, "partial_product_count": 100},
+    {"name": "d4pair_one5", "removed_slots": [[4,1],[4,4]], "node_ids": [152,468], "compensation_columns": [5], "remaining_variance": 0.0, "synthesis_status": "sat", "g_cost": 0, "gate_cost": 1055.2, "evm_db": -57.9890145385129, "partial_product_count": 100},
+    {"name": "d5pair_direct", "removed_slots": [[5,1],[5,4]], "node_ids": [163,479], "compensation_columns": [5,6], "remaining_variance": 0.0, "synthesis_status": "interrupted_due_to_foreground_runtime", "g_cost": null, "gate_cost": null, "evm_db": null, "partial_product_count": null},
+    {"name": "d5pair_fused", "removed_slots": [[5,1],[5,4]], "node_ids": [163,479], "compensation_columns": [5,5,6], "remaining_variance": 0.0, "synthesis_status": "not_run_unrestricted_table_below_target", "g_cost": null, "gate_cost": null, "evm_db": null, "partial_product_count": null}
+  ],
+  "additional_screened_only": ["d4a_factors", "d5mux_direct", "d5mux_compact", "d5mux_full", "d5pair_compact"],
+  "chosen": "d4pair_one4",
+  "reason": "Best validated cost and fewer slots among trials; -57.9303 dB passes -57.6 dB strictly. Parent has better EVM, while one5 gains only 0.059 dB for 9 weighted gate-cost units. The current archive contains dominating completed circuits (for example 980.2, -58.0267, 94); deliver this provisional deletion-layout candidate for the following deep-gate optimization stage, not as a claimed Pareto improvement. Source retains the parent compressor and output-adder exactly."
+}

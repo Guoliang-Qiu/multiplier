@@ -1,0 +1,234 @@
+{
+  "baseline": {
+    "gate_cost": 1010.6,
+    "evm_db": -58.18330682718984,
+    "partial_product_count": 93
+  },
+  "selected": "pair_direct_one",
+  "selected_objectives": [
+    995.8,
+    -57.898557989441954,
+    92
+  ],
+  "pareto_dominators": [],
+  "note": "Partial-product-stage tradeoff provisional; gate optimization follows. Unmeasured complete costs are unknown; table oracle and screening are not complete-circuit guarantees.",
+  "trials": {
+    "single_inputs": {
+      "removed_slots": [
+        [
+          4,
+          1
+        ]
+      ],
+      "node_ids": [
+        4,
+        22
+      ],
+      "remaining_variance": 0.0037708042561819272,
+      "compensation_columns": [
+        4
+      ],
+      "synthesis_status": "sat",
+      "G_weighted_cost": 0,
+      "complete_cost": 1002.8,
+      "complete_evm_db": -57.99331559074916,
+      "partial_product_count": 93
+    },
+    "single_shared": {
+      "removed_slots": [
+        [
+          4,
+          1
+        ]
+      ],
+      "node_ids": [
+        73,
+        76
+      ],
+      "remaining_variance": 0.0028675815018492624,
+      "compensation_columns": [
+        4
+      ],
+      "synthesis_status": "not_run",
+      "G_weighted_cost": null,
+      "complete_cost": null,
+      "complete_evm_db": null,
+      "partial_product_count": null
+    },
+    "single_exact": {
+      "removed_slots": [
+        [
+          4,
+          1
+        ]
+      ],
+      "node_ids": [
+        90
+      ],
+      "remaining_variance": 0.0,
+      "compensation_columns": [
+        4
+      ],
+      "synthesis_status": "sat",
+      "G_weighted_cost": 0,
+      "complete_cost": 1011.6,
+      "complete_evm_db": -58.18330682718984,
+      "partial_product_count": 93
+    },
+    "pair_inputs": {
+      "removed_slots": [
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "node_ids": [
+        4,
+        5,
+        22,
+        23
+      ],
+      "remaining_variance": 0.007075957637643875,
+      "compensation_columns": [
+        4,
+        5
+      ],
+      "synthesis_status": "not_run",
+      "G_weighted_cost": null,
+      "complete_cost": null,
+      "complete_evm_db": null,
+      "partial_product_count": null
+    },
+    "pair_digit": {
+      "removed_slots": [
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "node_ids": [
+        11,
+        43,
+        73,
+        76
+      ],
+      "remaining_variance": 0.0057572974533707496,
+      "compensation_columns": [
+        4,
+        5
+      ],
+      "synthesis_status": "sat",
+      "G_weighted_cost": 0,
+      "complete_cost": 1002.0,
+      "complete_evm_db": -57.758072106966125,
+      "partial_product_count": 93
+    },
+    "pair_direct": {
+      "removed_slots": [
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "node_ids": [
+        65,
+        90
+      ],
+      "remaining_variance": 0.0,
+      "compensation_columns": [
+        4,
+        5
+      ],
+      "synthesis_status": "sat",
+      "G_weighted_cost": 0,
+      "complete_cost": 1010.8,
+      "complete_evm_db": -57.768547437293265,
+      "partial_product_count": 93
+    },
+    "single_other": {
+      "removed_slots": [
+        [
+          5,
+          1
+        ]
+      ],
+      "node_ids": [
+        5,
+        22
+      ],
+      "remaining_variance": 0.01466503884130765,
+      "compensation_columns": [
+        5
+      ],
+      "synthesis_status": "not_run",
+      "G_weighted_cost": null,
+      "complete_cost": null,
+      "complete_evm_db": null,
+      "partial_product_count": null
+    },
+    "pair_digit_one": {
+      "removed_slots": [
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "node_ids": [
+        11,
+        43,
+        73,
+        76
+      ],
+      "remaining_variance": 0.0057572974533707496,
+      "compensation_columns": [
+        4
+      ],
+      "synthesis_status": "unsat",
+      "G_weighted_cost": null,
+      "complete_cost": null,
+      "complete_evm_db": null,
+      "partial_product_count": null
+    },
+    "pair_direct_one": {
+      "removed_slots": [
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "node_ids": [
+        65,
+        90
+      ],
+      "remaining_variance": 0.0,
+      "compensation_columns": [
+        5
+      ],
+      "synthesis_status": "sat",
+      "G_weighted_cost": 0,
+      "complete_cost": 995.8,
+      "complete_evm_db": -57.898557989441954,
+      "partial_product_count": 92
+    }
+  }
+}

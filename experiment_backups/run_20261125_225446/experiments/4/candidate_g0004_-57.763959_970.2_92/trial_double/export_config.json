@@ -1,0 +1,5 @@
+{
+  "implementation": "/home/guoliang/multiplier/experiments/4/candidate_g0004_0008/parent.py",
+  "error_table": "/home/guoliang/multiplier/experiments/4/candidate_g0004_0008/trial_double/table.npy",
+  "synthesis_result": "/home/guoliang/multiplier/experiments/4/candidate_g0004_0008/trial_double/synthesis.json"
+}

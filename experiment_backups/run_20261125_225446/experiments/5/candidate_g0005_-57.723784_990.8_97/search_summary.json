@@ -1,0 +1,21 @@
+{
+  "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+  "evm_limit_db": -57.6,
+  "synthesis_target_db": -57.65,
+  "parent": {"gate_cost": 1023.8, "evm_db": -58.18330682718984, "partial_product_count": 100},
+  "trials": {
+    "col4_shared": {"removed_slots": [[4,1],[4,4]], "node_ids": [101,399], "remaining_variance": 0.007261751568191001, "synthesis_status": "not_run", "g_cost": null, "complete_metrics": null},
+    "col4_compact": {"removed_slots": [[4,1],[4,4]], "node_ids": [11,29], "remaining_variance": 0.007540442235374835, "synthesis_status": "not_run", "g_cost": null, "complete_metrics": null},
+    "col4_strong": {"removed_slots": [[4,1],[4,4]], "node_ids": [143,441], "remaining_variance": 0, "synthesis_status": "sat", "g_cost": 0, "complete_metrics": [1010.8,-57.70920098569807,100]},
+    "col4_one": {"removed_slots": [[4,1],[4,4]], "node_ids": [143,441], "remaining_variance": 0, "synthesis_status": "unsat_unrestricted_table", "g_cost": null, "complete_metrics": null},
+    "col4_one_compact": {"removed_slots": [[4,1],[4,4]], "node_ids": [11,29], "remaining_variance": 0.007540442235374835, "synthesis_status": "not_run", "g_cost": null, "complete_metrics": null},
+    "col3_compact": {"removed_slots": [[3,0],[3,1]], "node_ids": [101,399], "remaining_variance": 0.0009754731400411986, "synthesis_status": "sat", "g_cost": 0, "complete_metrics": null},
+    "col3_one": {"removed_slots": [[3,0],[3,1]], "node_ids": [101,399], "remaining_variance": 0.0009754731400411986, "synthesis_status": "sat", "g_cost": 0, "complete_metrics": [1023.8,-58.18330682718984,99]},
+    "col4_triple": {"removed_slots": [[4,1],[4,2],[4,4]], "node_ids": [143,441], "remaining_variance": 0.0035033850261842804, "synthesis_status": "sat", "g_cost": 0, "complete_metrics": [1005.8,-57.65868514174898,99]},
+    "col4_triple_strong": {"removed_slots": [[4,1],[4,2],[4,4]], "node_ids": [143,216,441], "compensation_columns": [4,5], "remaining_variance": 0, "synthesis_status": "sat", "g_cost": 0, "complete_metrics": [1005.8,-57.72378365543872,99]},
+    "col4_quad": {"removed_slots": [[4,1],[4,2],[4,4],[4,5]], "node_ids": [143,441], "remaining_variance": 0.007021074141771664, "synthesis_status": "unsat_unrestricted_table", "g_cost": null, "complete_metrics": null},
+    "col4_quad_strong": {"removed_slots": [[4,1],[4,2],[4,4],[4,5]], "node_ids": [143,216,441,514], "remaining_variance": 0, "synthesis_status": "sat", "g_cost": 0, "complete_metrics": [1006.8,-57.67164491899298,99]}
+  },
+  "selected": "col4_triple_strong",
+  "selection_note": "At equal cost and slot count, triple-strong beats triple-compact on EVM; four-slot alternative costs more and has worse EVM. The selected candidate has EVM margin of 0.124 dB; a subsequent gate optimizer may improve cost. Current archive contains lower-cost alternatives and this handoff is provisional. No candidate claims equivalence to its parent."
+}

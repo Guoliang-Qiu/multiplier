@@ -1,0 +1,16 @@
+{
+  "baseline_cost": 1037,
+  "deleted_cost": 1013,
+  "nonconstant_terms_upper_bound": 88,
+  "final_cost": 1033,
+  "net_cost_saving": 4,
+  "strict_cost_improvement": true,
+  "target_evm_db": -57.65,
+  "table_metrics": {
+    "scaled_squared_error_sum": 1676069475,
+    "mse": 0.09736990806652092,
+    "evm_db": -57.768547437293265
+  },
+  "performance_basis": "pre-compression insertion followed by original compressor and CPA; verify full candidate",
+  "candidate_file": "/home/guoliang/multiplier/experiments/3/candidate_g0003_0001/double_two_bits/compensated.py"
+}

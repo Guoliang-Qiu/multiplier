@@ -1,0 +1,12 @@
+{
+  "implementation": "/home/guoliang/multiplier/experiments/5/candidate_g0005_0000/parent.py",
+  "error_table": "/home/guoliang/multiplier/experiments/5/candidate_g0005_0000/one_bit_two_del/table.npy",
+  "node_ids": [
+    29,
+    30
+  ],
+  "compensation_columns": [
+    5
+  ],
+  "target_evm_db": -57.65
+}

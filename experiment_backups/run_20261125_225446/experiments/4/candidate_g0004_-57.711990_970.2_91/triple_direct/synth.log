@@ -1,0 +1,3 @@
+[compensation_synth] gates<=4, weighted_cost<=0
+[compensation_synth] gates<=4, weighted_cost<=1
+[compensation_synth] gates<=4, weighted_cost<=2

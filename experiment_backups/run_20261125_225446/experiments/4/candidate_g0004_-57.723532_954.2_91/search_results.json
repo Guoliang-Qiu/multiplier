@@ -1,0 +1,24 @@
+{
+  "outcome": "no improvement; retain verified parent",
+  "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+  "parent_sha256": "8e1bc431ac5ec852d882d9aee3833ff437342a9cd09ed67d1d154100665acdf9",
+  "parent_and_final": {"gate_cost": 954.2, "evm_db": -57.72353155447783, "partial_product_count": 92},
+  "pareto_population": "All 12 records in generations/pareto_archive/archive.json compared",
+  "target_evm_db": -57.65,
+  "trials": [
+    {"name":"trial_a","removed_slots":[[4,0],[4,2]],"node_ids":[400],"compensation_columns":[4,5],"remaining_variance":0.0,"best_table_evm_db":-57.42085751029482,"synthesis_status":"unsat","g_cost":null,"complete_metrics":null},
+    {"name":"trial_b","removed_slots":[[4,0],[4,2]],"node_ids":[29,24,399],"remaining_variance":0.0009784536281821183,"synthesis_status":"not run","g_cost":null,"complete_metrics":null},
+    {"name":"trial_c","removed_slots":[[4,0],[4,2]],"node_ids":[29,24],"remaining_variance":0.003425180573294224,"synthesis_status":"not run","g_cost":null,"complete_metrics":null},
+    {"name":"trial_d","removed_slots":[[4,1]],"node_ids":[454],"compensation_columns":[5],"remaining_variance":0.0,"best_table_evm_db":-57.33430241068767,"synthesis_status":"not run","g_cost":null,"complete_metrics":null},
+    {"name":"trial_e","removed_slots":[[5,6]],"node_ids":[400],"remaining_variance":0.015092422141777988,"synthesis_status":"not run","g_cost":null,"complete_metrics":null},
+    {"name":"trial_f","removed_slots":[[5,0]],"node_ids":[92],"compensation_columns":[5],"remaining_variance":0.0,"best_table_evm_db":-56.795394157027026,"synthesis_status":"not run","g_cost":null,"complete_metrics":null},
+    {"name":"trial_g","removed_slots":[[5,6]],"node_ids":[400],"compensation_columns":[5],"remaining_variance":0.015092422141777988,"best_table_evm_db":-57.142740051891536,"synthesis_status":"not run","g_cost":null,"complete_metrics":null},
+    {"name":"trial_h","removed_slots":[[4,0],[4,1]],"node_ids":[400,454],"compensation_columns":[4],"best_table_evm_db":-57.200431470404666,"synthesis_status":"not run","g_cost":null,"complete_metrics":null},
+    {"name":"trial_i","removed_slots":[[4,0]],"node_ids":[400],"compensation_columns":[4],"best_table_evm_db":-57.42085751029482,"synthesis_status":"not run","g_cost":null,"complete_metrics":null},
+    {"name":"trial_j","removed_slots":[[5,6]],"node_ids":[690],"compensation_columns":[5],"best_table_evm_db":-57.142740051891536,"synthesis_status":"not run","g_cost":null,"complete_metrics":null},
+    {"name":"trial_k","removed_slots":[[5,0]],"node_ids":[92],"compensation_columns":[5,6,7],"best_table_evm_db":-55.28548690599696,"synthesis_status":"not run","g_cost":null,"complete_metrics":null},
+    {"name":"trial_l","removed_slots":[[4,2]],"node_ids":[400],"compensation_columns":[4],"synthesis_status":"sat","g_cost":0,"gate_cost":954.2,"evm_db":-57.72353155447783,"partial_product_count":92},
+    {"name":"trial_m","removed_slots":[[4,2]],"node_ids":[400],"compensation_columns":[5],"constant_action_evm_db":[-56.98913782228765,-57.11239945070492],"synthesis_status":"not run","g_cost":null,"complete_metrics":null}
+  ],
+  "notes":"CLI only allows removed slots in columns 0–5; trial_g initially requested invalid column 6, then was corrected. The only SAT export exactly restores an existing ONE slot and equals the parent on all measured objectives. Unmeasured G costs are unknown. All child commands exited in foreground."
+}

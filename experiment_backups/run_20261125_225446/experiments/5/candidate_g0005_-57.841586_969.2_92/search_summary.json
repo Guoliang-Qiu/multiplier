@@ -1,0 +1,342 @@
+{
+  "baseline": {
+    "gate_cost": 973.2,
+    "evm_db": -57.852453944355204,
+    "partial_product_count": 92
+  },
+  "selected": "s41_compact",
+  "selected_pareto_dominators": [],
+  "archive_size": 14,
+  "trials": [
+    {
+      "trial": "s40_compact",
+      "removed_slots": [
+        [
+          4,
+          0
+        ]
+      ],
+      "node_ids": [
+        11,
+        55,
+        43
+      ],
+      "compensation_columns": [
+        4
+      ],
+      "remaining_variance": 0.0009746582195424634,
+      "synthesis_status": "not attempted",
+      "G_cost": null,
+      "complete_cost": null,
+      "complete_evm_db": null,
+      "complete_partial_product_count": null
+    },
+    {
+      "trial": "s40_strong",
+      "removed_slots": [
+        [
+          4,
+          0
+        ]
+      ],
+      "node_ids": [
+        11,
+        55,
+        43,
+        339
+      ],
+      "compensation_columns": [
+        4
+      ],
+      "remaining_variance": 0.0,
+      "synthesis_status": "not attempted",
+      "G_cost": null,
+      "complete_cost": null,
+      "complete_evm_db": null,
+      "complete_partial_product_count": null
+    },
+    {
+      "trial": "s41_40_compact",
+      "removed_slots": [
+        [
+          4,
+          1
+        ],
+        [
+          4,
+          0
+        ]
+      ],
+      "node_ids": [
+        119,
+        110,
+        11,
+        55
+      ],
+      "compensation_columns": [
+        4,
+        4
+      ],
+      "remaining_variance": 0.003409103414503361,
+      "synthesis_status": "not attempted",
+      "G_cost": null,
+      "complete_cost": null,
+      "complete_evm_db": null,
+      "complete_partial_product_count": null
+    },
+    {
+      "trial": "s41_40_small",
+      "removed_slots": [
+        [
+          4,
+          1
+        ],
+        [
+          4,
+          0
+        ]
+      ],
+      "node_ids": [
+        119,
+        110,
+        11
+      ],
+      "compensation_columns": [
+        4,
+        4
+      ],
+      "remaining_variance": 0.005358748242037803,
+      "synthesis_status": "not attempted",
+      "G_cost": null,
+      "complete_cost": null,
+      "complete_evm_db": null,
+      "complete_partial_product_count": null
+    },
+    {
+      "trial": "s41_42_compact",
+      "removed_slots": [
+        [
+          4,
+          1
+        ],
+        [
+          4,
+          2
+        ]
+      ],
+      "node_ids": [
+        119,
+        110,
+        2,
+        179
+      ],
+      "compensation_columns": [
+        4,
+        4
+      ],
+      "remaining_variance": 0.0019530969456500154,
+      "synthesis_status": "sat",
+      "G_cost": 2,
+      "complete_cost": 970.2,
+      "complete_evm_db": -57.84158629896105,
+      "complete_partial_product_count": 92
+    },
+    {
+      "trial": "s41_42_one",
+      "removed_slots": [
+        [
+          4,
+          1
+        ],
+        [
+          4,
+          2
+        ]
+      ],
+      "node_ids": [
+        119,
+        110,
+        2,
+        179
+      ],
+      "compensation_columns": [
+        4
+      ],
+      "remaining_variance": 0.0019530969456500154,
+      "synthesis_status": "unsat",
+      "G_cost": null,
+      "complete_cost": null,
+      "complete_evm_db": null,
+      "complete_partial_product_count": null
+    },
+    {
+      "trial": "s41_42_small",
+      "removed_slots": [
+        [
+          4,
+          1
+        ],
+        [
+          4,
+          2
+        ]
+      ],
+      "node_ids": [
+        119,
+        110,
+        2
+      ],
+      "compensation_columns": [
+        4,
+        4
+      ],
+      "remaining_variance": 0.003906726393493302,
+      "synthesis_status": "not attempted",
+      "G_cost": null,
+      "complete_cost": null,
+      "complete_evm_db": null,
+      "complete_partial_product_count": null
+    },
+    {
+      "trial": "s41_compact",
+      "removed_slots": [
+        [
+          4,
+          1
+        ]
+      ],
+      "node_ids": [
+        119,
+        110
+      ],
+      "compensation_columns": [
+        4
+      ],
+      "remaining_variance": 0.0019531183953524279,
+      "synthesis_status": "sat",
+      "G_cost": 1,
+      "complete_cost": 969.2,
+      "complete_evm_db": -57.84158629896105,
+      "complete_partial_product_count": 92
+    },
+    {
+      "trial": "s41_strong",
+      "removed_slots": [
+        [
+          4,
+          1
+        ]
+      ],
+      "node_ids": [
+        119,
+        110,
+        123
+      ],
+      "compensation_columns": [
+        4
+      ],
+      "remaining_variance": 0.0,
+      "synthesis_status": "not attempted",
+      "G_cost": null,
+      "complete_cost": null,
+      "complete_evm_db": null,
+      "complete_partial_product_count": null
+    },
+    {
+      "trial": "s50_compact",
+      "removed_slots": [
+        [
+          5,
+          0
+        ]
+      ],
+      "node_ids": [
+        11,
+        55,
+        43
+      ],
+      "compensation_columns": [
+        5
+      ],
+      "remaining_variance": 0.007797123304917218,
+      "synthesis_status": "not attempted",
+      "G_cost": null,
+      "complete_cost": null,
+      "complete_evm_db": null,
+      "complete_partial_product_count": null
+    },
+    {
+      "trial": "s50_strong",
+      "removed_slots": [
+        [
+          5,
+          0
+        ]
+      ],
+      "node_ids": [
+        11,
+        55,
+        43,
+        59
+      ],
+      "compensation_columns": [
+        5
+      ],
+      "remaining_variance": 0.0,
+      "synthesis_status": "not attempted",
+      "G_cost": null,
+      "complete_cost": null,
+      "complete_evm_db": null,
+      "complete_partial_product_count": null
+    },
+    {
+      "trial": "s51_compact",
+      "removed_slots": [
+        [
+          5,
+          1
+        ]
+      ],
+      "node_ids": [
+        110,
+        119,
+        5
+      ],
+      "compensation_columns": [
+        5
+      ],
+      "remaining_variance": 0.011716739863378907,
+      "synthesis_status": "not attempted",
+      "G_cost": null,
+      "complete_cost": null,
+      "complete_evm_db": null,
+      "complete_partial_product_count": null
+    },
+    {
+      "trial": "s51_strong",
+      "removed_slots": [
+        [
+          5,
+          1
+        ]
+      ],
+      "node_ids": [
+        110,
+        119,
+        165,
+        4,
+        5
+      ],
+      "compensation_columns": [
+        5
+      ],
+      "remaining_variance": 0.0,
+      "synthesis_status": "not attempted",
+      "G_cost": null,
+      "complete_cost": null,
+      "complete_evm_db": null,
+      "complete_partial_product_count": null
+    }
+  ],
+  "notes": "Seven-gate paired trial interrupted in foreground after 120 s; two-gate retry sat. Two-slot single-output trial unsat from exact table lower bound for its chosen observations. Unmeasured costs remain unknown."
+}

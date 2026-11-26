@@ -1,0 +1,147 @@
+{
+  "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+  "parent": {
+    "gate_cost": 969.2,
+    "evm_db": -57.83461265306508,
+    "partial_product_count": 93
+  },
+  "archive_objectives": [
+    [
+      954.2,
+      -57.72353155447783,
+      92.0
+    ],
+    [
+      973.2,
+      -57.852453944355204,
+      93.0
+    ],
+    [
+      986.2,
+      -57.90019115841574,
+      93.0
+    ],
+    [
+      980.2,
+      -58.026732013627964,
+      94.0
+    ],
+    [
+      1067.0,
+      -58.291617784559755,
+      100.0
+    ],
+    [
+      1067.2,
+      -58.34955620145295,
+      101.0
+    ],
+    [
+      1010.6,
+      -58.18330682718984,
+      93.0
+    ],
+    [
+      978.2,
+      -57.7781172796199,
+      92.0
+    ],
+    [
+      968.2,
+      -57.83461265306508,
+      94.0
+    ],
+    [
+      959.2,
+      -57.77611271366918,
+      94.0
+    ],
+    [
+      969.2,
+      -57.83461265306508,
+      93.0
+    ],
+    [
+      965.2,
+      -57.65277192275167,
+      91.0
+    ],
+    [
+      976.2,
+      -57.72423799932994,
+      92.0
+    ]
+  ],
+  "trials": {
+    "constant": {
+      "remaining_variance": 0.005869398648836256,
+      "x_size": 0,
+      "synthesis_status": "not_run",
+      "g_cost": null,
+      "complete_metrics": null
+    },
+    "buses": {
+      "remaining_variance": 0.005869371877237763,
+      "x_size": 2,
+      "synthesis_status": "not_run",
+      "g_cost": null,
+      "complete_metrics": null
+    },
+    "factors": {
+      "remaining_variance": 0.0,
+      "x_size": 4,
+      "synthesis_status": "not_run",
+      "g_cost": null,
+      "complete_metrics": null
+    },
+    "shared_or": {
+      "remaining_variance": 0.0,
+      "x_size": 2,
+      "synthesis_status": "unsat_at_one_compensation_bit",
+      "g_cost": null,
+      "complete_metrics": null
+    },
+    "highsaving_observe": {
+      "remaining_variance": 0.0,
+      "x_size": 1,
+      "synthesis_status": "sat",
+      "g_cost": 0,
+      "complete_metrics": null
+    },
+    "single_wire": {
+      "remaining_variance": 0.0,
+      "x_size": 1,
+      "synthesis_status": "sat",
+      "g_cost": 0,
+      "complete_metrics": {
+        "gate_cost": 969.2,
+        "evm_db": -57.83461265306508,
+        "partial_product_count": 93
+      }
+    },
+    "single_cheap": {
+      "remaining_variance": 0.0029286833743144267,
+      "x_size": 0,
+      "synthesis_status": "sat",
+      "g_cost": 0,
+      "complete_metrics": {
+        "gate_cost": 968.2,
+        "evm_db": -57.614047989826645,
+        "partial_product_count": 93
+      }
+    }
+  },
+  "selected": "single_cheap",
+  "removed_slots": [
+    [
+      4,
+      2
+    ]
+  ],
+  "node_ids": [],
+  "compensation_columns": [
+    4
+  ],
+  "target_evm_db": -57.61,
+  "reason": "The active column-4 bit is deleted and replaced with a constant compensation bit; complete circuit saves one weighted gate over parent, meets strict runtime EVM, and offers a different partial-product tradeoff for downstream optimization. It is presently dominated by the full Pareto archive, but downstream gate rewrites may improve it. Screening variance alone did not select the more expensive observation alternatives."
+}

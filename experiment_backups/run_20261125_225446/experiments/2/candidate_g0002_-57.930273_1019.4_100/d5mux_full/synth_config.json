@@ -1,0 +1,15 @@
+{
+  "implementation": "/home/guoliang/multiplier/experiments/2/candidate_g0002_0006/parent.py",
+  "error_table": "/home/guoliang/multiplier/experiments/2/candidate_g0002_0006/d5mux_full/table.npy",
+  "node_ids": [
+    110,
+    116,
+    162,
+    5,
+    4
+  ],
+  "compensation_columns": [
+    5
+  ],
+  "target_evm_db": -57.8
+}

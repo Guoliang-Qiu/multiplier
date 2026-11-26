@@ -1,0 +1,23 @@
+{
+  "saved_cost": 21.0,
+  "max_gates": 21,
+  "target_evm_db": -57.7,
+  "integer_error_budget": 1702733813,
+  "gate_costs": {
+    "AND": 1,
+    "OR": 1,
+    "XOR": 3,
+    "NOT": 0
+  },
+  "status": "unsat",
+  "reason": "Even unrestricted G truth tables exceed the error budget",
+  "node_ids": [
+    11,
+    29
+  ],
+  "compensation_columns": [
+    5
+  ],
+  "baseline_cost": 1067.2,
+  "deleted_cost": 1046.2
+}

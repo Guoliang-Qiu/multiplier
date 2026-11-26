@@ -1,0 +1,621 @@
+{
+  "parent": {
+    "gate_cost": 967.2,
+    "evm_db": -57.83461265306508,
+    "partial_product_count": 93
+  },
+  "archive_objectives": [
+    [
+      954.2,
+      -57.72353155447783,
+      92.0
+    ],
+    [
+      986.2,
+      -57.90019115841574,
+      93.0
+    ],
+    [
+      980.2,
+      -58.026732013627964,
+      94.0
+    ],
+    [
+      1067.0,
+      -58.291617784559755,
+      100.0
+    ],
+    [
+      1067.2,
+      -58.34955620145295,
+      101.0
+    ],
+    [
+      1010.6,
+      -58.18330682718984,
+      93.0
+    ],
+    [
+      965.2,
+      -57.65277192275167,
+      91.0
+    ],
+    [
+      963.2,
+      -57.61668813404249,
+      90.0
+    ],
+    [
+      971.2,
+      -57.83461265306508,
+      92.0
+    ],
+    [
+      973.2,
+      -57.852453944355204,
+      92.0
+    ],
+    [
+      958.2,
+      -57.77611271366918,
+      93.0
+    ],
+    [
+      967.2,
+      -57.83461265306508,
+      93.0
+    ]
+  ],
+  "trials": {
+    "shared": {
+      "screen.json": {
+        "implementation": "/home/guoliang/multiplier/experiments/4/candidate_g0004_0005/parent.py",
+        "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+        "removed_slots": [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            3
+          ]
+        ],
+        "node_ids": [
+          94,
+          417
+        ]
+      },
+      "screen_result.json": {
+        "remaining_variance": 0.0
+      },
+      "table.json": {
+        "sampling": {
+          "kind": "file",
+          "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+          "count": 1050624
+        },
+        "removed_slots": [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            3
+          ]
+        ],
+        "node_ids": [
+          94,
+          417
+        ],
+        "compensation_columns": [
+          5
+        ],
+        "num_inputs": 2,
+        "num_outputs": 1,
+        "compensation_values": [
+          0,
+          32
+        ],
+        "raw_output_width": 19,
+        "error_scale": 16384,
+        "reference_squared_sum": 1002644002629475,
+        "error_table_file": "table.npy",
+        "error_table_shape": [
+          4,
+          2
+        ],
+        "error_table_dtype": "int64"
+      },
+      "synthesis.json": {
+        "saved_cost": 23.0,
+        "max_gates": 3,
+        "target_evm_db": -57.65,
+        "integer_error_budget": 1722450541,
+        "gate_costs": {
+          "AND": 1,
+          "OR": 1,
+          "XOR": 3,
+          "NOT": 0
+        },
+        "status": "unsat",
+        "reason": "Even unrestricted G truth tables exceed the error budget",
+        "node_ids": [
+          94,
+          417
+        ],
+        "compensation_columns": [
+          5
+        ],
+        "baseline_cost": 967.2,
+        "deleted_cost": 944.2
+      }
+    },
+    "compact": {
+      "screen.json": {
+        "implementation": "/home/guoliang/multiplier/experiments/4/candidate_g0004_0005/parent.py",
+        "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+        "removed_slots": [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            3
+          ]
+        ],
+        "node_ids": [
+          92,
+          415
+        ]
+      },
+      "screen_result.json": {
+        "remaining_variance": 0.013030420164359497
+      }
+    },
+    "strong": {
+      "screen.json": {
+        "implementation": "/home/guoliang/multiplier/experiments/4/candidate_g0004_0005/parent.py",
+        "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+        "removed_slots": [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            3
+          ]
+        ],
+        "node_ids": [
+          94,
+          417,
+          92
+        ]
+      },
+      "screen_result.json": {
+        "remaining_variance": 0.0
+      }
+    },
+    "single_exact": {
+      "screen.json": {
+        "implementation": "/home/guoliang/multiplier/experiments/4/candidate_g0004_0005/parent.py",
+        "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+        "removed_slots": [
+          [
+            5,
+            0
+          ]
+        ],
+        "node_ids": [
+          94
+        ]
+      },
+      "screen_result.json": {
+        "remaining_variance": 0.0
+      },
+      "table.json": {
+        "sampling": {
+          "kind": "file",
+          "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+          "count": 1050624
+        },
+        "removed_slots": [
+          [
+            5,
+            0
+          ]
+        ],
+        "node_ids": [
+          94
+        ],
+        "compensation_columns": [
+          5
+        ],
+        "num_inputs": 1,
+        "num_outputs": 1,
+        "compensation_values": [
+          0,
+          32
+        ],
+        "raw_output_width": 19,
+        "error_scale": 16384,
+        "reference_squared_sum": 1002644002629475,
+        "error_table_file": "table.npy",
+        "error_table_shape": [
+          2,
+          2
+        ],
+        "error_table_dtype": "int64"
+      },
+      "synthesis.json": {
+        "saved_cost": 8.0,
+        "max_gates": 3,
+        "target_evm_db": -57.65,
+        "integer_error_budget": 1722450541,
+        "gate_costs": {
+          "AND": 1,
+          "OR": 1,
+          "XOR": 3,
+          "NOT": 0
+        },
+        "status": "sat",
+        "weighted_cost": 0,
+        "gates": 0,
+        "metrics": {
+          "scaled_squared_error_sum": 1650765923,
+          "mse": 0.09589991856504369,
+          "evm_db": -57.83461265306508
+        },
+        "optimal_within_gate_cap": true,
+        "node_ids": [
+          94
+        ],
+        "compensation_columns": [
+          5
+        ],
+        "baseline_cost": 967.2,
+        "deleted_cost": 959.2
+      }
+    },
+    "single_compact": {
+      "screen.json": {
+        "implementation": "/home/guoliang/multiplier/experiments/4/candidate_g0004_0005/parent.py",
+        "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+        "removed_slots": [
+          [
+            5,
+            0
+          ]
+        ],
+        "node_ids": [
+          92,
+          93
+        ]
+      },
+      "screen_result.json": {
+        "remaining_variance": 0.0
+      },
+      "table.json": {
+        "sampling": {
+          "kind": "file",
+          "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+          "count": 1050624
+        },
+        "removed_slots": [
+          [
+            5,
+            0
+          ]
+        ],
+        "node_ids": [
+          92,
+          93
+        ],
+        "compensation_columns": [
+          5
+        ],
+        "num_inputs": 2,
+        "num_outputs": 1,
+        "compensation_values": [
+          0,
+          32
+        ],
+        "raw_output_width": 19,
+        "error_scale": 16384,
+        "reference_squared_sum": 1002644002629475,
+        "error_table_file": "table.npy",
+        "error_table_shape": [
+          4,
+          2
+        ],
+        "error_table_dtype": "int64"
+      },
+      "synthesis.json": {
+        "saved_cost": 8.0,
+        "max_gates": 3,
+        "target_evm_db": -57.65,
+        "integer_error_budget": 1722450541,
+        "gate_costs": {
+          "AND": 1,
+          "OR": 1,
+          "XOR": 3,
+          "NOT": 0
+        },
+        "status": "sat",
+        "weighted_cost": 1,
+        "gates": 1,
+        "metrics": {
+          "scaled_squared_error_sum": 1650765923,
+          "mse": 0.09589991856504369,
+          "evm_db": -57.83461265306508
+        },
+        "optimal_within_gate_cap": true,
+        "node_ids": [
+          92,
+          93
+        ],
+        "compensation_columns": [
+          5
+        ],
+        "baseline_cost": 967.2,
+        "deleted_cost": 959.2
+      }
+    },
+    "double_carry": {
+      "screen.json": {
+        "implementation": "/home/guoliang/multiplier/experiments/4/candidate_g0004_0005/parent.py",
+        "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+        "removed_slots": [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            3
+          ]
+        ],
+        "node_ids": [
+          94,
+          417
+        ]
+      },
+      "screen_result.json": {
+        "remaining_variance": 0.0
+      },
+      "table.json": {
+        "sampling": {
+          "kind": "file",
+          "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+          "count": 1050624
+        },
+        "removed_slots": [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            3
+          ]
+        ],
+        "node_ids": [
+          94,
+          417
+        ],
+        "compensation_columns": [
+          5,
+          6
+        ],
+        "num_inputs": 2,
+        "num_outputs": 2,
+        "compensation_values": [
+          0,
+          32,
+          64,
+          96
+        ],
+        "raw_output_width": 19,
+        "error_scale": 16384,
+        "reference_squared_sum": 1002644002629475,
+        "error_table_file": "table.npy",
+        "error_table_shape": [
+          4,
+          4
+        ],
+        "error_table_dtype": "int64"
+      },
+      "synthesis.json": {
+        "saved_cost": 23.0,
+        "max_gates": 3,
+        "target_evm_db": -57.65,
+        "integer_error_budget": 1722450541,
+        "gate_costs": {
+          "AND": 1,
+          "OR": 1,
+          "XOR": 3,
+          "NOT": 0
+        },
+        "status": "sat",
+        "weighted_cost": 4,
+        "gates": 2,
+        "metrics": {
+          "scaled_squared_error_sum": 1650765923,
+          "mse": 0.09589991856504369,
+          "evm_db": -57.83461265306508
+        },
+        "optimal_within_gate_cap": true,
+        "node_ids": [
+          94,
+          417
+        ],
+        "compensation_columns": [
+          5,
+          6
+        ],
+        "baseline_cost": 967.2,
+        "deleted_cost": 944.2
+      },
+      "gate_cost.json": {
+        "counts": {
+          "AND": 454,
+          "MUX_XOR": 24,
+          "NOT": 238,
+          "OR": 401,
+          "XOR": 1
+        },
+        "gate_cost": 973.2,
+        "partial_product_count": 93
+      },
+      "eval.json": {
+        "avg_abs_error": 0.26250947799831337,
+        "bias": 0.2853194193998043,
+        "error_cases": 1038524,
+        "error_rate": 0.9884830348440545,
+        "evm_db": -57.83461265306508,
+        "mae": 0.26250947799831337,
+        "max_abs_error": 0.875,
+        "mse": 0.11350496209155746,
+        "rmse": 0.309677119860418,
+        "runtime_seconds": 48.49106264099828,
+        "total_cases": 1050624
+      }
+    },
+    "triple": {
+      "screen.json": {
+        "implementation": "/home/guoliang/multiplier/experiments/4/candidate_g0004_0005/parent.py",
+        "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+        "removed_slots": [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            3
+          ]
+        ],
+        "node_ids": [
+          94,
+          165,
+          417
+        ]
+      },
+      "screen_result.json": {
+        "remaining_variance": 0.0
+      },
+      "table.json": {
+        "sampling": {
+          "kind": "file",
+          "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+          "count": 1050624
+        },
+        "removed_slots": [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            3
+          ]
+        ],
+        "node_ids": [
+          94,
+          165,
+          417
+        ],
+        "compensation_columns": [
+          5,
+          6
+        ],
+        "num_inputs": 3,
+        "num_outputs": 2,
+        "compensation_values": [
+          0,
+          32,
+          64,
+          96
+        ],
+        "raw_output_width": 19,
+        "error_scale": 16384,
+        "reference_squared_sum": 1002644002629475,
+        "error_table_file": "table.npy",
+        "error_table_shape": [
+          8,
+          4
+        ],
+        "error_table_dtype": "int64"
+      },
+      "synthesis.json": {
+        "saved_cost": 31.8,
+        "max_gates": 6,
+        "target_evm_db": -57.65,
+        "integer_error_budget": 1722450541,
+        "gate_costs": {
+          "AND": 1,
+          "OR": 1,
+          "XOR": 3,
+          "NOT": 0
+        },
+        "status": "sat",
+        "weighted_cost": 8,
+        "gates": 6,
+        "metrics": {
+          "scaled_squared_error_sum": 1701117539,
+          "mse": 0.09882505519813031,
+          "evm_db": -57.7041243810159
+        },
+        "optimal_within_gate_cap": true,
+        "node_ids": [
+          94,
+          165,
+          417
+        ],
+        "compensation_columns": [
+          5,
+          6
+        ],
+        "baseline_cost": 967.2,
+        "deleted_cost": 935.4
+      },
+      "gate_cost.json": {
+        "counts": {
+          "AND": 452,
+          "MUX_XOR": 24,
+          "NOT": 236,
+          "OR": 400,
+          "XOR": 1
+        },
+        "gate_cost": 970.2,
+        "partial_product_count": 92
+      },
+      "eval.json": {
+        "avg_abs_error": 0.2654346146314,
+        "bias": 0.2630450376990246,
+        "error_cases": 1038524,
+        "error_rate": 0.9884830348440545,
+        "evm_db": -57.7041243810159,
+        "mae": 0.2654346146314,
+        "max_abs_error": 0.9375,
+        "mse": 0.10529128681381776,
+        "rmse": 0.31436452598556713,
+        "runtime_seconds": 43.7665437579999,
+        "total_cases": 1050624
+      }
+    }
+  },
+  "chosen": "triple",
+  "rationale": "Triple removal reduces live partial-product slots 93 to 92 with strictly eligible -57.704 dB; 970.2 cost is provisional ahead of gate optimization. Double removal gives 93 slots and higher cost, and the single-slot compensation recreates the parent. Archive includes a dominating 954.2/-57.7235/92 candidate, hence this is a handoff for cross-layer optimization, not a claimed Pareto improvement."
+}

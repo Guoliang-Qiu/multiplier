@@ -1,0 +1,107 @@
+{
+  "parent": {
+    "gate_cost": 1020.4,
+    "evm_db": -58.12928019806061,
+    "partial_product_count": 93
+  },
+  "selected_trial": "s5",
+  "parameters": {
+    "removed_slots": [
+      [
+        4,
+        6
+      ]
+    ],
+    "node_ids": [
+      23,
+      24
+    ],
+    "compensation_columns": [
+      4
+    ],
+    "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+    "target_evm_db": -57.65
+  },
+  "remaining_variance": 0.003665686314640108,
+  "selected_synthesis_status": "sat",
+  "g_weighted_cost": 0,
+  "selected_metrics": {
+    "gate_cost": 1015.6,
+    "evm_db": -58.18330682718984,
+    "partial_product_count": 93,
+    "mae": 0.25511069046823603,
+    "rmse": 0.2974913965730208
+  },
+  "other_trials": {
+    "s8": {
+      "remaining_variance": 0.003665685579249828,
+      "status": "sat",
+      "g_cost": 0,
+      "gate_cost": 1011.8,
+      "evm_db": -57.70728487243383,
+      "partial_product_count": 93
+    },
+    "s3": {
+      "remaining_variance": 0,
+      "status": "sat",
+      "g_cost": 0,
+      "gate_cost": null,
+      "evm_db": null
+    },
+    "s10": {
+      "status": "unsat",
+      "g_cost": null,
+      "gate_cost": null,
+      "evm_db": null
+    }
+  },
+  "current_archive_objectives": [
+    [
+      954.2,
+      -57.72353155447783,
+      92.0
+    ],
+    [
+      970.2,
+      -57.77706902080404,
+      93.0
+    ],
+    [
+      969.2,
+      -57.83461265306508,
+      94.0
+    ],
+    [
+      973.2,
+      -57.852453944355204,
+      93.0
+    ],
+    [
+      986.2,
+      -57.90019115841574,
+      93.0
+    ],
+    [
+      980.2,
+      -58.026732013627964,
+      94.0
+    ],
+    [
+      1020.4,
+      -58.12928019806061,
+      93.0
+    ],
+    [
+      1067.0,
+      -58.291617784559755,
+      100.0
+    ],
+    [
+      1067.2,
+      -58.34955620145295,
+      101.0
+    ]
+  ],
+  "dominated_by_archive": [],
+  "sample_based_not_formal": true
+}

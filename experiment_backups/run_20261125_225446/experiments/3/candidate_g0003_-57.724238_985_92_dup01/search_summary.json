@@ -1,0 +1,187 @@
+{
+  "selected": "verified_parent_no_improvement",
+  "parent": {
+    "gate_cost": 983,
+    "evm_db": -57.66509477604998,
+    "partial_product_count": 92
+  },
+  "trials": {
+    "trial_compact": {
+      "removed_slots": [
+        [
+          4,
+          4
+        ]
+      ],
+      "node_ids": [
+        30
+      ],
+      "compensation_columns": [
+        4
+      ],
+      "remaining_variance": 0.0014615317393938047,
+      "status": "no synthesis; unrestricted error exceeds EVM limit",
+      "g_cost": null,
+      "complete_metrics": null
+    },
+    "trial_shared": {
+      "removed_slots": [
+        [
+          4,
+          4
+        ]
+      ],
+      "node_ids": [
+        30,
+        29,
+        24
+      ],
+      "remaining_variance": 0,
+      "status": "screened only",
+      "g_cost": null,
+      "complete_metrics": null
+    },
+    "trial_original": {
+      "removed_slots": [
+        [
+          4,
+          4
+        ]
+      ],
+      "node_ids": [
+        739
+      ],
+      "remaining_variance": 0,
+      "status": "table generated; no superior correction",
+      "g_cost": null,
+      "complete_metrics": null
+    },
+    "trial_strong": {
+      "removed_slots": [
+        [
+          4,
+          4
+        ]
+      ],
+      "node_ids": [
+        30,
+        738
+      ],
+      "compensation_columns": [
+        4
+      ],
+      "remaining_variance": 0,
+      "status": "sat",
+      "g_cost": 1,
+      "gate_cost": 984,
+      "evm_db": -57.66509477604998,
+      "partial_product_count": 92
+    },
+    "trial_del41": {
+      "removed_slots": [
+        [
+          4,
+          1
+        ]
+      ],
+      "node_ids": [
+        152
+      ],
+      "compensation_columns": [
+        4
+      ],
+      "remaining_variance": 0,
+      "status": "sat",
+      "g_cost": 0,
+      "gate_cost": 984,
+      "evm_db": -57.66509477604998,
+      "partial_product_count": 92
+    },
+    "trial_strong_tight": {
+      "removed_slots": [
+        [
+          4,
+          4
+        ]
+      ],
+      "node_ids": [
+        30,
+        738
+      ],
+      "compensation_columns": [
+        4
+      ],
+      "status": "interrupted due to foreground command timeout; no result; not infeasible",
+      "g_cost": null,
+      "complete_metrics": null
+    }
+  },
+  "pareto_population": [
+    [
+      954.2,
+      -57.72353155447783,
+      92.0
+    ],
+    [
+      973.2,
+      -57.852453944355204,
+      93.0
+    ],
+    [
+      986.2,
+      -57.90019115841574,
+      93.0
+    ],
+    [
+      980.2,
+      -58.026732013627964,
+      94.0
+    ],
+    [
+      1067.0,
+      -58.291617784559755,
+      100.0
+    ],
+    [
+      1067.2,
+      -58.34955620145295,
+      101.0
+    ],
+    [
+      1010.6,
+      -58.18330682718984,
+      93.0
+    ],
+    [
+      978.2,
+      -57.7781172796199,
+      92.0
+    ],
+    [
+      968.2,
+      -57.83461265306508,
+      94.0
+    ],
+    [
+      959.2,
+      -57.77611271366918,
+      94.0
+    ],
+    [
+      969.2,
+      -57.83461265306508,
+      93.0
+    ],
+    [
+      965.2,
+      -57.65277192275167,
+      91.0
+    ],
+    [
+      976.2,
+      -57.72423799932994,
+      92.0
+    ]
+  ],
+  "conclusion": "Both eligible exported circuits cost 984 versus verified parent 983, with identical EVM and partial-product count; retain parent. Baseline and both trials are dominated by archive members; no demonstrated partial-product improvement."
+}

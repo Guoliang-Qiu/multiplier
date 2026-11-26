@@ -1,0 +1,64 @@
+{
+  "parent": {
+    "gate_cost": 996,
+    "evm_db": -57.82742896557088,
+    "partial_product_count": 97
+  },
+  "selected_trial": "col3both",
+  "removed_slots": [
+    [
+      3,
+      0
+    ],
+    [
+      3,
+      1
+    ]
+  ],
+  "node_ids": [],
+  "compensation_columns": [
+    3
+  ],
+  "target_evm_db": -57.7,
+  "screen_remaining_variance": 0.0014665906486608963,
+  "synthesis_status": "sat",
+  "g_weighted_cost": 0,
+  "pre_optimization": {
+    "gate_cost": 996,
+    "evm_db": -57.82742896557088,
+    "partial_product_count": 96,
+    "mae": 0.26266823781628823,
+    "rmse": 0.30993334506473896
+  },
+  "other_completed_trials": {
+    "direct": {
+      "variance": 0.0,
+      "g_cost": 0,
+      "gate_cost": 998,
+      "evm_db": -57.82742896557088,
+      "partial_product_count": 97
+    },
+    "strong": {
+      "variance": 0.0,
+      "g_cost": 1,
+      "gate_cost": 1002,
+      "evm_db": -57.73197833554542,
+      "partial_product_count": 97
+    },
+    "col3": {
+      "gate_cost": 996,
+      "evm_db": -57.82742896557088,
+      "partial_product_count": 97
+    }
+  },
+  "unmeasured_or_incomplete": {
+    "compact": "error-table unconstrained optimum -57.3948 dB, not synthesized",
+    "shared": "screened zero residual variance; synthesis and complete cost unknown",
+    "single": "error-table unconstrained optimum -57.61106 dB; not synthesized",
+    "zero_slot": "negative deletion savings; synthesis rejected",
+    "col3triple": "unsat unrestricted action table at target -57.7 dB",
+    "strong_unrestricted": "interrupted before result; restricted max_gates=1 completed separately"
+  },
+  "pareto_archive_population_size": 14,
+  "pareto_comparison": "selected pre-gate-optimization trial is dominated; reduces parent slot count by one at equal measured cost and EVM, so pass to next gate-optimization stage"
+}

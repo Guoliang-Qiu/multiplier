@@ -1,0 +1,7 @@
+Directional MUX_XOR pass (after saved general baseline)
+The installed library specifies MUX_XOR(a,b,c,d,e)=e XOR ((a AND b) OR (c AND d)), cost 4.8, with XOR=3, AND/OR=1. Existing handoff already had 51 output-reachable MUX_XOR cells after general cleanup; retained those efficient ordinary/special-cell mixtures.
+Tested alternate Shannon factoring of shared Booth p: 997.8, equal to best (5 AND exchanged for 5 OR); no savings.
+Tested MUX_XOR for all sign-row one/negative bit selections: cost 1019.4, 63 MUX_XOR, raw-equivalent on 1,050,624 configured samples, rejected (+21.6 cost).
+Tested parity-based exact full adder: cost 1138.8, rejected (+141 cost); inherited _fa has better complete-circuit sharing.
+Tested factored sign correction next to MUX_XOR: cost 997.8, raw-equivalent, no saving.
+Selected directional.py: exact earliest-first 3:2 compression schedule rather than LIFO, exposing one fewer OR and one fewer NOT in the reachable surrounding circuit without adding MUX_XOR cells. Cost 997.8, EVM -57.99331559074916 dB, 93 slots. Full 1,050,624-sample configured-stimulus signed raw-word check versus general.py: zero mismatches; empirical, not formal. The tested MUX_XOR remappings failed to improve cost, so final improvement is due to coordinated exact arithmetic scheduling around the existing MUX_XOR-equipped partial-product cones, not adding cells.

@@ -1,0 +1,38 @@
+{
+  "parent": {
+    "gate_cost": 978.2,
+    "evm_db": -57.7781172796199,
+    "partial_product_count": 92
+  },
+  "selected": "triple_direct",
+  "removed_slots": [
+    [
+      4,
+      1
+    ],
+    [
+      4,
+      2
+    ],
+    [
+      4,
+      3
+    ]
+  ],
+  "node_ids": [
+    152,
+    466
+  ],
+  "compensation_columns": [
+    4,
+    5
+  ],
+  "remaining_variance": 0.0,
+  "synthesis_status": "sat",
+  "g_weighted_cost": 2,
+  "gate_cost": 979.2,
+  "evm_db": -57.71198998619433,
+  "partial_product_count": 91,
+  "pareto_dominators": [],
+  "note": "Pre-deep-optimization partial-product tradeoff, currently nondominated against the ten archived records; further gate optimization may improve it."
+}

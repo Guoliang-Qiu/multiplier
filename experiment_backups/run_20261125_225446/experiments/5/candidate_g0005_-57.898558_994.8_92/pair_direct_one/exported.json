@@ -1,0 +1,16 @@
+{
+  "baseline_cost": 1010.6,
+  "deleted_cost": 985.0,
+  "nonconstant_terms_upper_bound": 87,
+  "final_cost": 995.8,
+  "net_cost_saving": 14.800000000000068,
+  "strict_cost_improvement": true,
+  "target_evm_db": -57.75,
+  "table_metrics": {
+    "scaled_squared_error_sum": 1626638179,
+    "mse": 0.09449823668360942,
+    "evm_db": -57.898557989441954
+  },
+  "performance_basis": "pre-compression insertion followed by original compressor and CPA; verify full candidate",
+  "candidate_file": "/home/guoliang/multiplier/experiments/5/candidate_g0005_0008/pair_direct_one/exported.py"
+}

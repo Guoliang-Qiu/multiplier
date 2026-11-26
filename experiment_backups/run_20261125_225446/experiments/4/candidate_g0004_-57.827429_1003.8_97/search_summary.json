@@ -1,0 +1,19 @@
+{
+  "parent": {"implementation": "/home/guoliang/multiplier/experiments/4/candidate_g0004_0007/parent.py", "gate_cost": 1023.8, "evm_db": -58.18330682718984, "partial_product_count": 100},
+  "stimulus_file": "/home/guoliang/multiplier/stimulus.npy",
+  "target_evm_db": -57.75,
+  "screening": [
+    {"trial": "del4_compact", "removed_slots": [[4, 1], [4, 4]], "node_ids": [101, 399], "remaining_variance": 0.007261751568191001, "g_cost": 0, "synthesis_status": "sat", "gate_cost": 1007.8, "evm_db": -57.79726370227037, "partial_product_count": 100},
+    {"trial": "del4_direct", "removed_slots": [[4, 1], [4, 4]], "node_ids": [143, 441], "remaining_variance": 0, "g_cost": 0, "synthesis_status": "sat", "gate_cost": 1016.8, "evm_db": -57.99331559074916, "partial_product_count": 100},
+    {"trial": "del4_shared", "removed_slots": [[4, 1], [4, 4]], "node_ids": [5, 23, 101, 399], "remaining_variance": 0.007261676187024917, "g_cost": null, "synthesis_status": "not_run", "gate_cost": null},
+    {"trial": "del4_single", "removed_slots": [[4, 1], [4, 4]], "node_ids": [101, 5], "remaining_variance": 0.007402407702919536, "g_cost": null, "synthesis_status": "not_run", "gate_cost": null},
+    {"trial": "del4_direct_one", "removed_slots": [[4, 1], [4, 4]], "node_ids": [143, 441], "remaining_variance": 0, "synthesis_status": "not_run", "reason": "One compensation column [4] unrestricted table EVM -55.22 dB; insufficient action range"},
+    {"trial": "del4four_compact", "remaining_variance": 0.015174015928462136, "synthesis_status": "not_run"},
+    {"trial": "del4four_direct", "remaining_variance": 0, "synthesis_status": "not_run", "reason": "[4, 5] unrestricted table EVM -55.33 dB; insufficient compensation range"},
+    {"trial": "del4three_direct", "removed_slots": [[4, 1], [4, 4], [4, 2]], "node_ids": [143, 441, 216], "compensation_columns": [4, 5], "remaining_variance": 0, "synthesis_status": "sat", "g_cost": 0, "gate_cost": 1009.8, "evm_db": -57.82742896557088, "partial_product_count": 99}
+  ],
+  "selected": "del4three_direct",
+  "selection_reason": "Three deleted column-4 terms and two inserted compensation terms yield 99 pre-compression slots versus parent's 100 and 14.0 weighted gate savings. Directly reused Booth intermediate node IDs 143 and 216 provide G without extra synthesis gates; post-export reachable cost includes their observation cones and insertion buffers. Though presently dominated by the archive (e.g. 986.2/-57.9002/93), it is an eligible partial-product handoff to subsequent gate optimization; the more accurate two-deletion trial retains 100 slots, while the compact trial has 100 slots and is less accurate. Comparison uses all 12 archive records, not an isolated cost estimate.",
+  "raw_output_equivalence_claim": false,
+  "note": "These are algorithmic changes, not equivalence-preserving rewrites; all final metrics are full-workload eval.py results. Results in each trial directory retain configs, tables and synthesis/export reports."
+}

@@ -1,0 +1,395 @@
+{
+  "parent": {
+    "cost": {
+      "counts": {
+        "AND": 463,
+        "MUX_XOR": 24,
+        "NOT": 246,
+        "OR": 400
+      },
+      "gate_cost": 978.2,
+      "partial_product_count": 92
+    },
+    "eval": {
+      "avg_abs_error": 0.26376514546355306,
+      "bias": 0.26217793395877115,
+      "error_cases": 1038524,
+      "error_rate": 0.9884830348440545,
+      "evm_db": -57.7781172796199,
+      "mae": 0.26376514546355306,
+      "max_abs_error": 0.921875,
+      "mse": 0.10325795650249801,
+      "rmse": 0.3116979082866669,
+      "runtime_seconds": 39.690539277000425,
+      "total_cases": 1050624
+    }
+  },
+  "pareto_archive_objectives": [
+    [
+      954.2,
+      -57.72353155447783,
+      92.0
+    ],
+    [
+      970.2,
+      -57.77706902080404,
+      93.0
+    ],
+    [
+      969.2,
+      -57.83461265306508,
+      94.0
+    ],
+    [
+      973.2,
+      -57.852453944355204,
+      93.0
+    ],
+    [
+      986.2,
+      -57.90019115841574,
+      93.0
+    ],
+    [
+      980.2,
+      -58.026732013627964,
+      94.0
+    ],
+    [
+      1067.0,
+      -58.291617784559755,
+      100.0
+    ],
+    [
+      1067.2,
+      -58.34955620145295,
+      101.0
+    ],
+    [
+      1010.6,
+      -58.18330682718984,
+      93.0
+    ],
+    [
+      978.2,
+      -57.7781172796199,
+      92.0
+    ]
+  ],
+  "trials": {
+    "slot4_shared": {
+      "removed_slots": [
+        [
+          4,
+          4
+        ]
+      ],
+      "node_ids": [
+        29,
+        30,
+        24
+      ],
+      "compensation_columns": [
+        4
+      ],
+      "remaining_variance": 0.0009784536281821183,
+      "synthesis_status": "sat",
+      "g_cost": 2,
+      "cost": {
+        "counts": {
+          "AND": 460,
+          "MUX_XOR": 24,
+          "NOT": 245,
+          "OR": 400
+        },
+        "gate_cost": 975.2,
+        "partial_product_count": 92
+      },
+      "eval": {
+        "avg_abs_error": 0.266326748139677,
+        "bias": 0.2294197826125236,
+        "error_cases": 1038524,
+        "error_rate": 0.9884830348440545,
+        "evm_db": -57.66509477604998,
+        "mae": 0.266326748139677,
+        "max_abs_error": 0.9140625,
+        "mse": 0.08943868397969251,
+        "rmse": 0.31578028549358067,
+        "runtime_seconds": 43.200103630999365,
+        "total_cases": 1050624
+      },
+      "objectives": [
+        975.2,
+        -57.66509477604998,
+        92
+      ],
+      "archive_dominators": [
+        [
+          954.2,
+          -57.72353155447783,
+          92.0
+        ]
+      ]
+    },
+    "slot4_strong": {
+      "removed_slots": [
+        [
+          4,
+          4
+        ]
+      ],
+      "node_ids": [
+        29,
+        30,
+        23,
+        24
+      ],
+      "compensation_columns": [
+        4
+      ],
+      "remaining_variance": 0.0,
+      "synthesis_status": "sat",
+      "g_cost": 4,
+      "cost": {
+        "counts": {
+          "AND": 460,
+          "MUX_XOR": 24,
+          "NOT": 245,
+          "OR": 399,
+          "XOR": 1
+        },
+        "gate_cost": 977.2,
+        "partial_product_count": 92
+      },
+      "eval": {
+        "avg_abs_error": 0.2649779812401963,
+        "bias": 0.24587714509424874,
+        "error_cases": 1038524,
+        "error_rate": 0.9884830348440545,
+        "evm_db": -57.72423799932994,
+        "mae": 0.2649779812401963,
+        "max_abs_error": 0.921875,
+        "mse": 0.09629892251412539,
+        "rmse": 0.3136374049869158,
+        "runtime_seconds": 44.37207540000054,
+        "total_cases": 1050624
+      },
+      "objectives": [
+        977.2,
+        -57.72423799932994,
+        92
+      ],
+      "archive_dominators": []
+    },
+    "slot1_shared": {
+      "removed_slots": [
+        [
+          4,
+          1
+        ]
+      ],
+      "node_ids": [
+        12,
+        13,
+        14
+      ],
+      "compensation_columns": [
+        4
+      ],
+      "remaining_variance": 0.002808087607027282,
+      "synthesis_status": "sat",
+      "g_cost": 5,
+      "cost": {
+        "counts": {
+          "AND": 457,
+          "MUX_XOR": 24,
+          "NOT": 244,
+          "OR": 398,
+          "XOR": 1
+        },
+        "gate_cost": 973.2,
+        "partial_product_count": 92
+      },
+      "eval": {
+        "avg_abs_error": 0.267332430239077,
+        "bias": 0.2506400288661786,
+        "error_cases": 1038525,
+        "error_rate": 0.9884839866593568,
+        "evm_db": -57.6215140814069,
+        "mae": 0.267332430239077,
+        "max_abs_error": 1.0,
+        "mse": 0.10107658916746663,
+        "rmse": 0.317368667019615,
+        "runtime_seconds": 50.478412972000115,
+        "total_cases": 1050624
+      },
+      "objectives": [
+        973.2,
+        -57.6215140814069,
+        92
+      ],
+      "archive_dominators": [
+        [
+          954.2,
+          -57.72353155447783,
+          92.0
+        ]
+      ]
+    },
+    "slot1_strong": {
+      "removed_slots": [
+        [
+          4,
+          1
+        ]
+      ],
+      "node_ids": [
+        12,
+        13,
+        4,
+        14
+      ],
+      "compensation_columns": [
+        4
+      ],
+      "remaining_variance": 0.0008549652485232013,
+      "synthesis_status": "sat",
+      "g_cost": 5,
+      "cost": {
+        "counts": {
+          "AND": 458,
+          "MUX_XOR": 24,
+          "NOT": 244,
+          "OR": 399,
+          "XOR": 1
+        },
+        "gate_cost": 975.2,
+        "partial_product_count": 92
+      },
+      "eval": {
+        "avg_abs_error": 0.2661107901708889,
+        "bias": 0.25044109946803045,
+        "error_cases": 1038524,
+        "error_rate": 0.9884830348440545,
+        "evm_db": -57.67451051091698,
+        "mae": 0.2661107901708889,
+        "max_abs_error": 0.96875,
+        "mse": 0.09972420090820357,
+        "rmse": 0.3154381567559943,
+        "runtime_seconds": 42.389422457000364,
+        "total_cases": 1050624
+      },
+      "objectives": [
+        975.2,
+        -57.67451051091698,
+        92
+      ],
+      "archive_dominators": [
+        [
+          954.2,
+          -57.72353155447783,
+          92.0
+        ]
+      ]
+    },
+    "slot2_shared": {
+      "removed_slots": [
+        [
+          4,
+          2
+        ]
+      ],
+      "node_ids": [
+        30,
+        31,
+        32
+      ],
+      "compensation_columns": [
+        4
+      ],
+      "remaining_variance": 0.0028071879968551957,
+      "synthesis_status": "not_run",
+      "g_cost": "unknown",
+      "complete_cost": "unknown"
+    },
+    "pair5_extended": {
+      "removed_slots": [
+        [
+          5,
+          0
+        ],
+        [
+          5,
+          3
+        ]
+      ],
+      "node_ids": [
+        11,
+        12,
+        7,
+        29,
+        30,
+        25
+      ],
+      "compensation_columns": [
+        5
+      ],
+      "remaining_variance": 0.007820214778594889,
+      "synthesis_status": "not_run",
+      "g_cost": "unknown",
+      "complete_cost": "unknown"
+    },
+    "single5_shared": {
+      "removed_slots": [
+        [
+          5,
+          0
+        ]
+      ],
+      "node_ids": [
+        11,
+        12,
+        7
+      ],
+      "compensation_columns": [
+        5
+      ],
+      "remaining_variance": 0.0038985884664910738,
+      "synthesis_status": "not_run",
+      "g_cost": "unknown",
+      "complete_cost": "unknown"
+    },
+    "pair5_simple": {
+      "removed_slots": [
+        [
+          5,
+          0
+        ],
+        [
+          5,
+          3
+        ]
+      ],
+      "node_ids": [
+        11,
+        12,
+        29,
+        30
+      ],
+      "compensation_columns": [
+        5
+      ],
+      "remaining_variance": 0.02344758430643646,
+      "synthesis_status": "not_run",
+      "g_cost": "unknown",
+      "unrestricted_table_evm_db": -54.998175288963715,
+      "complete_cost": "unknown"
+    }
+  },
+  "selection": "slot4_strong",
+  "selection_reason": "Among evaluated trials, only slot4_strong is not dominated by the full current archive, by a small EVM advantage; its 4-input XOR/AND compensation preserves a 0.124 dB margin below the strict EVM limit and removes one live original product bit, while preserving compressor and output stages unchanged. Gate cost is provisional before subsequent deep gate optimization.",
+  "unchanged_stages": [
+    "compress_columns",
+    "build_outputs"
+  ]
+}
